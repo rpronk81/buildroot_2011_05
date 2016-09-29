@@ -1,0 +1,4 @@
+./output/host/usr/bin/arm-none-linux-gnueabi-gcc myinit.c -static -o output/target/myinitstatic
+
+./output/host/usr/bin/arm-none-linux-gnueabi-gcc myinit.c -o output/target/myinitdynamic
+exit 0
