@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
-# Buildroot 2011.05-00006-ga4da305 Configuration
-# Thu Oct 13 09:56:11 2016
+# Buildroot 2011.05-gf246a8a Configuration
+# Fri Oct 14 14:15:21 2016
 #
 BR2_HAVE_DOT_CONFIG=y
 BR2_arm=y
@@ -677,14 +677,14 @@ BR2_TARGET_UBOOT_FORMAT_BIN=y
 #
 BR2_LINUX_KERNEL=y
 # BR2_LINUX_KERNEL_2_6_38 is not set
-# BR2_LINUX_KERNEL_CUSTOM_VERSION is not set
-BR2_LINUX_KERNEL_CUSTOM_TARBALL=y
-BR2_LINUX_KERNEL_CUSTOM_TARBALL_LOCATION="file:///home/robert/linux/linux-spacelite.tar"
-BR2_LINUX_KERNEL_VERSION="custom"
-BR2_LINUX_KERNEL_PATCH=""
+BR2_LINUX_KERNEL_CUSTOM_VERSION=y
+# BR2_LINUX_KERNEL_CUSTOM_TARBALL is not set
+BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="2.6.34"
+BR2_LINUX_KERNEL_VERSION="2.6.34"
+BR2_LINUX_KERNEL_PATCH="package/34to3412.patch package/ns921-1.patch"
 # BR2_LINUX_KERNEL_USE_DEFCONFIG is not set
 BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
-BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="/home/robert/linux/linux-spacelite/.config"
+BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="output/build/linux-2.6.34/arch/arm/configs/spacecom_lite_defconfig"
 BR2_LINUX_KERNEL_UIMAGE=y
 # BR2_LINUX_KERNEL_ZIMAGE is not set
 # BR2_LINUX_KERNEL_IMAGE_TARGET_CUSTOM is not set
