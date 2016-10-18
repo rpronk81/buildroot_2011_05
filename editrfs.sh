@@ -3,7 +3,7 @@
 # 
 echo $1
 
-rm output/target/etc/inittab
+rm -f output/target/etc/inittab
 cp ./inittab output/target/etc/inittab
 
 exit 0
