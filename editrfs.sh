@@ -6,4 +6,7 @@ echo $1
 rm -f output/target/etc/inittab
 cp ./inittab output/target/etc/inittab
 
+mkdir output/target/lib/firmware
+cp -r package/redpine output/target/lib/firmware/
+
 exit 0
