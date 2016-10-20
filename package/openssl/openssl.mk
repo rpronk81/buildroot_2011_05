@@ -4,7 +4,8 @@
 #
 #############################################################
 
-OPENSSL_VERSION = 1.0.0d
+OPENSSL_VERSION = 1.0.1t
+OPENSSL_SOURCE = openssl-1.0.1t.tar.gz
 OPENSSL_SITE = http://www.openssl.org/source
 OPENSSL_INSTALL_STAGING = YES
 OPENSSL_DEPENDENCIES = zlib
@@ -55,12 +56,14 @@ define OPENSSL_CONFIGURE_CMDS
 			--libdir=/lib \
 			threads \
 			shared \
-			no-idea \
+			no-sse2 \
+			no-ssl2 \
+			no-ssl3 \
 			no-rc5 \
 			enable-camellia \
 			enable-mdc2 \
 			enable-tlsext \
-			zlib-dynamic \
+			zlib \
 	)
 	$(SED) "s:-march=[-a-z0-9] ::" -e "s:-mcpu=[-a-z0-9] ::g" $(@D)/Makefile
 	$(SED) "s:-O[0-9]:$(OPENSSL_CFLAGS):" $(@D)/Makefile
