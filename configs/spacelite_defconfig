@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
-# Buildroot 2011.05-00018-g57be169 Configuration
-# Tue Oct 18 13:17:59 2016
+# Buildroot 2011.05-00028-gf8cbf7c-dirty Configuration
+# Fri Oct 21 11:08:50 2016
 #
 BR2_HAVE_DOT_CONFIG=y
 BR2_arm=y
@@ -352,7 +352,13 @@ BR2_PACKAGE_BUSYBOX_SHOW_OTHERS=y
 # BR2_PACKAGE_SQUASHFS is not set
 # BR2_PACKAGE_SSHFS is not set
 # BR2_PACKAGE_SYSSTAT is not set
-# BR2_PACKAGE_UDEV is not set
+BR2_PACKAGE_UDEV=y
+# BR2_PACKAGE_UDEV_UTILS is not set
+
+#
+# Extra udev tools
+#
+# BR2_PACKAGE_UDEV_VOLUME_ID is not set
 # BR2_PACKAGE_USB_MODESWITCH is not set
 # BR2_PACKAGE_USBMOUNT is not set
 # BR2_PACKAGE_USBUTILS is not set
@@ -497,6 +503,7 @@ BR2_PACKAGE_LIBNL=y
 #
 # Miscellaneous
 #
+BR2_PACKAGE_BOOST=y
 # BR2_PACKAGE_SHARED_MIME_INFO is not set
 
 #
