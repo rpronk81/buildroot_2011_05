@@ -10,22 +10,35 @@ BOOST_SITE = https://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_5
 BOOST_INSTALL_STAGING = YES
 BOOST_DEPENDENCIES = zlib
 BOOST_CFLAGS = $(TARGET_CFLAGS)
+BOOST_ROOT := boost_$(subst .,_,$(BOOST_VERSION))
+GCC_PATH=$(@D)/../../host/usr/bin
+BOOST_ENABLED_LIBS := \
+        atomic \
+    chrono \
+    date_time \
+    exception \
+    filesystem \
+    program_options \
+    random \
+    serialization \
+    signals \
+    system \
+    thread \
+    timer \
 
 define BOOST_BUILD_CMDS
-#	#$(MAKE1) -C $(@D) all
-	#$(MAKE) CC=$(TARGET_CC) LD=$(TARGET_LS) -C $(@D) all
-	(cd $(@D); \
-	./bootstrap.sh )
+env -i HOME="$$HOME" LC_CTYPE="$${LC_ALL:-$${LC_CTYPE:-$$LANG}}" PATH="$$PATH:$(GCC_PATH)" USER="$$USER" \
+	sh -c 'cd $(@D) && \
+	$(@D)/bootstrap.sh && \
+	$(@D)/b2 $(addprefix --with-,$(BOOST_ENABLED_LIBS)) install --prefix="$(@D)/boost.build/"'
 endef
 
 define BOOST_INSTALL_TARGET_CMDS
-	#$(MAKE1) -C $(@D) INSTALL_PREFIX=$(TARGET_DIR) install
-	(cd $(@D); \
-	./b2 -a install --prefix=$(TARGET_DIR)/boost/install )
+	# Nothing to do, the successful BOOT_BUILD_CMDS will also install
 endef
 
 define BOOST_REMOVE_DEV_FILES
-	rm -rf $(TARGET_DIR)/install
+	rm -rf $(@D)/boost.build $(@D)/b2 $(@D)/bjam $(@D)project-config.jam $(@D)bootstrap.log
 endef
 
 
