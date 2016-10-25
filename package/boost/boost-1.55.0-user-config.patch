@@ -5,7 +5,7 @@
  # Configure specific gcc version, giving alternative name to use.
  # using gcc : 3.2 : g++-3.2 ;
 -
-+using gcc : 4.5.1 :  arm-none-linux-gnueabi-gcc : <root>/home/robert/Downloads/buildroot-2011.05/output/host/usr/bin ;
++using gcc : 4.5.1 :   BR201105/output/host/usr/bin/arm-none-linux-gnueabi-gcc : BR201105/output/host/usr/bin ;
  
  # -------------------
  # MSVC configuration.
