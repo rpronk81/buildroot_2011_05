@@ -365,6 +365,7 @@ endmenu
 
 menu "Miscellaneous"
 source "package/boost/Config.in"
+source "package/yaml/Config.in"
 source "package/shared-mime-info/Config.in"
 endmenu
 
@@ -397,6 +398,7 @@ source "package/ipsec-tools/Config.in"
 source "package/iptables/Config.in"
 source "package/iw/Config.in"
 source "package/kismet/Config.in"
+source "package/networkmanager/Config.in"
 source "package/xl2tp/Config.in"
 if BR2_PACKAGE_BUSYBOX_SHOW_OTHERS
 source "package/lighttpd/Config.in"
