@@ -4,12 +4,12 @@
 #
 #############################################################
 
-NETWORK_MANAGER_VERSION = 0.8.1
-NETWORK_MANAGER_SOURCE = NetworkManager-0.8.1.tar.gz
-NETWORK_MANAGER_SITE = https://download.gnome.org/sources/NetworkManager/0.8/
-NETWORK_MANAGER_INSTALL_STAGING = YES
-NETWORK_MANAGER_INSTALL_TARGET = YES
+NETWORKMANAGER_VERSION = 0.8.1
+NETWORKMANAGER_SOURCE = NetworkManager-0.8.1.tar.bz2
+NETWORKMANAGER_SITE = https://download.gnome.org/sources/NetworkManager/0.8/
+NETWORKMANAGER_INSTALL_STAGING = YES
+NETWORKMANAGER_INSTALL_TARGET = YES
 # GCC_PATH=$(@D)/../../host/usr/bin
-NETWORK_MANAGER_DEPENDENCIES = libdbus
+#NETWORKMANAGER_DEPENDENCIES = libdbus
 
 $(eval $(call AUTOTARGETS,package,networkmanager))

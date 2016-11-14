@@ -365,7 +365,6 @@ endmenu
 
 menu "Miscellaneous"
 source "package/boost/Config.in"
-source "package/yaml/Config.in"
 source "package/shared-mime-info/Config.in"
 endmenu
 
