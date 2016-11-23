@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
-# Buildroot 2011.05-00033-g4bffdf2-dirty Configuration
-# Wed Oct 26 15:13:29 2016
+# Buildroot 2011.05-00036-g6c741d8-dirty Configuration
+# Tue Nov 22 10:59:32 2016
 #
 BR2_HAVE_DOT_CONFIG=y
 BR2_arm=y
@@ -310,10 +310,8 @@ BR2_PACKAGE_BUSYBOX_SHOW_OTHERS=y
 # BR2_PACKAGE_CDRKIT is not set
 # BR2_PACKAGE_CRAMFS is not set
 BR2_PACKAGE_DBUS=y
-
-#
-# dbus not available (need expat or libxml2)
-#
+# BR2_DBUS_EXPAT is not set
+BR2_DBUS_LIBXML2=y
 
 #
 # dbus-glib needs dbus to be compiled with expat support
@@ -499,9 +497,9 @@ BR2_PACKAGE_LIBNL=y
 #
 # XML
 #
-# BR2_PACKAGE_EXPAT is not set
+BR2_PACKAGE_EXPAT=y
 # BR2_PACKAGE_EZXML is not set
-# BR2_PACKAGE_LIBXML2 is not set
+BR2_PACKAGE_LIBXML2=y
 # BR2_PACKAGE_LIBXSLT is not set
 # BR2_PACKAGE_XERCES is not set
 
@@ -509,7 +507,6 @@ BR2_PACKAGE_LIBNL=y
 # Miscellaneous
 #
 BR2_PACKAGE_BOOST=y
-BR2_PACKAGE_YAML=y
 # BR2_PACKAGE_SHARED_MIME_INFO is not set
 
 #
@@ -539,7 +536,7 @@ BR2_PACKAGE_CAN_UTILS=y
 # BR2_PACKAGE_IPTABLES is not set
 BR2_PACKAGE_IW=y
 # BR2_PACKAGE_KISMET is not set
-BR2_PACKAGE_NETWORK_MANAGER=y
+# BR2_PACKAGE_NETWORKMANAGER is not set
 # BR2_PACKAGE_XL2TP is not set
 BR2_PACKAGE_LIGHTTPD=y
 BR2_PACKAGE_LIGHTTPD_OPENSSL=y
