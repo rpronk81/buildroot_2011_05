@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
-# Buildroot 2011.05-00040-g8b162dc Configuration
-# Wed Dec 14 11:13:50 2016
+# Buildroot 2011.05-00041-g1828a0c-dirty Configuration
+# Thu Dec 15 12:51:01 2016
 #
 BR2_HAVE_DOT_CONFIG=y
 BR2_arm=y
@@ -245,6 +245,7 @@ BR2_PACKAGE_BUSYBOX_SHOW_OTHERS=y
 # BR2_PACKAGE_MAKE is not set
 # BR2_PACKAGE_MPC is not set
 # BR2_PACKAGE_MPFR is not set
+BR2_PACKAGE_PKGCONF=y
 # BR2_PACKAGE_LIBTOOL is not set
 # BR2_PACKAGE_M4 is not set
 # BR2_PACKAGE_PATCH is not set
@@ -366,6 +367,7 @@ BR2_PACKAGE_IOSTAT=y
 # BR2_PACKAGE_IRDA_UTILS is not set
 # BR2_PACKAGE_KBD is not set
 # BR2_PACKAGE_LIBV4L is not set
+BR2_PACKAGE_LIBGUDEV=y
 # BR2_PACKAGE_LM_SENSORS is not set
 # BR2_PACKAGE_LSUIO is not set
 # BR2_PACKAGE_LVM2 is not set
@@ -605,7 +607,7 @@ BR2_PACKAGE_CAN_UTILS=y
 # BR2_PACKAGE_IPTABLES is not set
 BR2_PACKAGE_IW=y
 # BR2_PACKAGE_KISMET is not set
-BR2_PACKAGE_NETWORKMANAGER=y
+# BR2_PACKAGE_NETWORKMANAGER is not set
 # BR2_PACKAGE_XL2TP is not set
 BR2_PACKAGE_LIGHTTPD=y
 BR2_PACKAGE_LIGHTTPD_OPENSSL=y
