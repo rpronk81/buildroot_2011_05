@@ -1,0 +1,4 @@
+config BR2_PACKAGE_LIBUDEV
+	bool "libudev"
+	help
+	  https://wiki.gnome.org/Projects/libudev
