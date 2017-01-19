@@ -1,4 +1,5 @@
 config BR2_PACKAGE_LIBUDEV
 	bool "libudev"
+	depends on BR2_PACKAGE_LIBGCRYPT
 	help
 	  https://wiki.gnome.org/Projects/libudev
