@@ -14,6 +14,8 @@ LIBUDEV_DEPENDENCIES = host-intltool gettext libglib2
 LIBUDEV_LICENSE = LGPLv2.1+
 LIBUDEV_LICENSE_FILES = COPYING
 LIBUDEV_AUTORECONF = YES
+# LIBUDEV_SUBDIR=configuredir
+
 
 LIBUDEV_CONF_OPT = \
 		--enable-shared \
