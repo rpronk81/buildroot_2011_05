@@ -1,0 +1,69 @@
+--- a/src/core/execute.h	2016-12-22 20:38:27.000000000 -0500
++++ b/src/core/execute.h	2017-02-03 16:00:01.574704804 -0500
+@@ -23,6 +23,7 @@
+ 
+ typedef struct ExecStatus ExecStatus;
+ typedef struct ExecCommand ExecCommand;
++
+ typedef struct ExecContext ExecContext;
+ 
+ #include <linux/types.h>
+@@ -35,8 +36,25 @@
+ 
+ struct CGroupBonding;
+ struct CGroupAttribute;
+-
++#ifdef REMOVE
+ typedef struct Unit Unit;
++#endif
++#include "time-util.h"
++struct ExecStatus {
++        dual_timestamp start_timestamp;
++        dual_timestamp exit_timestamp;
++        pid_t pid;
++        int code;     /* as in siginfo_t::si_code */
++        int status;   /* as in sigingo_t::si_status */
++};
++#include "list.h"
++struct ExecCommand {
++        char *path;
++        char **argv;
++        ExecStatus exec_status;
++        LIST_FIELDS(ExecCommand, command); /* useful for chaining commands */
++        bool ignore;
++};
+ 
+ #include "list.h"
+ #include "util.h"
+@@ -66,6 +84,7 @@
+         _EXEC_OUTPUT_INVALID = -1
+ } ExecOutput;
+ 
++#ifdef MOVED
+ struct ExecStatus {
+         dual_timestamp start_timestamp;
+         dual_timestamp exit_timestamp;
+@@ -73,7 +92,6 @@
+         int code;     /* as in siginfo_t::si_code */
+         int status;   /* as in sigingo_t::si_status */
+ };
+-
+ struct ExecCommand {
+         char *path;
+         char **argv;
+@@ -81,6 +99,7 @@
+         LIST_FIELDS(ExecCommand, command); /* useful for chaining commands */
+         bool ignore;
+ };
++#endif
+ 
+ struct ExecContext {
+         char **environment;
+@@ -165,6 +184,7 @@
+         bool ioprio_set:1;
+         bool cpu_sched_set:1;
+ };
++#include "unit.h"
+ 
+ int exec_spawn(ExecCommand *command,
+                char **argv,

@@ -1,0 +1,23 @@
+--- a/src/test/test-engine.c	2016-12-22 20:38:27.000000000 -0500
++++ b/src/test/test-engine.c	2017-02-05 17:03:38.720256902 -0500
+@@ -24,9 +24,12 @@
+ #include <string.h>
+ #include <unistd.h>
+ 
++#ifdef REMOVE
+ #include "manager.h"
++#endif
+ 
+ int main(int argc, char *argv[]) {
++#ifdef REMOVE
+         Manager *m = NULL;
+         Unit *a = NULL, *b = NULL, *c = NULL, *d = NULL, *e = NULL, *g = NULL, *h = NULL;
+         Job *j;
+@@ -94,6 +97,6 @@
+         manager_dump_jobs(m, stdout, "\t");
+ 
+         manager_free(m);
+-
++#endif
+         return 0;
+ }
