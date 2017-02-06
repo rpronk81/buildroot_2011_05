@@ -1,0 +1,19 @@
+--- a/bus/config-parser-trivial.c	2017-02-05 17:46:21.674764207 -0500
++++ b/bus/config-parser-trivial.c	2017-02-01 11:41:10.490147805 -0500
+@@ -329,7 +329,7 @@
+ {
+   return &parser->service_dirs;
+ }
+-
++#if 0
+ dbus_bool_t
+ bus_config_parser_check_doctype (BusConfigParser   *parser,
+                                  const char        *doctype,
+@@ -337,6 +337,7 @@
+ {
+     return TRUE;
+ }
++#endif
+ 
+ #ifdef DBUS_BUILD_TESTS
+ #include <stdio.h>
