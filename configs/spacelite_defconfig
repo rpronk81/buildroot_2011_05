@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
-# Buildroot 2011.05-g7ef05e6-dirty Configuration
-# Tue Jan 31 17:10:32 2017
+# Buildroot 2011.05-dirty Configuration
+# Tue Feb  7 14:39:25 2017
 #
 BR2_HAVE_DOT_CONFIG=y
 BR2_arm=y
@@ -239,6 +239,8 @@ BR2_PACKAGE_BUSYBOX_SHOW_OTHERS=y
 # BR2_PACKAGE_FINDUTILS is not set
 # BR2_PACKAGE_FLEX is not set
 # BR2_PACKAGE_GAWK is not set
+BR2_PACKAGE_GETTEXT=y
+# BR2_PACKAGE_GETTEXT_STATIC is not set
 # BR2_PACKAGE_GMP is not set
 BR2_PACKAGE_GPERF=y
 # BR2_PACKAGE_GREP is not set
@@ -311,12 +313,9 @@ BR2_PACKAGE_PKG_CONFIG=y
 # BR2_PACKAGE_CDRKIT is not set
 # BR2_PACKAGE_CRAMFS is not set
 BR2_PACKAGE_DBUS=y
-# BR2_DBUS_EXPAT is not set
-BR2_DBUS_LIBXML2=y
-
-#
-# dbus-glib needs dbus to be compiled with expat support
-#
+BR2_DBUS_EXPAT=y
+# BR2_DBUS_LIBXML2 is not set
+BR2_PACKAGE_DBUS_GLIB=y
 BR2_PACKAGE_LIBUDEV=y
 # BR2_PACKAGE_DMRAID is not set
 BR2_PACKAGE_DOSFSTOOLS=y
@@ -608,6 +607,7 @@ BR2_PACKAGE_CAN_UTILS=y
 # BR2_PACKAGE_IPTABLES is not set
 BR2_PACKAGE_IW=y
 # BR2_PACKAGE_KISMET is not set
+BR2_PACKAGE_NETWORKMANAGER=y
 # BR2_PACKAGE_XL2TP is not set
 BR2_PACKAGE_LIGHTTPD=y
 BR2_PACKAGE_LIGHTTPD_OPENSSL=y

@@ -1,8 +1,13 @@
 config BR2_PACKAGE_DBUS_GLIB
 	bool "dbus-glib"
+	select BR2_PACKAGE_GETTEXT
+	# select BR2_PACKAGE_GETTEXT if BR2_NEEDS_GETTEXT_IF_LOCALE
 	depends on BR2_PACKAGE_DBUS
 	depends on BR2_DBUS_EXPAT
 	depends on BR2_USE_WCHAR # glib2
+	#
+	# GETTEXT is a run time dependency only.
+	#
 	select BR2_PACKAGE_LIBGLIB2
 	help
 	  GLib bindings for D-Bus.
