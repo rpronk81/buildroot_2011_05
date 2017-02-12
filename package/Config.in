@@ -487,13 +487,13 @@ source "package/xmlstarlet/Config.in"
 endmenu
 
 menu "System tools"
+source "package/polkit/Config.in"
 if BR2_PACKAGE_BUSYBOX_SHOW_OTHERS
 source "package/bootutils/Config.in"
 endif
 source "package/htop/Config.in"
 if BR2_PACKAGE_BUSYBOX_SHOW_OTHERS
 source "package/module-init-tools/Config.in"
-source "package/polkit/Config.in"
 source "package/procps/Config.in"
 source "package/psmisc/Config.in"
 source "package/sysklogd/Config.in"

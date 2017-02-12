@@ -11,7 +11,7 @@ NETWORKMANAGER_SITE = https://download.gnome.org/sources/NetworkManager/0.8/
 NETWORKMANAGER_INSTALL_STAGING = YES
 NETWORKMANAGER_INSTALL_TARGET = YES
 # GCC_PATH=$(@D)/../../host/usr/bin
-NETWORKMANAGER_DEPENDENCIES = wireless_tools libnl
+NETWORKMANAGER_DEPENDENCIES = wireless_tools libnl polkit
 #NETWORKMANAGER_AUTORECONF = YES
 
 $(eval $(call AUTOTARGETS,package,networkmanager))
