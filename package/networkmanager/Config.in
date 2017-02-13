@@ -1,7 +1,7 @@
 config BR2_PACKAGE_NETWORKMANAGER
 	bool "networkmanager"
 	select BR2_PACKAGE_DBUS
-	select BR2_PACKAGE_polkit
+	#select BR2_PACKAGE_POLKIT
 	help
 	The point of NetworkManager is to make networking configuration and
 	setup as painless and automatic as possible. If using DHCP,
