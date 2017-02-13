@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
-# Buildroot 2011.05-dirty Configuration
-# Tue Feb  7 14:39:25 2017
+# Buildroot 2011.05-g54f2490-dirty Configuration
+# Mon Feb 13 08:57:07 2017
 #
 BR2_HAVE_DOT_CONFIG=y
 BR2_arm=y
@@ -477,7 +477,8 @@ BR2_PACKAGE_OPENSSL_BIN=y
 #
 # BR2_PACKAGE_BERKELEYDB is not set
 # BR2_PACKAGE_MYSQL_CLIENT is not set
-# BR2_PACKAGE_SQLITE is not set
+BR2_PACKAGE_SQLITE=y
+# BR2_PACKAGE_SQLITE_READLINE is not set
 
 #
 # Filesystem
@@ -607,7 +608,7 @@ BR2_PACKAGE_CAN_UTILS=y
 # BR2_PACKAGE_IPTABLES is not set
 BR2_PACKAGE_IW=y
 # BR2_PACKAGE_KISMET is not set
-BR2_PACKAGE_NETWORKMANAGER=y
+BR2_PACKAGE_NETWORKMANAGER=y 
 # BR2_PACKAGE_XL2TP is not set
 BR2_PACKAGE_LIGHTTPD=y
 BR2_PACKAGE_LIGHTTPD_OPENSSL=y
@@ -702,6 +703,8 @@ BR2_PACKAGE_DASH=y
 #
 # System tools
 #
+BR2_PACKAGE_POLKIT=y
+BR2_PACKAGE_LIBNSS=y
 # BR2_PACKAGE_BOOTUTILS is not set
 # BR2_PACKAGE_HTOP is not set
 # BR2_PACKAGE_MODULE_INIT_TOOLS is not set
