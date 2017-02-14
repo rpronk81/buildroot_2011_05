@@ -1,0 +1,19 @@
+--- a/src/polkitd/main.c	2011-11-17 17:33:28.000000000 -0500
++++ b/src/polkitd/main.c	2017-02-13 14:19:12.324129935 -0500
+@@ -18,13 +18,13 @@
+  *
+  * Author: David Zeuthen <davidz@redhat.com>
+  */
+-
++#include <fcntl.h>
+ #include "config.h"
+ 
+ #include <signal.h>
+-
++#ifdef REMOVE
+ #include <glib-unix.h>
+-
++#endif
+ #include <polkit/polkit.h>
+ #include <polkitbackend/polkitbackend.h>
+ 
