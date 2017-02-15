@@ -77,5 +77,3 @@ define LIBNSS_CLEAN_CMDS
 endef
 
 $(eval $(call GENTARGETS,package,libnss))
-
-# $(eval $(generic-package))

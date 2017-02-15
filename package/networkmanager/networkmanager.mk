@@ -11,6 +11,6 @@ NETWORKMANAGER_INSTALL_STAGING = YES
 NETWORKMANAGER_INSTALL_TARGET = YES
 # GCC_PATH=$(@D)/../../host/usr/bin
 NETWORKMANAGER_DEPENDENCIES = wireless_tools libnl polkit libnss
-NETWORKMANAGER_AUTORECONF = YES
+# check this, needs to do once then apply patch to the configure file, then no reconf NETWORKMANAGER_AUTORECONF = YES
 
 $(eval $(call AUTOTARGETS,package,networkmanager))
