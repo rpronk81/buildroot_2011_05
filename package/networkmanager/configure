@@ -804,6 +804,8 @@ TARGET_PARDUS_FALSE
 TARGET_PARDUS_TRUE
 TARGET_MANDRIVA_FALSE
 TARGET_MANDRIVA_TRUE
+TARGET_UBUNTU_FALSE
+TARGET_UBUNTU_TRUE
 TARGET_FRUGALWARE_FALSE
 TARGET_FRUGALWARE_TRUE
 TARGET_PALDO_FALSE
@@ -1679,7 +1681,7 @@ Optional Packages:
   --with-docs             Build NetworkManager documentation
   --with-distro=DISTRO    Specify the Linux distribution to target: One of
                           redhat, suse, gentoo, debian, arch, slackware,
-                          paldo, mandriva or pardus
+                          paldo, mandriva, ubuntu or pardus
   --with-dist-version=<NM-distribution-version>
                           Define the NM's distribution version string
   --with-udev-dir=DIR     where the udev base directory is
@@ -6461,7 +6463,7 @@ netbsd*)
 newos6*)
   lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (executable|dynamic lib)'
   lt_cv_file_magic_cmd=/usr/bin/file
-  lt_cv_file_magic_test_file=/usr/lib/libnls.so
+  lt_cv_file_magic_test_file=/usr/lib/libnl-3.0s.so
   ;;
 
 *nto* | *qnx*)
@@ -13475,9 +13477,6 @@ $as_echo "#define AC_APPLE_UNIVERSAL_BUILD 1" >>confdefs.h
 
 
 
-if  test "$cross_compiling" = no; then :
-
-
 # Check whether --with-distro was given.
 if test "${with_distro+set}" = set; then :
   withval=$with_distro;
@@ -13655,6 +13654,25 @@ if test "x$ac_cv_file__etc_mandriva_release" = x""yes; then :
   with_distro="mandriva"
 fi
 
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for /etc/ubuntu-release" >&5
+$as_echo_n "checking for /etc/ubuntu-release... " >&6; }
+if test "${ac_cv_file__etc_ubuntu_release+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+  test "$cross_compiling" = yes &&
+  as_fn_error "cannot check for file existence when cross compiling" "$LINENO" 5
+if test -r "/etc/ubuntu-release"; then
+  ac_cv_file__etc_ubuntu_release=yes
+else
+  ac_cv_file__etc_ubuntu_release=no
+fi
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_file__etc_ubuntu_release" >&5
+$as_echo "$ac_cv_file__etc_ubuntu_release" >&6; }
+if test "x$ac_cv_file__etc_ubuntu_release" = x""yes; then :
+  with_distro="ubuntu"
+fi
+
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for /etc/pardus-release" >&5
 $as_echo_n "checking for /etc/pardus-release... " >&6; }
 if test "${ac_cv_file__etc_pardus_release+set}" = set; then :
@@ -13688,7 +13706,7 @@ else
 		redhat|suse|gentoo|debian|slackware|arch|paldo|frugalware|mandriva|pardus) ;;
 		*)
 			echo "Your distribution (${with_distro}) is not yet supported!  (patches welcome)"
-			exit 1
+			#exit 1
 			;;
 	esac
 fi
@@ -13818,6 +13836,20 @@ if test x"$with_distro" = xmandriva; then
 $as_echo "#define TARGET_MANDRIVA 1" >>confdefs.h
 
 fi
+ 
+if test x"$with_distro" = xubuntu; then
+  TARGET_UBUNTU_TRUE=
+  TARGET_UBUNTU_FALSE='#'
+else
+  TARGET_UBUNTU_TRUE='#'
+  TARGET_UBUNTU_FALSE=
+fi
+
+if test x"$with_distro" = xubuntu; then
+
+$as_echo "#define TARGET_UBUNTU 1" >>confdefs.h
+
+fi
 
  if test x"$with_distro" = xpardus; then
   TARGET_PARDUS_TRUE=
@@ -13848,8 +13880,6 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 fi
-
-fi # end cross_compile == no
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking Linux Wireless Extensions >= 18" >&5
 $as_echo_n "checking Linux Wireless Extensions >= 18... " >&6; }
@@ -14645,12 +14675,12 @@ if test -n "$LIBNL_CFLAGS"; then
     pkg_cv_LIBNL_CFLAGS="$LIBNL_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libnl-1 >= 1.0-pre8\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libnl-1 >= 1.0-pre8") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libnl-3.0 >= 3.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libnl-3.0 >= 3.0") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_LIBNL_CFLAGS=`$PKG_CONFIG --cflags "libnl-1 >= 1.0-pre8" 2>/dev/null`
+  pkg_cv_LIBNL_CFLAGS=`$PKG_CONFIG --cflags "libnl-3.0 >= 3.0" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -14661,12 +14691,12 @@ if test -n "$LIBNL_LIBS"; then
     pkg_cv_LIBNL_LIBS="$LIBNL_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libnl-1 >= 1.0-pre8\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libnl-1 >= 1.0-pre8") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libnl-3.0 >= 3.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libnl-3.0 >= 3.0") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_LIBNL_LIBS=`$PKG_CONFIG --libs "libnl-1 >= 1.0-pre8" 2>/dev/null`
+  pkg_cv_LIBNL_LIBS=`$PKG_CONFIG --libs "libnl-3.0 >= 3.0" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -14684,14 +14714,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        LIBNL_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "libnl-1 >= 1.0-pre8" 2>&1`
+	        LIBNL_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "libnl-3.0 >= 3.0" 2>&1`
         else
-	        LIBNL_PKG_ERRORS=`$PKG_CONFIG --print-errors "libnl-1 >= 1.0-pre8" 2>&1`
+	        LIBNL_PKG_ERRORS=`$PKG_CONFIG --print-errors "libnl-3.0 >= 3.0" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$LIBNL_PKG_ERRORS" >&5
 
-	as_fn_error "Package requirements (libnl-1 >= 1.0-pre8) were not met:
+	as_fn_error "Package requirements (libnl-3.0 >= 3.0) were not met:
 
 $LIBNL_PKG_ERRORS
 
@@ -14725,8 +14755,8 @@ fi
 
 
 
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libnl address caching bug" >&5
-$as_echo_n "checking for libnl address caching bug... " >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libnl-3.0 address caching bug" >&5
+$as_echo_n "checking for libnl-3.0 address caching bug... " >&6; }
     save_CFLAGS="$CFLAGS"
     save_LDFLAGS="$LDFLAGS"
     CFLAGS="$CFLAGS $LIBNL_CFLAGS"
@@ -14799,7 +14829,7 @@ $as_echo "#define LIBNL_NEEDS_ADDR_CACHING_WORKAROUND 1" >>confdefs.h
 
     2) { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes, and workaround doesn't work" >&5
 $as_echo "yes, and workaround doesn't work" >&6; }
-       as_fn_error "Installed libnl has broken address caching; please patch or upgrade" "$LINENO" 5
+       as_fn_error "Installed libnl-3.0 has broken address caching; please patch or upgrade" "$LINENO" 5
        ;;
 
     cross) { $as_echo "$as_me:${as_lineno-$LINENO}: result: cross-compiling... assuming it works!" >&5
@@ -14808,7 +14838,7 @@ $as_echo "cross-compiling... assuming it works!" >&6; }
 
     *) { $as_echo "$as_me:${as_lineno-$LINENO}: result: ?" >&5
 $as_echo "?" >&6; }
-       as_fn_error "libnl test program failed" "$LINENO" 5
+       as_fn_error "libnl-3.0 test program failed" "$LINENO" 5
        ;;
 esac
 
@@ -15994,6 +16024,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${TARGET_MANDRIVA_TRUE}" && test -z "${TARGET_MANDRIVA_FALSE}"; then
   as_fn_error "conditional \"TARGET_MANDRIVA\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${TARGET_UBUNTU_TRUE}" && test -z "${TARGET_UBUNTU_FALSE}"; then
+  as_fn_error "conditional \"TARGET_UBUNTU\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${TARGET_PARDUS_TRUE}" && test -z "${TARGET_PARDUS_FALSE}"; then
