@@ -28,11 +28,11 @@ NETWORKMANAGER_CONF_ENV = \
 	ac_cv_path_LIBGCRYPT_CONFIG=$(STAGING_DIR)/usr/bin/libgcrypt-config \
 	ac_cv_file__etc_fedora_release=no \
 	ac_cv_file__etc_mandriva_release=no \
-	ac_cv_file__etc_debian_version=no \
+	ac_cv_file__etc_debian_version=yes \
 	ac_cv_file__etc_redhat_release=no \
 	ac_cv_file__etc_gentoo_release=no \
 	ac_cv_file__etc_arch_release=no \
- 	ac_cv_file__etc_ubuntu_release=yes \
+ 	ac_cv_file__etc_ubuntu_release=no \
 	ac_cv_file__etc_slackware_version=no \
 	ac_cv_file__etc_paldo_release=no \
 	ac_cv_file__etc_frugalware_release=no \
@@ -43,12 +43,13 @@ NETWORKMANAGER_CONF_ENV = \
 
 NETWORKMANAGER_CONF_OPT = \
 		--mandir=$(STAGING_DIR)/usr/man/ \
-#		--disable-tests 
+		--disable-tests \
 		--disable-more-warnings \
 		--without-docs \
 		--disable-gtk-doc \
 		--localstatedir=/var \
-#		--with-crypto=gnutls 
+		--with-crypto=gnutls \
+		--with-distro=debian \
 		--disable-ppp \
 		--with-iptables=/usr/sbin/iptables \
 		--disable-ifupdown \
