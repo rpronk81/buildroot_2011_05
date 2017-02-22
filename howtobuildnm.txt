@@ -1,0 +1,20 @@
+cd /media/robert/50G/temp/buildroot_2011_05/output/build/networkmanager-0.8.1$ 
+ 
+rm -rf output/build/networkmanager-0.8.1/
+make
+./bunm2.sh 
+
+cd output/build/networkmanager-0.8.1/
+patch -p1 -i ../../../package/networkmanager/patches/networkmanager-4.patch 
+
+patching file configure
+Hunk #1 succeeded at 6461 (offset 40 lines).
+Hunk #2 succeeded at 14640 (offset -154 lines).
+Hunk #3 succeeded at 14656 (offset -154 lines).
+Hunk #4 succeeded at 14679 (offset -156 lines).
+Hunk #5 succeeded at 14720 (offset -157 lines).
+Hunk #6 succeeded at 14794 (offset -157 lines).
+Hunk #7 succeeded at 14803 (offset -157 lines).
+
+cd -
+./bunm2.sh
