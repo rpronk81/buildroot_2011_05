@@ -43,17 +43,13 @@ NETWORKMANAGER_CONF_ENV = \
 
 NETWORKMANAGER_CONF_OPT = \
 		--mandir=$(STAGING_DIR)/usr/man/ \
-		--disable-tests \
 		--disable-more-warnings \
 		--without-docs \
 		--disable-gtk-doc \
 		--localstatedir=/var \
 		--with-crypto=gnutls \
 		--with-distro=debian \
-		--disable-ppp \
-		--with-iptables=/usr/sbin/iptables \
-		--disable-ifupdown \
-		--disable-ifnet
+		--with-iptables=/usr/sbin/iptables 
 
 # uClibc by default doesn't have backtrace support, so don't use it
 ifeq ($(BR2_TOOLCHAIN_BUILDROOT)$(BR2_TOOLCHAIN_EXTERNAL_UCLIBC)$(BR2_TOOLCHAIN_CTNG_uClibc),y)
