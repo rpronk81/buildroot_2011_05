@@ -5,27 +5,18 @@
 #############################################################
 
 NETWORKMANAGER_VERSION_MAJOR = 0.8
-#NETWORKMANAGER_VERSION_MAJOR = 0.9
 NETWORKMANAGER_VERSION = $(NETWORKMANAGER_VERSION_MAJOR).1
-#NETWORKMANAGER_VERSION = $(NETWORKMANAGER_VERSION_MAJOR).8.0
 NETWORKMANAGER_SOURCE = NetworkManager-0.8.1.tar.bz2
-#NETWORKMANAGER_SOURCE = NetworkManager-$(NETWORKMANAGER_VERSION).tar.xz
 NETWORKMANAGER_SITE = https://download.gnome.org/sources/NetworkManager/$(NETWORKMANAGER_VERSION_MAJOR)
-#NETWORKMANAGER_SITE = http://ftp.gnome.org/pub/GNOME/sources/NetworkManager/$(NETWORKMANAGER_VERSION_MAJOR)
-# NETWORKMANGER_AUTORECONF = YES
 NETWORKMANAGER_INSTALL_STAGING = YES
 NETWORKMANAGER_DEPENDENCIES = wireless_tools libnl polkit libnss pppd \
 	$(if $(BR2_NEEDS_GETTEXT_IF_LOCALE),gettext) \
 	host-pkg-config \
 	host-intltool
 
-#NETWORKMANAGER_DEPENDENCIES = host-pkg-config udev dbus-glib libnl \
-#	libgcrypt wireless_tools util-linux host-intltool
-
-#	ac_cv_env_CFLAGS_value=-I $(STAGING_DIR)/../../../../build/pppd-2.4.5  \
-
 NETWORKMANAGER_CONF_ENV = \
 	ac_cv_path_LIBGCRYPT_CONFIG=$(STAGING_DIR)/usr/bin/libgcrypt-config \
+	CFLAGS="$(TARGET_CFLAGS) -I$(BUILD_DIR)/pppd-2.4.5" \
 	ac_cv_file__etc_fedora_release=no \
 	ac_cv_file__etc_mandriva_release=no \
 	ac_cv_file__etc_debian_version=yes \
@@ -40,7 +31,6 @@ NETWORKMANAGER_CONF_ENV = \
 	ac_cv_file__etc_pardus_release=no \
 	ac_cv_file__etc_SuSE_release=no
 
-
 NETWORKMANAGER_CONF_OPT = \
 		--mandir=$(STAGING_DIR)/usr/man/ \
 		--disable-more-warnings \
@@ -49,12 +39,14 @@ NETWORKMANAGER_CONF_OPT = \
 		--localstatedir=/var \
 		--with-crypto=gnutls \
 		--with-distro=debian \
-		--with-iptables=/usr/sbin/iptables 
+		--with-iptables=/usr/sbin/iptables
 
-define NETWORKMANGER_PRE_BUILD_FIXUP
-	postconfig.sh
+# Remove the "tests" target from the src/makefile
+NETWORKMANAGER_DIR:=$(BUILD_DIR)/networkmanager-0.8.1
+define NETWORKMANGER_POST_CONFIGURE_FIXUP
+	cd $(NETWORKMANAGER_DIR) && patch -p1 -i $(NETWORKMANAGER_DIR)/../../../package/networkmanager/networkmanager-9.patch.postconfigure
 endef
-NETWORKMANAGER_PRE_BUILD_HOOKS += NETWORKMANGER_PRE_BUILD_FIXUP
+NETWORKMANAGER_POST_CONFIGURE_HOOKS += NETWORKMANGER_POST_CONFIGURE_FIXUP
 
 # uClibc by default doesn't have backtrace support, so don't use it
 ifeq ($(BR2_TOOLCHAIN_BUILDROOT)$(BR2_TOOLCHAIN_EXTERNAL_UCLIBC)$(BR2_TOOLCHAIN_CTNG_uClibc),y)
@@ -64,8 +56,6 @@ endif
 define NETWORKMANAGER_INSTALL_INIT_SYSV
 	$(INSTALL) -m 0755 -D package/network-manager/S45network-manager $(TARGET_DIR)/etc/init.d/S45network-manager
 endef
-
-#$(eval $(autotools-package))
 
 $(eval $(call AUTOTARGETS,package,networkmanager))
 
