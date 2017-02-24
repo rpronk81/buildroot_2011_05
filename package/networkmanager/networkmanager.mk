@@ -51,6 +51,11 @@ NETWORKMANAGER_CONF_OPT = \
 		--with-distro=debian \
 		--with-iptables=/usr/sbin/iptables 
 
+define NETWORKMANGER_PRE_BUILD_FIXUP
+	postconfig.sh
+endef
+NETWORKMANAGER_PRE_BUILD_HOOKS += NETWORKMANGER_PRE_BUILD_FIXUP
+
 # uClibc by default doesn't have backtrace support, so don't use it
 ifeq ($(BR2_TOOLCHAIN_BUILDROOT)$(BR2_TOOLCHAIN_EXTERNAL_UCLIBC)$(BR2_TOOLCHAIN_CTNG_uClibc),y)
 NETWORKMANAGER_CONF_OPT += --disable-crashtrace

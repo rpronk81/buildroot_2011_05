@@ -1,0 +1,34 @@
+--- a/src/drivers/drivers.mk	2014-10-09 10:41:31.000000000 -0400
++++ b/src/drivers/drivers.mk	2017-02-24 09:14:54.690801780 -0500
+@@ -42,10 +42,10 @@
+     DRV_LIBS += -lnl
+   endif
+ 
+-  ifdef CONFIG_LIBNL20
+-    DRV_LIBS += -lnl-genl
+-    DRV_CFLAGS += -DCONFIG_LIBNL20
+-  endif
++#  ifdef CONFIG_LIBNL20
++#    DRV_LIBS += -lnl-genl
++#    DRV_CFLAGS += -DCONFIG_LIBNL20
++#  endif
+ endif
+ endif
+ 
+@@ -172,11 +172,11 @@
+     DRV_LIBS += -lnl
+   endif
+ 
+-  ifdef CONFIG_LIBNL20
+-    DRV_LIBS += -lnl-genl
+-    DRV_LIBS += -lnl-route
+-    DRV_CFLAGS += -DCONFIG_LIBNL20
+-  endif
++#  ifdef CONFIG_LIBNL20
++#    DRV_LIBS += -lnl-genl
++#    DRV_LIBS += -lnl-route
++#    DRV_CFLAGS += -DCONFIG_LIBNL20
++#  endif
+ endif
+ endif
+ endif

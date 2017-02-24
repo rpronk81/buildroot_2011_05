@@ -1,0 +1,29 @@
+--- a/wpa_supplicant/defconfig	2014-10-09 10:41:31.000000000 -0400
++++ b/wpa_supplicant/defconfig	2017-02-24 09:14:39.681444419 -0500
+@@ -29,7 +29,7 @@
+ CONFIG_DRIVER_WEXT=y
+ 
+ # Driver interface for Linux drivers using the nl80211 kernel interface
+-CONFIG_DRIVER_NL80211=y
++# CONFIG_DRIVER_NL80211=y
+ 
+ # driver_nl80211.c requires libnl. If you are compiling it yourself
+ # you may need to point hostapd to your version of libnl.
+@@ -71,7 +71,7 @@
+ #CONFIG_DRIVER_TEST=y
+ 
+ # Driver interface for wired Ethernet drivers
+-CONFIG_DRIVER_WIRED=y
++#CONFIG_DRIVER_WIRED=y
+ 
+ # Driver interface for the Broadcom RoboSwitch family
+ #CONFIG_DRIVER_ROBOSWITCH=y
+@@ -172,7 +172,7 @@
+ 
+ # Smartcard support (i.e., private key on a smartcard), e.g., with openssl
+ # engine.
+-CONFIG_SMARTCARD=y
++#CONFIG_SMARTCARD=y
+ 
+ # PC/SC interface for smartcards (USIM, GSM SIM)
+ # Enable this if EAP-SIM or EAP-AKA is included

@@ -1,0 +1,10 @@
+--- a/Makefile	2017-02-23 13:51:18.027850943 -0500
++++ b/Makefile	2017-02-23 13:51:53.881428824 -0500
+@@ -23,7 +23,6 @@
+ ALL = iw
+ 
+ NL1FOUND := $(shell $(PKG_CONFIG) --atleast-version=1 libnl-1 && echo Y)
+-NL2FOUND := $(shell $(PKG_CONFIG) --atleast-version=2 libnl-2.0 && echo Y)
+ 
+ ifeq ($(NL1FOUND),Y)
+ NLLIBNAME = libnl-1

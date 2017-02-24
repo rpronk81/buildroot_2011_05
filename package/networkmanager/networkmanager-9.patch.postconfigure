@@ -1,0 +1,10 @@
+--- a/src/Makefile	2017-02-23 11:46:08.059725695 -0500
++++ b/src/Makefile	2017-02-23 11:46:19.203946052 -0500
+@@ -402,7 +402,6 @@
+ 	bluez-manager \
+ 	system-settings \
+ 	. \
+-	tests
+ 
+ INCLUDES = -I${top_srcdir}                   \
+            -I${top_srcdir}/include           \
