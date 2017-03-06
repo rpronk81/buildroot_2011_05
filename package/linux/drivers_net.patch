@@ -1,0 +1,44 @@
+Index: linux-2.6.34/drivers/net/fec_mpc52xx.c
+===================================================================
+--- linux-2.6.34.orig/drivers/net/fec_mpc52xx.c	2010-05-16 23:17:36.000000000 +0200
++++ linux-2.6.34/drivers/net/fec_mpc52xx.c	2010-08-16 18:31:37.000000000 +0200
+@@ -84,6 +84,17 @@
+ module_param(debug, int, 0);
+ MODULE_PARM_DESC(debug, "debugging messages level");
+ 
++static void __init mpc52xx_fec_str2mac(const char *str, unsigned char *mac)
++{
++	int i;
++	u64 val64;
++
++	val64 = simple_strtoull(str, NULL, 16);
++
++	for (i = 0; i < 6; i++)
++		mac[5-i] = val64 >> (i*8);
++}
++
+ static void mpc52xx_fec_tx_timeout(struct net_device *dev)
+ {
+ 	struct mpc52xx_fec_priv *priv = netdev_priv(dev);
+@@ -932,8 +943,19 @@
+ 	/* MAC address init */
+ 	if (!is_zero_ether_addr(mpc52xx_fec_mac_addr))
+ 		memcpy(ndev->dev_addr, mpc52xx_fec_mac_addr, 6);
+-	else
+-		mpc52xx_fec_get_paddr(ndev, ndev->dev_addr);
++	else {
++		const char *prop_addr;
++		prop_addr = of_get_property(op->node, "men-mac-address", NULL);
++		
++		if (prop_addr == NULL) {
++			printk(KERN_ERR DRIVER_NAME ": Can't get mac-address from"
++				" device tree. Reading FEC registers.\n" );
++			mpc52xx_fec_get_paddr(ndev, ndev->dev_addr);
++		} else {
++			printk(DRIVER_NAME ": Using MAC %s.\n", prop_addr);
++			mpc52xx_fec_str2mac(prop_addr, ndev->dev_addr);
++		}
++	}
+ 
+ 	priv->msg_enable = netif_msg_init(debug, MPC52xx_MESSAGES_DEFAULT);
+ 

@@ -1,0 +1,34 @@
+!!! It is not guaranteed by the USB subsystem in which order will be detected USB devices.
+!!! Since the root filesystem is located on the onboard USB flash and a USB mass storage
+!!! device could be inserted in the USB ports we will make all USB devices unauthorized.
+!!! The only exception is the onboard USB flash. The device authorization is done
+!!! in user space by udev rule
+--- linux/drivers/usb/core/usb.c.ori	2010-11-07 20:57:12.000000000 +0100
++++ linux/drivers/usb/core/usb.c	2010-11-24 15:37:25.000000000 +0100
+@@ -454,7 +454,14 @@ struct usb_device *usb_alloc_dev(struct
+ 	if (root_hub)	/* Root hub always ok [and always wired] */
+ 		dev->authorized = 1;
+ 	else {
+-		dev->authorized = usb_hcd->authorized_default;
++		if (!strcmp(bus->bus_name, "0000:00:18.2") && (port1 == 4)) {
++			/* 
++			 * authorize SPACECOM2 onboard USB flash connecte to the port 4,
++			 * the rest of the USB devices is unauthorized by default
++			 */
++			dev->authorized = 1;
++		} else
++			dev->authorized = usb_hcd->authorized_default;
+ 		dev->wusb = usb_bus_is_wusb(bus)? 1 : 0;
+ 	}
+ 	return dev;
+--- linux/drivers/usb/core/hcd.c.ori	2010-11-07 20:57:12.000000000 +0100
++++ linux/drivers/usb/core/hcd.c	2010-11-24 15:31:12.000000000 +0100
+@@ -2133,7 +2133,7 @@ int usb_add_hcd(struct usb_hcd *hcd,
+ 
+ 	dev_info(hcd->self.controller, "%s\n", hcd->product_desc);
+ 
+-	hcd->authorized_default = hcd->wireless? 0 : 1;
++	hcd->authorized_default = 0;
+ 	set_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
+ 
+ 	/* HC is in reset state, but accessible.  Now do the one-time init,
