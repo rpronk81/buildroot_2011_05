@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
-# Buildroot 2011.05-gdbd9369-dirty Configuration
-# Wed Feb 22 09:51:54 2017
+# Buildroot 2011.05-g5507525 Configuration
+# Tue Feb 28 13:58:33 2017
 #
 BR2_HAVE_DOT_CONFIG=y
 BR2_arm=y
@@ -42,6 +42,31 @@ BR2_arm926t=y
 BR2_ARM_TYPE="ARM926T"
 BR2_ARM_EABI=y
 # BR2_ARM_OABI is not set
+# BR2_x86_i386 is not set
+# BR2_x86_i486 is not set
+# BR2_x86_i586 is not set
+# BR2_x86_i686 is not set
+# BR2_x86_pentiumpro is not set
+# BR2_x86_pentium_mmx is not set
+# BR2_x86_pentium_m is not set
+# BR2_x86_pentium2 is not set
+# BR2_x86_pentium3 is not set
+# BR2_x86_pentium4 is not set
+# BR2_x86_prescott is not set
+# BR2_x86_nocona is not set
+# BR2_x86_core2 is not set
+# BR2_x86_k6 is not set
+# BR2_x86_k6_2 is not set
+# BR2_x86_athlon is not set
+# BR2_x86_athlon_4 is not set
+# BR2_x86_opteron is not set
+# BR2_x86_opteron_sse3 is not set
+# BR2_x86_barcelona is not set
+# BR2_x86_geode is not set
+# BR2_x86_c3 is not set
+# BR2_x86_c32 is not set
+# BR2_x86_winchip_c6 is not set
+# BR2_x86_winchip2 is not set
 BR2_ARCH="arm"
 BR2_ENDIAN="LITTLE"
 BR2_GCC_TARGET_TUNE="arm926ej-s"

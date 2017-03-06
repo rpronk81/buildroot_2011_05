@@ -44,7 +44,7 @@ NETWORKMANAGER_CONF_OPT = \
 # Remove the "tests" target from the src/makefile
 NETWORKMANAGER_DIR:=$(BUILD_DIR)/networkmanager-0.8.1
 define NETWORKMANGER_POST_CONFIGURE_FIXUP
-	cd $(NETWORKMANAGER_DIR) && patch -p1 -i $(NETWORKMANAGER_DIR)/../../../package/networkmanager/networkmanager-9.patch.postconfigure
+	cd $(NETWORKMANAGER_DIR) && patch -p1 -i $(BUILD_DIR)/../../../buildroot/package/networkmanager/networkmanager-9.patch.postconfigure
 endef
 NETWORKMANAGER_POST_CONFIGURE_HOOKS += NETWORKMANGER_POST_CONFIGURE_FIXUP
 
