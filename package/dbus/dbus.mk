@@ -3,11 +3,11 @@
 # dbus
 #
 #############################################################
-DBUS_VERSION = 1.2.24
+DBUS_VERSION = 1.5.12
+#DBUS_VERSION = 1.4.24
 DBUS_SOURCE = dbus-$(DBUS_VERSION).tar.gz
 DBUS_SITE = http://dbus.freedesktop.org/releases/dbus/
 DBUS_INSTALL_STAGING = YES
-DBUS_INSTALL_TARGET = YES
 
 DBUS_DEPENDENCIES = host-pkg-config
 
@@ -25,6 +25,10 @@ DBUS_CONF_OPT = --program-prefix="" \
 		--localstatedir=/var \
 		--with-system-socket=/var/run/dbus/system_bus_socket \
 		--with-system-pid-file=/var/run/messagebus.pid
+
+ifeq ($(BR2_PACKAGE_SYSTEMD),y)
+DBUS_CONF_OPT += --with-systemdsystemunitdir=/lib/systemd/system
+endif
 
 ifeq ($(BR2_DBUS_EXPAT),y)
 DBUS_CONF_OPT += --with-xml=expat
@@ -62,7 +66,7 @@ define DBUS_INSTALL_TARGET_FIXUP
 	$(INSTALL) -m 0755 -D package/dbus/S30dbus $(TARGET_DIR)/etc/init.d/S30dbus
 endef
 
-DBUS_POST_INSTALL_TARGET_HOOKS += DBUS_INSTALL_TARGET_FIXUP
+# DBUS_POST_INSTALL_TARGET_HOOKS += DBUS_INSTALL_TARGET_FIXUP
 
 HOST_DBUS_DEPENDENCIES = host-pkg-config host-expat
 HOST_DBUS_CONF_OPT = \

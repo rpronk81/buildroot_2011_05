@@ -22,6 +22,7 @@ DBUS_GLIB_CONF_OPT = --localstatedir=/var \
 		--disable-doxygen-docs \
 		--enable-asserts=yes
 
+# DBUS_GLIB_DEPENDENCIES = dbus host-dbus host-dbus-glib host-pkg-config libglib2 expat
 DBUS_GLIB_DEPENDENCIES = host-pkg-config dbus host-dbus host-dbus-glib libglib2 expat
 
 HOST_DBUS_GLIB_DEPENDENCIES = host-dbus host-expat host-libglib2
