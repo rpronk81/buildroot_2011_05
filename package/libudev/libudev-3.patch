@@ -1,0 +1,16 @@
+--- a/docs/gudev/Makefile.am	2016-12-22 20:38:26.000000000 -0500
++++ b/docs/gudev/Makefile.am	2017-01-18 16:02:54.724924335 -0500
+@@ -95,11 +95,11 @@
+ 	$(top_builddir)/libgudev-1.0.la
+ 
+ # This includes the standard gtk-doc make rules, copied by gtkdocize.
+-include $(top_srcdir)/docs/gtk-doc.make
++# include $(top_srcdir)/docs/gtk-doc.make
+ 
+ # Other files to distribute
+ # e.g. EXTRA_DIST += version.xml.in
+-EXTRA_DIST += version.xml.in
++EXTRA_DIST = version.xml.in
+ 
+ # Files not to distribute
+ # for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types

@@ -1,0 +1,14 @@
+--- a/src/core/namespace.h	2016-12-22 20:38:27.000000000 -0500
++++ b/src/core/namespace.h	2017-02-03 16:00:52.523071467 -0500
+@@ -22,9 +22,9 @@
+ ***/
+ 
+ #include <stdbool.h>
+-
++#ifdef REMOVE
+ typedef struct ExecContext ExecContext;
+-
++#endif
+ int setup_tmpdirs(char **tmp_dir, char **var_tmp_dir);
+ int setup_namespace(char **read_write_dirs,
+                     char **read_only_dirs,

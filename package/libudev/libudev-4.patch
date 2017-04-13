@@ -1,0 +1,26 @@
+--- a/src/test/test-ns.c	2016-12-22 20:38:27.000000000 -0500
++++ b/src/test/test-ns.c	2017-02-05 16:26:29.615928042 -0500
+@@ -24,12 +24,13 @@
+ #include <unistd.h>
+ #include <sys/mount.h>
+ #include <linux/fs.h>
+-
++#ifdef REMOVE
+ #include "namespace.h"
+ #include "execute.h"
+ #include "log.h"
+-
++#endif
+ int main(int argc, char *argv[]) {
++#ifdef REMOVE
+         const char * const writable[] = {
+                 "/home",
+                 NULL
+@@ -68,6 +69,6 @@
+ 
+         execl("/bin/sh", "/bin/sh", NULL);
+         log_error("execl(): %m");
+-
++#endif
+         return 1;
+ }

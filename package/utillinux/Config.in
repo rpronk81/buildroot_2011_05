@@ -1,0 +1,108 @@
+config BR2_PACKAGE_UTILLINUX
+	bool "utillinux"
+	depends on BR2_LARGEFILE
+	depends on BR2_USE_WCHAR
+	help
+	  Various useful/essential Linux utilities.
+
+	  Things like mkfs, mkswap, swapon, fdisk, mount, dmesg, etc...
+
+	  http://www.kernel.org/pub/linux/utils/util-linux/
+
+if BR2_PACKAGE_UTILLINUX
+
+############################################
+# default enabled and should be disabled by
+#  --disable-foo
+#
+
+config BR2_PACKAGE_UTILLINUX_MOUNT
+	bool "build mount utilties"
+	select BR2_PACKAGE_UTILLINUX_LIBBLKID
+
+config BR2_PACKAGE_UTILLINUX_FSCK
+	select BR2_PACKAGE_UTILLINUX_LIBBLKID
+	bool "build \"fsck\""
+
+config BR2_PACKAGE_UTILLINUX_LIBMOUNT
+	select BR2_PACKAGE_UTILLINUX_LIBBLKID
+	bool "build libmount"
+
+config BR2_PACKAGE_UTILLINUX_LIBUUID
+	bool "build libuuid and uuid utilities"
+	default y
+
+config BR2_PACKAGE_UTILLINUX_UUIDD
+	bool "build \"uuidd\""
+
+config BR2_PACKAGE_UTILLINUX_LIBBLKID
+	select BR2_PACKAGE_UTILLINUX_LIBUUID
+	bool "build libblkid and blkid utilities"
+	default y
+
+config BR2_PACKAGE_UTILLINUX_AGETTY
+	bool "build \"agetty\""
+
+config BR2_PACKAGE_UTILLINUX_CRAMFS
+	bool "build \"fsck.cramfs, mkfs.cramfs\""
+
+config BR2_PACKAGE_UTILLINUX_SWITCH_ROOT
+	bool "build \"switch_root\""
+
+config BR2_PACKAGE_UTILLINUX_PIVOT_ROOT
+	bool "build \"pivot_root\""
+
+config BR2_PACKAGE_UTILLINUX_FALLOCATE
+	bool "build \"fallocate\""
+
+config BR2_PACKAGE_UTILLINUX_UNSHARE
+	bool "build \"unshare\""
+
+config BR2_PACKAGE_UTILLINUX_RENAME
+	bool "build \"rename\""
+
+config BR2_PACKAGE_UTILLINUX_SCHEDUTILS
+	bool "build \"chrt, ionice, teskset\""
+
+config BR2_PACKAGE_UTILLINUX_WALL
+	bool "build \"wall\""
+
+config BR2_PACKAGE_UTILLINUX_PARTX
+	bool "build \"addpart, delpart, partx\""
+	select BR2_PACKAGE_UTILLINUX_LIBBLKID
+
+############################################
+# default disabled and should be enabled by
+#  --enable-foo
+#
+config BR2_PACKAGE_UTILLINUX_ARCH
+	bool "build \"arch\""
+
+config BR2_PACKAGE_UTILLINUX_INIT
+	bool "build \"simpleinit, shutdown, initctl\""
+
+config BR2_PACKAGE_UTILLINUX_KILL
+	bool "build \"kill\""
+
+config BR2_PACKAGE_UTILLINUX_LAST
+	bool "build \"last\""
+
+config BR2_PACKAGE_UTILLINUX_MESG
+	bool "build \"mesg\""
+
+config BR2_PACKAGE_UTILLINUX_RAW
+	bool "build \"raw\""
+
+config BR2_PACKAGE_UTILLINUX_RESET
+	bool "build \"reset\""
+
+config BR2_PACKAGE_UTILLINUX_LOGIN_UTILS
+	bool "build \"chfn, chsh, login, newgrp, vipw\""
+
+config BR2_PACKAGE_UTILLINUX_WRITE
+	bool "build \"write\""
+
+endif
+
+comment "utillinux requires a toolchain with LARGEFILE + WCHAR support"
+	depends on !(BR2_LARGEFILE && BR2_USE_WCHAR)
