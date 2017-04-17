@@ -110,9 +110,9 @@ $(STAGING_DIR)/$(GETTEXT_TARGET_BINARY): $(GETTEXT_DIR)/$(GETTEXT_BINARY)
 	$(SED) "s,^libdir=.*,libdir=\'$(STAGING_DIR)/usr/lib\',g" $(STAGING_DIR)/usr/lib/libgettextpo.la
 	$(SED) "s,^libdir=.*,libdir=\'$(STAGING_DIR)/usr/lib\',g" $(STAGING_DIR)/usr/lib/libgettextsrc.la
 	$(SED) "s,^libdir=.*,libdir=\'$(STAGING_DIR)/usr/lib\',g" $(STAGING_DIR)/usr/lib/libintl.la
-	rm -f $(addprefix $(STAGING_DIR)/usr/bin/, \
-		autopoint envsubst gettext.sh gettextize msg* ?gettext)
-	touch -c $@
+	#rm -f $(addprefix $(STAGING_DIR)/usr/bin/, \
+	#	autopoint envsubst gettext.sh gettextize msg* ?gettext)
+	#touch -c $@
 
 gettext: host-pkg-config $(if $(BR2_PACKAGE_LIBICONV),libiconv) $(STAGING_DIR)/$(GETTEXT_TARGET_BINARY)
 
@@ -163,3 +163,5 @@ endif
 ifeq ($(BR2_PACKAGE_GETTEXT),y)
 TARGETS+=gettext
 endif
+
+$(eval $(call AUTOTARGETS,package,gettext))

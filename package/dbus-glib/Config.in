@@ -3,7 +3,6 @@ config BR2_PACKAGE_DBUS_GLIB
 	select BR2_PACKAGE_GETTEXT
 	# select BR2_PACKAGE_GETTEXT if BR2_NEEDS_GETTEXT_IF_LOCALE
 	depends on BR2_PACKAGE_DBUS
-	depends on BR2_DBUS_EXPAT
 	depends on BR2_USE_WCHAR # glib2
 	#
 	# GETTEXT is a run time dependency only.
@@ -13,9 +12,6 @@ config BR2_PACKAGE_DBUS_GLIB
 	  GLib bindings for D-Bus.
 
 	  http://www.freedesktop.org/software/dbus
-
-comment "dbus-glib needs dbus to be compiled with expat support"
-	depends on BR2_PACKAGE_DBUS && !BR2_DBUS_EXPAT
 
 comment "dbus-glib requires a toolchain with WCHAR support"
 	depends on BR2_PACKAGE_DBUS && !BR2_USE_WCHAR
