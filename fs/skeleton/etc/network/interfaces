@@ -2,3 +2,6 @@
 auto lo
 iface lo inet loopback
 
+auto wlan0
+iface wlan inet dhcp
+	wireless-essid SPACE

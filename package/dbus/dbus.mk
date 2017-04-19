@@ -4,7 +4,6 @@
 #
 #############################################################
 DBUS_VERSION = 1.5.12
-#DBUS_VERSION = 1.4.24
 DBUS_SOURCE = dbus-$(DBUS_VERSION).tar.gz
 DBUS_SITE = http://dbus.freedesktop.org/releases/dbus/
 DBUS_INSTALL_STAGING = YES

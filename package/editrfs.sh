@@ -10,17 +10,17 @@ mkdir output/target/lib/firmware
 cp -fr package/redpine output/target/lib/firmware/
 
 echo "Expanding elinos_rfs tar files to this RFS"
-SPACE_RFS_ADD_ONS=/home/robert/Downloads/elinos_rfs/buildrootrftaddons
-tar -xf $SPACE_RFS_ADD_ONS/bin.tar         -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/etc.tar         -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/firmware.tar    -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/sbin.tar        -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/updater.tar     -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/usrbin.tar      -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/usr_libexec.tar -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/usr_local.tar   -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/www.tar         -C output/target
-
+SPACE_RFS_ADD_ONS=package/customize/source
+#tar -xf $SPACE_RFS_ADD_ONS/bin.tar         -C output/target
+#tar -xf $SPACE_RFS_ADD_ONS/etc.tar         -C output/target
+#tar -xf $SPACE_RFS_ADD_ONS/firmware.tar    -C output/target
+#tar -xf $SPACE_RFS_ADD_ONS/sbin.tar        -C output/target
+#tar -xf $SPACE_RFS_ADD_ONS/updater.tar     -C output/target
+#tar -xf $SPACE_RFS_ADD_ONS/usrbin.tar      -C output/target
+#tar -xf $SPACE_RFS_ADD_ONS/usr_libexec.tar -C output/target
+#tar -xf $SPACE_RFS_ADD_ONS/usr_local.tar   -C output/target
+#tar -xf $SPACE_RFS_ADD_ONS/www.tar         -C output/target
+STARTINGPOINT=$PWD
 cd output/target/usr/share/locale/
 rm -rf \
 af   be@latin     cs           en_CA    eu  he  it  locale.alias  mn   nn  pt     sl        te  vi \
@@ -31,6 +31,7 @@ ast  bs           dz           eo       ga  hy  kn  mg            nds  pa  rw   
 az   ca           el           es       gl  id  ko  mk            ne   pl  si     sv        ug  zh_HK \
 be   ca@valencia  en@boldquot  et       gu  is  ku  ml            nl   ps  sk     ta        uk  zh_TW \
 
+chmod -R a+x $STARTINGPOINT/output/target/etc/init.d/*
 
 echo "Done expanding elinos_rfs tar files to this RFS"
 
