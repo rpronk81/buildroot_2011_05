@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
-# Buildroot 2011.05-g05fece3-dirty Configuration
-# Thu Apr 13 08:36:43 2017
+# Buildroot 2011.05-g35c7690-dirty Configuration
+# Tue Apr 18 12:02:17 2017
 #
 BR2_HAVE_DOT_CONFIG=y
 BR2_arm=y
@@ -158,7 +158,7 @@ BR2_BUSYBOX_VERSION_1_18_X=y
 BR2_BUSYBOX_VERSION="1.18.4"
 BR2_PACKAGE_BUSYBOX_CONFIG="package/busybox/busybox.config"
 BR2_PACKAGE_BUSYBOX_SHOW_OTHERS=y
-# BR2_PACKAGE_CUSTOMIZE is not set
+BR2_PACKAGE_CUSTOMIZE=y
 
 #
 # Audio and video libraries and applications
@@ -782,7 +782,7 @@ BR2_LINUX_KERNEL_CUSTOM_VERSION=y
 # BR2_LINUX_KERNEL_CUSTOM_TARBALL is not set
 BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="2.6.34"
 BR2_LINUX_KERNEL_VERSION="2.6.34"
-BR2_LINUX_KERNEL_PATCH="package/34to3412.patch package/ns921-1.patch package/ns921-2.patch package/ns921-3.patch package/linux_config.patch"
+BR2_LINUX_KERNEL_PATCH="package/34to3412.patch package/ns921-1.patch package/ns921-2.patch package/ns921-3.patch /home/robert/svn/trunk/buildroot/ns921-non_gpl.patch package/linux_config.patch"
 # BR2_LINUX_KERNEL_USE_DEFCONFIG is not set
 BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
 BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="output/build/linux-2.6.34/arch/arm/configs/spacecom_lite_defconfig"
