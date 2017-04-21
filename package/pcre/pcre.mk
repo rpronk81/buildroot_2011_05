@@ -7,6 +7,7 @@
 PCRE_VERSION = 7.9
 PCRE_SITE = ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre
 PCRE_INSTALL_STAGING = YES
+PCRE_INSTALL_TARGET = YES
 
 ifneq ($(BR2_INSTALL_LIBSTDCPP),y)
 # pcre will use the host g++ if a cross version isn't available

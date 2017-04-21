@@ -5,17 +5,9 @@
 /               /              jffs2    rw,relatime       0      0
 
 /dev/mntblock2  /.flash        jffs2    rw,relatime       0      0 
-/dev/mntblock2  /bin           jffs2    rw,relatime       0      0 
 /dev/mntblock2  /configExport  jffs2    rw,relatime       0      0 
-/dev/mntblock2  /etc           jffs2    rw,relatime       0      0 
-/dev/mntblock2  /lib           jffs2    rw,relatime       0      0 
-/dev/mntblock2  /mnt           jffs2    rw,relatime       0      0 
-/dev/mntblock2  /root          jffs2    rw,relatime       0      0 
-/dev/mntblock2  /run           jffs2    rw,relatime       0      0 
-/dev/mntblock2  /sbin          jffs2    rw,relatime       0      0 
 /dev/mntblock2  /share         jffs2    rw,relatime       0      0 
 /dev/mntblock2  /updater       jffs2    rw,relatime       0      0 
-/dev/mntblock2  /usr           jffs2    rw,relatime       0      0 
 /dev/mntblock2  /var           jffs2    rw,relatime       0      0 
 /dev/mntblock2  /www           jffs2    rw,relatime       0      0 
 

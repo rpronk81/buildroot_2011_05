@@ -9,6 +9,11 @@ cp ./inittab output/target/etc/inittab
 mkdir output/target/lib/firmware
 cp -fr package/redpine output/target/lib/firmware/
 
+mkdir output/target/.flash
+chmod a+rwx output/target/.flash
+mkdir output/target/etc/spacecom
+chmod a+rwx output/target/etc/spacecom
+
 echo "Expanding elinos_rfs tar files to this RFS"
 SPACE_RFS_ADD_ONS=package/customize/source
 #tar -xf $SPACE_RFS_ADD_ONS/bin.tar         -C output/target

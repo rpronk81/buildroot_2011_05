@@ -13,6 +13,8 @@ IW_MAKE_ENV = PKG_CONFIG_PATH="$(STAGING_DIR)/usr/lib/pkgconfig" \
 	PKG_CONFIG="$(HOST_DIR)/usr/bin/pkg-config" \
 	GIT_DIR=$(IW_DIR)
 
+IW_INSTALL_TARGET = yes
+
 define IW_CONFIGURE_CMDS
 	echo "CC = $(TARGET_CC)" >$(IW_CONFIG)
 	echo "CFLAGS = $(TARGET_CFLAGS)" >>$(IW_CONFIG)
