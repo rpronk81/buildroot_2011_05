@@ -21,6 +21,7 @@ null::sysinit:/bin/mkdir -p /dev/pts
 null::sysinit:/bin/hostname -F /etc/hostname
 
 # now run any rc scripts
+::once:/etc/rc.start
 ::sysinit:/etc/init.d/rcS
 
 # Put a getty on the serial port

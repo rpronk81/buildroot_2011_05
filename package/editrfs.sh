@@ -6,25 +6,44 @@ echo $1
 rm -f output/target/etc/inittab
 cp ./inittab output/target/etc/inittab
 
-mkdir output/target/lib/firmware
+if [ ! -e output/target/lib/firmware ]
+then
+	mkdir output/target/lib/firmware
+fi
 cp -fr package/redpine output/target/lib/firmware/
 
-mkdir output/target/.flash
+if [ ! -e output/target/.flash ]
+then
+	mkdir output/target/.flash
+fi
 chmod a+rwx output/target/.flash
-mkdir output/target/etc/spacecom
+
+if [ ! -e output/target/etc/spacecom ]
+then
+	mkdir output/target/etc/spacecom
+fi
 chmod a+rwx output/target/etc/spacecom
 
+if [ ! -e output/target/run ]
+then
+	mkdir output/target/run
+fi
+if [ ! -e output/target/run/udev ]
+then
+	mkdir output/target/run/udev
+fi
+
 echo "Expanding elinos_rfs tar files to this RFS"
-SPACE_RFS_ADD_ONS=package/customize/source
-#tar -xf $SPACE_RFS_ADD_ONS/bin.tar         -C output/target
-#tar -xf $SPACE_RFS_ADD_ONS/etc.tar         -C output/target
-#tar -xf $SPACE_RFS_ADD_ONS/firmware.tar    -C output/target
+SPACE_RFS_ADD_ONS=package/customize
+tar -xf $SPACE_RFS_ADD_ONS/bin.tar         -C output/target
+tar -xf $SPACE_RFS_ADD_ONS/etc.tar         -C output/target
+tar -xf $SPACE_RFS_ADD_ONS/firmware.tar    -C output/target
 #tar -xf $SPACE_RFS_ADD_ONS/sbin.tar        -C output/target
-#tar -xf $SPACE_RFS_ADD_ONS/updater.tar     -C output/target
+tar -xf $SPACE_RFS_ADD_ONS/updater.tar     -C output/target
 #tar -xf $SPACE_RFS_ADD_ONS/usrbin.tar      -C output/target
 #tar -xf $SPACE_RFS_ADD_ONS/usr_libexec.tar -C output/target
 #tar -xf $SPACE_RFS_ADD_ONS/usr_local.tar   -C output/target
-#tar -xf $SPACE_RFS_ADD_ONS/www.tar         -C output/target
+tar -xf $SPACE_RFS_ADD_ONS/www.tar         -C output/target
 STARTINGPOINT=$PWD
 cd output/target/usr/share/locale/
 rm -rf \
