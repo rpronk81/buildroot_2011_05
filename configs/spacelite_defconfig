@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
-# Buildroot 2011.05-g35c7690-dirty Configuration
-# Tue Apr 18 12:02:17 2017
+# Buildroot 2011.05-g1e8a801 Configuration
+# Fri Apr 21 16:15:14 2017
 #
 BR2_HAVE_DOT_CONFIG=y
 BR2_arm=y
@@ -399,7 +399,7 @@ BR2_PACKAGE_SMARTMONTOOLS=y
 # BR2_PACKAGE_SSHFS is not set
 # BR2_PACKAGE_SYSSTAT is not set
 BR2_PACKAGE_UDEV=y
-# BR2_PACKAGE_UDEV_RULES_GEN is not set
+BR2_PACKAGE_UDEV_RULES_GEN=y
 BR2_PACKAGE_UDEV_ALL_EXTRAS=y
 # BR2_PACKAGE_USB_MODESWITCH is not set
 # BR2_PACKAGE_USBMOUNT is not set
