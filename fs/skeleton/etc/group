@@ -14,6 +14,16 @@ dbus:x:81:
 netdev:x:82:
 ftp:x:83
 nobody:x:99:
-nogroup:x:99:
 users:x:100:
 default:x:1000:
+www:x:2:
+_ntp:x:4:
+nogroup:x:65534:root
+lp:x:7:
+kmem:x:9:
+cdrom:x:11:
+dialout:x:18:
+floppy:x:19:
+tape:x:33:
+video:x:39:
+

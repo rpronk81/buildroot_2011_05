@@ -32,18 +32,31 @@ if [ ! -e output/target/run/udev ]
 then
 	mkdir output/target/run/udev
 fi
+if [ ! -e output/target/var/lock ]
+then
+	mkdir output/target/var/lock
+fi
+if [ ! -e output/target/var/log ]
+then
+	mkdir output/target/var/log
+	mkdir output/target/var/log/debug
+fi
 
 echo "Expanding elinos_rfs tar files to this RFS"
 SPACE_RFS_ADD_ONS=package/customize
 tar -xf $SPACE_RFS_ADD_ONS/bin.tar         -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/etc.tar         -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/firmware.tar    -C output/target
-#tar -xf $SPACE_RFS_ADD_ONS/sbin.tar        -C output/target
+tar -xf $SPACE_RFS_ADD_ONS/etc2.tar        -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/updater.tar     -C output/target
-#tar -xf $SPACE_RFS_ADD_ONS/usrbin.tar      -C output/target
-#tar -xf $SPACE_RFS_ADD_ONS/usr_libexec.tar -C output/target
-#tar -xf $SPACE_RFS_ADD_ONS/usr_local.tar   -C output/target
+
+tar -xf $SPACE_RFS_ADD_ONS/sbin.tar        -C output/target
+# tar -xf $SPACE_RFS_ADD_ONS/usrbin.tar      -C output/target
+tar -xf $SPACE_RFS_ADD_ONS/usr_libexec.tar -C output/target
+tar -xf $SPACE_RFS_ADD_ONS/usr_local.tar   -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/www.tar         -C output/target
+tar -xf $SPACE_RFS_ADD_ONS/lib.tar         -C output/target
+tar -xf $SPACE_RFS_ADD_ONS/lib2.tar        -C output/target
+
 STARTINGPOINT=$PWD
 cd output/target/usr/share/locale/
 rm -rf \
