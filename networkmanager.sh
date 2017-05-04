@@ -6,3 +6,7 @@ chmod u+x output/build/networkmanager-0.8.1/configure
  cp ./output/build/pppd-2.4.5/pppd/ipcp.h  ./output/host/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/pppd/
  cp ./output/build/pppd-2.4.5/pppd/patchlevel.h  ./output/host/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/
 cp ./output/host/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/nspr/prinit.h ./output/host/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/prinit.h
+
+cd output/build/networkmanager-0.8.1
+patch -p1 -i ../../../package/networkmanager/nmall.patch
+cd ../../..

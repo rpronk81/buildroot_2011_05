@@ -1,5 +1,5 @@
 # ~/.bashrc: executed by bash(1) for non-login interactive shells.
-
+umask 022
 export PATH=\
 /bin:\
 /sbin:\
@@ -7,6 +7,16 @@ export PATH=\
 /usr/sbin:\
 /usr/bin/X11:\
 /usr/local/bin
+
+export ORBInitRef="NameService=corbaname:omniunix:/tmp/omninames-socket"
+export OMNIORB_USEHOSTNAME=127.0.0.1
+echo
+echo "==========================================================================="
+echo "==                                                                       =="
+echo "==  Welcome to B.Braun SpaceCom!                                         =="
+echo "==                                                                       =="
+echo "==========================================================================="
+echo
 
 # If running interactively, then:
 if [ "$PS1" ]; then

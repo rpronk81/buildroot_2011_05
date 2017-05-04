@@ -7,6 +7,7 @@
 PCRE_VERSION = 7.9
 PCRE_SITE = ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre
 PCRE_INSTALL_STAGING = YES
+PCRE_INSTALL_TARGET = YES
 
 ifneq ($(BR2_INSTALL_LIBSTDCPP),y)
 # pcre will use the host g++ if a cross version isn't available
@@ -23,6 +24,10 @@ PCRE_POST_INSTALL_STAGING_HOOKS += PCRE_STAGING_PCRE_CONFIG_FIXUP
 
 define PCRE_TARGET_REMOVE_PCRE_CONFIG
 	rm -f $(TARGET_DIR)/usr/bin/pcre-config
+endef
+
+define PCRE_INSTALL_TARGET_CMDS
+	$(PCRE_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR=$(TARGET_DIR) install
 endef
 
 ifneq ($(BR2_HAVE_DEVFILES),y)

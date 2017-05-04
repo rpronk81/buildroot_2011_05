@@ -23,9 +23,39 @@ rdp	27	RDP		# "reliable datagram" protocol
 iso-tp4	29	ISO-TP4		# ISO Transport Protocol class 4
 xtp	36	XTP		# Xpress Tranfer Protocol
 ddp	37	DDP		# Datagram Delivery Protocol
-idpr-cmtp	39	IDPR-CMTP	# IDPR Control Message Transport
+idpr-cmtp	38	IDPR-CMTP	# IDPR Control Message Transport
+ipv6       41    IPv6
+ipv6-route 43   IPv6-Route
+ipv6-frag  44   IPv6-Frag
+idrp    45      IDRP
+rsvp        46        RSVP                # Reservation Protocol
+gre        47        GRE                # General Routing Encapsulation
+esp        50        IPSEC-ESP        # Encap Security Payload [RFC2406]
+ah        51        IPSEC-AH        # Authentication Header [RFC2402]
+skip        57        SKIP                # SKIP
+ipv6-icmp 58        IPv6-ICMP        # ICMP for IPv6
+ipv6-nonxt 59        IPv6-NoNxt        # No Next Header for IPv6
+ipv6-opts 60        IPv6-Opts        # Destination Options for IPv6
 rspf	73	RSPF		#Radio Shortest Path First.
 vmtp	81	VMTP		# Versatile Message Transport
+eigrp   88   EIGRP
 ospf	89	OSPFIGP		# Open Shortest Path First IGP
+ax.25   93    AX.25
 ipip	94	IPIP		# Yet Another IP encapsulation
+etherip 97 ETHERIP
 encap	98	ENCAP		# Yet Another IP encapsulation
+pim        103        PIM                # Protocol Independent Multicast
+ipcomp        108        IPCOMP                # IP Payload Compression Protocol
+vrrp        112        VRRP                # Virtual Router Redundancy Protocol [RFC5798]
+l2tp        115        L2TP                # Layer Two Tunneling Protocol [RFC2661]
+isis        124        ISIS                # IS-IS over IPv4
+sctp        132        SCTP                # Stream Control Transmission Protocol
+fc        133        FC                # Fibre Channel
+mobility-header 135 Mobility-Header # Mobility Support for IPv6 [RFC3775]
+udplite        136        UDPLite                # UDP-Lite [RFC3828]
+mpls-in-ip 137        MPLS-in-IP        # MPLS-in-IP [RFC4023]
+manet        138                        # MANET Protocols [RFC5498]
+hip        139        HIP                # Host Identity Protocol
+shim6        140        Shim6                # Shim6 Protocol [RFC5533]
+wesp        141        WESP                # Wrapped Encapsulating Security Payload
+rohc        142        ROHC                # Robust Header Compression
