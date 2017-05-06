@@ -1,0 +1,19 @@
+--- a/bus/config-parser-trivial.c	2017-05-06 17:29:50.600420308 -0400
++++ b/bus/config-parser-trivial.c	2017-05-06 17:30:29.972033734 -0400
+@@ -302,7 +302,7 @@
+ out:
+   return retval;
+ }
+-#if 0
++
+ dbus_bool_t
+ bus_config_parser_finished (BusConfigParser   *parser,
+                             DBusError         *error)
+@@ -311,7 +311,6 @@
+   _dbus_verbose ("finished scanning!\n");
+   return TRUE;
+ }
+-#endif
+ 
+ const char*
+ bus_config_parser_get_user (BusConfigParser *parser)
