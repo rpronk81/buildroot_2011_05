@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
-# Buildroot 2011.05-00018-g7939527-dirty Configuration
-# Thu May  4 15:46:50 2017
+# Buildroot 2011.05-00019-g646ced4-dirty Configuration
+# Mon May  8 15:19:37 2017
 #
 BR2_HAVE_DOT_CONFIG=y
 # BR2_arm is not set
@@ -17,31 +17,6 @@ BR2_powerpc=y
 # BR2_sparc is not set
 # BR2_x86_64 is not set
 # BR2_xtensa is not set
-# BR2_x86_i386 is not set
-# BR2_x86_i486 is not set
-# BR2_x86_i586 is not set
-# BR2_x86_i686 is not set
-# BR2_x86_pentiumpro is not set
-# BR2_x86_pentium_mmx is not set
-# BR2_x86_pentium_m is not set
-# BR2_x86_pentium2 is not set
-# BR2_x86_pentium3 is not set
-# BR2_x86_pentium4 is not set
-# BR2_x86_prescott is not set
-# BR2_x86_nocona is not set
-# BR2_x86_core2 is not set
-# BR2_x86_k6 is not set
-# BR2_x86_k6_2 is not set
-# BR2_x86_athlon is not set
-# BR2_x86_athlon_4 is not set
-# BR2_x86_opteron is not set
-# BR2_x86_opteron_sse3 is not set
-# BR2_x86_barcelona is not set
-# BR2_x86_geode is not set
-# BR2_x86_c3 is not set
-# BR2_x86_c32 is not set
-# BR2_x86_winchip_c6 is not set
-# BR2_x86_winchip2 is not set
 # BR2_generic_powerpc is not set
 # BR2_powerpc_401 is not set
 # BR2_powerpc_403 is not set
@@ -114,7 +89,7 @@ BR2_KERNEL_MIRROR="https://www.kernel.org/pub"
 BR2_GNU_MIRROR="http://ftp.gnu.org/pub/gnu"
 BR2_DEBIAN_MIRROR="http://ftp.debian.org"
 BR2_JLEVEL=8
-# BR2_CCACHE is not set
+BR2_CCACHE=y
 # BR2_DEPRECATED is not set
 # BR2_ENABLE_DEBUG is not set
 BR2_STRIP_strip=y
@@ -179,7 +154,7 @@ BR2_TARGET_GENERIC_GETTY_PORT="ttyPSC0"
 # BR2_TARGET_GENERIC_GETTY_BAUDRATE_57600 is not set
 BR2_TARGET_GENERIC_GETTY_BAUDRATE_115200=y
 BR2_TARGET_GENERIC_GETTY_BAUDRATE="115200"
-BR2_ROOTFS_POST_BUILD_SCRIPT=""
+BR2_ROOTFS_POST_BUILD_SCRIPT="./package/editrfs.sh"
 
 #
 # Package Selection for the target
@@ -275,7 +250,7 @@ BR2_PACKAGE_CUSTOMIZE=y
 # BR2_PACKAGE_GAWK is not set
 BR2_PACKAGE_GETTEXT=y
 # BR2_PACKAGE_GMP is not set
-BR2_PACKAGE_GPERF=y
+# BR2_PACKAGE_GPERF is not set
 # BR2_PACKAGE_GREP is not set
 BR2_PACKAGE_INTLTOOL=y
 # BR2_PACKAGE_MAKE is not set
@@ -284,7 +259,7 @@ BR2_PACKAGE_INTLTOOL=y
 # BR2_PACKAGE_LIBTOOL is not set
 # BR2_PACKAGE_M4 is not set
 # BR2_PACKAGE_PATCH is not set
-BR2_PACKAGE_PKG_CONFIG=y
+# BR2_PACKAGE_PKG_CONFIG is not set
 # BR2_PACKAGE_SED is not set
 # BR2_PACKAGE_SSTRIP is not set
 # BR2_PACKAGE_TAR is not set
@@ -372,7 +347,7 @@ BR2_PACKAGE_IOSTAT=y
 # BR2_PACKAGE_IRDA_UTILS is not set
 # BR2_PACKAGE_KBD is not set
 # BR2_PACKAGE_LIBV4L is not set
-# BR2_PACKAGE_LIBGUDEV is not set
+BR2_PACKAGE_LIBGUDEV=y
 # BR2_PACKAGE_LM_SENSORS is not set
 # BR2_PACKAGE_LSUIO is not set
 # BR2_PACKAGE_LVM2 is not set
@@ -427,12 +402,12 @@ BR2_PACKAGE_MTD_FLASH_ERASE=y
 # BR2_PACKAGE_RNG_TOOLS is not set
 # BR2_PACKAGE_SDPARM is not set
 # BR2_PACKAGE_SETSERIAL is not set
-BR2_PACKAGE_SMARTMONTOOLS=y
+# BR2_PACKAGE_SMARTMONTOOLS is not set
 # BR2_PACKAGE_SQUASHFS is not set
 # BR2_PACKAGE_SSHFS is not set
 # BR2_PACKAGE_SYSSTAT is not set
 BR2_PACKAGE_UDEV=y
-# BR2_PACKAGE_UDEV_RULES_GEN is not set
+BR2_PACKAGE_UDEV_RULES_GEN=y
 BR2_PACKAGE_UDEV_ALL_EXTRAS=y
 # BR2_PACKAGE_USB_MODESWITCH is not set
 # BR2_PACKAGE_USBMOUNT is not set
@@ -564,7 +539,7 @@ BR2_PACKAGE_LIBNSPR=y
 # BR2_PACKAGE_ICU is not set
 # BR2_PACKAGE_NCURSES is not set
 # BR2_PACKAGE_NEWT is not set
-# BR2_PACKAGE_PCRE is not set
+BR2_PACKAGE_PCRE=y
 # BR2_PACKAGE_POPT is not set
 # BR2_PACKAGE_READLINE is not set
 # BR2_PACKAGE_SLANG is not set
@@ -581,7 +556,7 @@ BR2_PACKAGE_LIBXML2=y
 #
 # Miscellaneous
 #
-BR2_PACKAGE_BOOST=y
+# BR2_PACKAGE_BOOST is not set
 # BR2_PACKAGE_SHARED_MIME_INFO is not set
 
 #
@@ -609,7 +584,7 @@ BR2_PACKAGE_CAN_UTILS=y
 # BR2_PACKAGE_IPROUTE2 is not set
 # BR2_PACKAGE_IPSEC_TOOLS is not set
 # BR2_PACKAGE_IPTABLES is not set
-BR2_PACKAGE_IW=y
+# BR2_PACKAGE_IW is not set
 # BR2_PACKAGE_KISMET is not set
 # BR2_PACKAGE_XL2TP is not set
 BR2_PACKAGE_LIGHTTPD=y
@@ -637,7 +612,7 @@ BR2_PACKAGE_NETWORKMANAGER=y
 BR2_PACKAGE_NTP=y
 # BR2_PACKAGE_NTP_SNTP is not set
 # BR2_PACKAGE_NTP_NTP_KEYGEN is not set
-BR2_PACKAGE_NTP_NTPD=y
+# BR2_PACKAGE_NTP_NTPD is not set
 BR2_PACKAGE_NTP_NTPDATE=y
 # BR2_PACKAGE_NTP_NTPDC is not set
 # BR2_PACKAGE_NTP_NTPQ is not set
@@ -648,11 +623,8 @@ BR2_PACKAGE_NTP_NTPDATE=y
 BR2_PACKAGE_OPENSSH=y
 # BR2_PACKAGE_OPENVPN is not set
 # BR2_PACKAGE_PORTMAP is not set
-BR2_PACKAGE_PPPD=y
-# BR2_PACKAGE_PPPD_FILTER is not set
-# BR2_PACKAGE_PPPD_RADIUS is not set
+# BR2_PACKAGE_PPPD is not set
 # BR2_PACKAGE_RADVD is not set
-# BR2_PACKAGE_RP_PPPOE is not set
 # BR2_PACKAGE_PPTP_LINUX is not set
 BR2_PACKAGE_PROFTPD=y
 # BR2_PACKAGE_QUAGGA is not set
@@ -696,7 +668,7 @@ BR2_PACKAGE_WPA_SUPPLICANT_PASSPHRASE=y
 #
 # BR2_PACKAGE_AT is not set
 # BR2_PACKAGE_BASH is not set
-# BR2_PACKAGE_DASH is not set
+BR2_PACKAGE_DASH=y
 # BR2_PACKAGE_DIALOG is not set
 # BR2_PACKAGE_FILE is not set
 # BR2_PACKAGE_LOCKFILE_PROGS is not set
@@ -720,7 +692,32 @@ BR2_PACKAGE_KMOD=y
 # BR2_PACKAGE_PSMISC is not set
 # BR2_PACKAGE_SYSKLOGD is not set
 # BR2_PACKAGE_SYSVINIT is not set
-# BR2_PACKAGE_UTILLINUX is not set
+BR2_PACKAGE_UTILLINUX=y
+# BR2_PACKAGE_UTILLINUX_MOUNT is not set
+# BR2_PACKAGE_UTILLINUX_FSCK is not set
+# BR2_PACKAGE_UTILLINUX_LIBMOUNT is not set
+BR2_PACKAGE_UTILLINUX_LIBUUID=y
+# BR2_PACKAGE_UTILLINUX_UUIDD is not set
+BR2_PACKAGE_UTILLINUX_LIBBLKID=y
+# BR2_PACKAGE_UTILLINUX_AGETTY is not set
+# BR2_PACKAGE_UTILLINUX_CRAMFS is not set
+# BR2_PACKAGE_UTILLINUX_SWITCH_ROOT is not set
+# BR2_PACKAGE_UTILLINUX_PIVOT_ROOT is not set
+# BR2_PACKAGE_UTILLINUX_FALLOCATE is not set
+# BR2_PACKAGE_UTILLINUX_UNSHARE is not set
+# BR2_PACKAGE_UTILLINUX_RENAME is not set
+# BR2_PACKAGE_UTILLINUX_SCHEDUTILS is not set
+# BR2_PACKAGE_UTILLINUX_WALL is not set
+# BR2_PACKAGE_UTILLINUX_PARTX is not set
+# BR2_PACKAGE_UTILLINUX_ARCH is not set
+# BR2_PACKAGE_UTILLINUX_INIT is not set
+# BR2_PACKAGE_UTILLINUX_KILL is not set
+# BR2_PACKAGE_UTILLINUX_LAST is not set
+# BR2_PACKAGE_UTILLINUX_MESG is not set
+# BR2_PACKAGE_UTILLINUX_RAW is not set
+# BR2_PACKAGE_UTILLINUX_RESET is not set
+# BR2_PACKAGE_UTILLINUX_LOGIN_UTILS is not set
+# BR2_PACKAGE_UTILLINUX_WRITE is not set
 
 #
 # Text editors and viewers
