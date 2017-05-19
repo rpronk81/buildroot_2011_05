@@ -50,13 +50,17 @@ tar -xf $SPACE_RFS_ADD_ONS/etc2.tar        -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/updater.tar     -C output/target
 
 tar -xf $SPACE_RFS_ADD_ONS/sbin.tar        -C output/target
-# tar -xf $SPACE_RFS_ADD_ONS/usrbin.tar      -C output/target
+tar -xf $SPACE_RFS_ADD_ONS/usrbin.tar      -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/usr_libexec.tar -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/usr_local.tar   -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/www.tar         -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/lib.tar         -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/lib2.tar        -C output/target
+tar -xf $SPACE_RFS_ADD_ONS/networkman.tar  -C output/target
 
+# rm -f output/target/lib/libpolkit-gobject-1*
+#rm -f output/target/usr/lib/libpolkit-gobject-1*
+#rm -f output/target/usr/lib/libpolkit-backend-1*
+# cp ./output/target_too_big/lib/libeggdbus-1.so.0.0.0 output/target/lib
 STARTINGPOINT=$PWD
 cd output/target/usr/share/locale/
 rm -rf \
