@@ -1,0 +1,53 @@
+--- a/src/drivers/drivers.mak	2014-10-09 10:41:31.000000000 -0400
++++ b/src/drivers/drivers.mak	2014-10-09 10:41:31.000000000 -0400
+@@ -32,28 +32,12 @@
+ NEED_LINUX_IOCTL=y
+ NEED_RFKILL=y
+ 
+-ifdef CONFIG_LIBNL32
+-  DRV_LIBS += -lnl-3
+-  DRV_LIBS += -lnl-genl-3
+-  DRV_CFLAGS += -DCONFIG_LIBNL20 -I/usr/include/libnl3
+-ifdef CONFIG_LIBNL3_ROUTE
+-  DRV_LIBS += -lnl-route-3
+-  DRV_CFLAGS += -DCONFIG_LIBNL3_ROUTE
+-endif
+-else
+   ifdef CONFIG_LIBNL_TINY
+     DRV_LIBS += -lnl-tiny
+   else
+     DRV_LIBS += -lnl
+   endif
+ 
+-  ifdef CONFIG_LIBNL20
+-    DRV_LIBS += -lnl-genl
+-    DRV_CFLAGS += -DCONFIG_LIBNL20
+-  endif
+-endif
+-endif
+-
+ ifdef CONFIG_DRIVER_BSD
+ ifndef CONFIG_L2_PACKET
+ CONFIG_L2_PACKET=freebsd
+@@ -164,12 +148,6 @@
+ 
+ ifdef CONFIG_VLAN_NETLINK
+ ifdef CONFIG_FULL_DYNAMIC_VLAN
+-ifdef CONFIG_LIBNL32
+-  DRV_LIBS += -lnl-3
+-  DRV_LIBS += -lnl-genl-3
+-  DRV_LIBS += -lnl-route-3
+-  DRV_CFLAGS += -DCONFIG_LIBNL20
+-else
+   ifdef CONFIG_LIBNL_TINY
+     DRV_LIBS += -lnl-tiny
+   else
+@@ -177,8 +155,6 @@
+   endif
+ 
+   ifdef CONFIG_LIBNL20
+-    DRV_LIBS += -lnl-genl
+-    DRV_LIBS += -lnl-route
+     DRV_CFLAGS += -DCONFIG_LIBNL20
+   endif
+ endif
