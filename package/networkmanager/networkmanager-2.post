@@ -1,0 +1,13 @@
+--- a/output/build/networkmanager-0.8.1/system-settings/plugins/keyfile/Makefile
++++ b/output/build/networkmanager-0.8.1/system-settings/plugins/keyfile/Makefile
+@@ -793,7 +793,7 @@
+ 	uninstall uninstall-am uninstall-pkglibLTLIBRARIES
+ 
+ 
+-install-data-hook:
+-	$(mkinstalldirs) -m 0755 $(DESTDIR)$(keyfiledir)
++#install-data-hook:
++#	$(mkinstalldirs) -m 0755 $(DESTDIR)$(keyfiledir)
+ 
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.

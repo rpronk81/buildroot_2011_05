@@ -1,0 +1,31 @@
+--- a/output/build/networkmanager-0.8.1/libnm-util/Makefile
++++ b/output/build/networkmanager-0.8.1/libnm-util/Makefile
+@@ -146,7 +146,9 @@
+ am_libtest_crypto_la_OBJECTS = libtest_crypto_la-crypto.lo \
+ 	$(am__objects_4) $(am__objects_5)
+ libtest_crypto_la_OBJECTS = $(am_libtest_crypto_la_OBJECTS)
+-DEFAULT_INCLUDES = -I. -I$(top_builddir)
++DEFAULT_INCLUDES = -I. -I$(top_builddir) \
++-I/opt/buildroot-2011.05/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/nspr \
++-I/opt/buildroot-2011.05/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/nss
+ depcomp = $(SHELL) $(top_srcdir)/depcomp
+ am__depfiles_maybe = depfiles
+ am__mv = mv -f
+@@ -224,7 +226,7 @@
+ CYGPATH_W = echo
+ DATADIRNAME = share
+ DBUS_CFLAGS = -pthread -I/opt/buildroot-2011.05//usr/arm-unknown-linux-gnueabi/sysroot/usr/include/dbus-1.0 -I/opt/buildroot-2011.05//usr/arm-unknown-linux-gnueabi/sysroot/usr/lib/dbus-1.0/include -I/opt/buildroot-2011.05//usr/arm-unknown-linux-gnueabi/sysroot/usr/include/glib-2.0 -I/opt/buildroot-2011.05//usr/arm-unknown-linux-gnueabi/sysroot/usr/lib/glib-2.0/include  
+-DBUS_LIBS = -pthread -ldbus-glib-1 -ldbus-1 -lgobject-2.0 -lgthread-2.0 -lrt -lglib-2.0  
++DBUS_LIBS = -pthread -ldbus-glib-1 -ldbus-1 -lgobject-2.0 -lgthread-2.0 -lrt -lglib-2.0 -lnss3 -lnspr4 -lsmime3
+ DBUS_SYS_DIR = /etc/dbus-1/system.d
+ DEFS = -DHAVE_CONFIG_H
+ DEPDIR = .deps
+@@ -311,7 +313,7 @@
+ PKG_CONFIG = /opt/buildroot-2011.05/usr/bin/pkg-config
+ POFILES = 
+ POLKIT_CFLAGS = -pthread -I/opt/buildroot-2011.05//usr/arm-unknown-linux-gnueabi/sysroot/usr/include/polkit-1 -I/opt/buildroot-2011.05//usr/arm-unknown-linux-gnueabi/sysroot/usr/include/glib-2.0 -I/opt/buildroot-2011.05//usr/arm-unknown-linux-gnueabi/sysroot/usr/lib/glib-2.0/include  
+-POLKIT_LIBS = -pthread -lpolkit-gobject-1 -lgio-2.0 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0  
++POLKIT_LIBS = -pthread -lpolkit-gobject-1 -lgio-2.0 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0 -lnss3 -lnspr4 -lsmime3
+ POSUB = po
+ PO_IN_DATADIR_FALSE = 
+ PO_IN_DATADIR_TRUE = 

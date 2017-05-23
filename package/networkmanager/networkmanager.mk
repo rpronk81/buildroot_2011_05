@@ -4,7 +4,9 @@
 #
 #############################################################
 NETWORKMANAGER_VERSION = 0.8.1
-NETWORKMANAGER_SOURCE = networkmanager-$(NETWORKMANAGER_VERSION).tar.gz
+NETWORKMANAGER_VERSION_MAJOR=0.8
+NETWORKMANAGER_SOURCE = NetworkManager-$(NETWORKMANAGER_VERSION).tar.gz
+NETWORKMANAGER_SITE = https://download.gnome.org/sources/NetworkManager/$(NETWORKMANAGER_VERSION_MAJOR)
 NETWORKMANAGER_INSTALL_STAGING = YES
 NETWORKMANAGER_DEPENDENCIES = host-pkg-config udev dbus-glib libnl wireless_tools gnutls utillinux polkit pppd
 
@@ -49,5 +51,14 @@ NETWORKMANAGER_CONF_OPT = \
 #endef
 
 #NETWORKMANAGER_POST_INSTALL_TARGET_HOOKS += NETWORKMANAGER_INSTALL_INITSCRIPT
+
+
+define NETWORKMANGER_LIBNM_UTIL_MAKEFILE
+	cd $(@D)
+	patch -p1 -i $(TARGET_DIR)/../../package/networkmanager/networkmanager-1.post
+	patch -p1 -i $(TARGET_DIR)/../../package/networkmanager/networkmanager-2.post
+endef
+
+NETWORKMANAGER_POST_CONFIGURE_HOOKS += NETWORKMANGER_LIBNM_UTIL_MAKEFILE
 
 $(eval $(call AUTOTARGETS,package,networkmanager))

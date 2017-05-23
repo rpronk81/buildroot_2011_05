@@ -1,0 +1,21 @@
+--- a/libnm-util/Makefile.am	2010-07-21 19:48:36.000000000 -0400
++++ b/libnm-util/Makefile.am	2017-05-23 14:01:39.659228093 -0400
+@@ -1,6 +1,8 @@
+ SUBDIRS=. tests
+ 
+-INCLUDES = -I${top_srcdir} -I${top_srcdir}/include
++INCLUDES = -I${top_srcdir} -I${top_srcdir}/include \
++-I/opt/buildroot-2011.05/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/nspr \
++-I/opt/buildroot-2011.05/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/nss
+ 
+ lib_LTLIBRARIES=libnm-util.la
+ 
+@@ -70,7 +72,7 @@
+ if WITH_NSS
+ libnm_util_la_SOURCES += crypto_nss.c
+ libnm_util_la_CPPFLAGS += $(NSS_CFLAGS)
+-libnm_util_la_LIBADD += $(NSS_LIBS)
++libnm_util_la_LIBADD += $(NSS_LIBS) -lnss3 -lnspr4 -lsmime3
+ endif
+ 
+ libnm_util_includedir=$(includedir)/NetworkManager
