@@ -14,7 +14,7 @@
 @@ -224,7 +226,7 @@
  CYGPATH_W = echo
  DATADIRNAME = share
- DBUS_CFLAGS = -pthread -I/opt/buildroot-2011.05//usr/arm-unknown-linux-gnueabi/sysroot/usr/include/dbus-1.0 -I/opt/buildroot-2011.05//usr/arm-unknown-linux-gnueabi/sysroot/usr/lib/dbus-1.0/include -I/opt/buildroot-2011.05//usr/arm-unknown-linux-gnueabi/sysroot/usr/include/glib-2.0 -I/opt/buildroot-2011.05//usr/arm-unknown-linux-gnueabi/sysroot/usr/lib/glib-2.0/include  
+ DBUS_CFLAGS = -pthread -I/opt/buildroot-2011.05/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/dbus-1.0 -I/opt/buildroot-2011.05/usr/arm-unknown-linux-gnueabi/sysroot/usr/lib/dbus-1.0/include -I/opt/buildroot-2011.05/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/glib-2.0 -I/opt/buildroot-2011.05/usr/arm-unknown-linux-gnueabi/sysroot/usr/lib/glib-2.0/include  
 -DBUS_LIBS = -pthread -ldbus-glib-1 -ldbus-1 -lgobject-2.0 -lgthread-2.0 -lrt -lglib-2.0  
 +DBUS_LIBS = -pthread -ldbus-glib-1 -ldbus-1 -lgobject-2.0 -lgthread-2.0 -lrt -lglib-2.0 -lnss3 -lnspr4 -lsmime3
  DBUS_SYS_DIR = /etc/dbus-1/system.d
@@ -23,7 +23,7 @@
 @@ -311,7 +313,7 @@
  PKG_CONFIG = /opt/buildroot-2011.05/usr/bin/pkg-config
  POFILES = 
- POLKIT_CFLAGS = -pthread -I/opt/buildroot-2011.05//usr/arm-unknown-linux-gnueabi/sysroot/usr/include/polkit-1 -I/opt/buildroot-2011.05//usr/arm-unknown-linux-gnueabi/sysroot/usr/include/glib-2.0 -I/opt/buildroot-2011.05//usr/arm-unknown-linux-gnueabi/sysroot/usr/lib/glib-2.0/include  
+ POLKIT_CFLAGS = -pthread -I/opt/buildroot-2011.05/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/polkit-1 -I/opt/buildroot-2011.05/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/glib-2.0 -I/opt/buildroot-2011.05/usr/arm-unknown-linux-gnueabi/sysroot/usr/lib/glib-2.0/include  
 -POLKIT_LIBS = -pthread -lpolkit-gobject-1 -lgio-2.0 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0  
 +POLKIT_LIBS = -pthread -lpolkit-gobject-1 -lgio-2.0 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0 -lnss3 -lnspr4 -lsmime3
  POSUB = po
