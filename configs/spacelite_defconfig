@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
-# Buildroot 2011.05-g952c0fb-dirty Configuration
-# Fri May 19 08:32:06 2017
+# Buildroot 2011.05-g1aca017-dirty Configuration
+# Tue Jun  6 14:06:30 2017
 #
 BR2_HAVE_DOT_CONFIG=y
 BR2_arm=y
@@ -63,7 +63,7 @@ BR2_ZCAT="gzip -d -c"
 BR2_BZCAT="bzcat"
 BR2_TAR_OPTIONS=""
 BR2_DL_DIR="$(TOPDIR)/dl"
-BR2_HOST_DIR="$(BASE_DIR)/host"
+BR2_HOST_DIR="/opt/buildroot-2011.05"
 
 #
 # Mirrors and Download locations
@@ -456,7 +456,7 @@ BR2_PACKAGE_SQLITE=y
 # BR2_PACKAGE_LIBCONFUSE is not set
 # BR2_PACKAGE_LIBFUSE is not set
 # BR2_PACKAGE_LIBLOCKFILE is not set
-# BR2_PACKAGE_LIBSYSFS is not set
+BR2_PACKAGE_LIBSYSFS=y
 
 #
 # Graphics
@@ -495,7 +495,8 @@ BR2_PACKAGE_SQLITE=y
 #
 # BR2_PACKAGE_LIBCGI is not set
 # BR2_PACKAGE_LIBCGICC is not set
-# BR2_PACKAGE_LIBCURL is not set
+BR2_PACKAGE_LIBCURL=y
+# BR2_PACKAGE_CURL is not set
 # BR2_PACKAGE_LIBDNET is not set
 # BR2_PACKAGE_LIBEXOSIP2 is not set
 # BR2_PACKAGE_LIBIDN is not set
@@ -579,10 +580,10 @@ BR2_PACKAGE_CAN_UTILS=y
 # BR2_PACKAGE_KISMET is not set
 # BR2_PACKAGE_XL2TP is not set
 BR2_PACKAGE_LIGHTTPD=y
-# BR2_PACKAGE_LIGHTTPD_OPENSSL is not set
+BR2_PACKAGE_LIGHTTPD_OPENSSL=y
 # BR2_PACKAGE_LIGHTTPD_ZLIB is not set
 # BR2_PACKAGE_LIGHTTPD_BZIP2 is not set
-# BR2_PACKAGE_LIGHTTPD_PCRE is not set
+BR2_PACKAGE_LIGHTTPD_PCRE=y
 # BR2_PACKAGE_LIGHTTPD_WEBDAV is not set
 # BR2_PACKAGE_LINKS is not set
 # BR2_PACKAGE_LRZSZ is not set
