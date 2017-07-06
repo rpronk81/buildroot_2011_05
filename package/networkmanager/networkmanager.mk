@@ -14,11 +14,11 @@ NETWORKMANAGER_AUTORECONF = yes
 
 NETWORKMANAGER_CONF_OPT = \
 	--with-distro=debian \
-	--with-iptables=/usr/sbin/iptables \
+	# --with-iptables=/usr/sbin/iptables 
 	--with-resolvconf=no \
 	--with-dhcpcd=no \
 	--with-dhclient=/sbin/dhclient \
-	--with-dbus-user=dbus \
+	--with-dbus-user=root \
 	--with-gnu-ld \
 	--without-pppd \
 	--without-ppp \
@@ -57,6 +57,7 @@ define NETWORKMANGER_LIBNM_UTIL_MAKEFILE
 	cd $(@D)
 	patch -p1 -i $(TARGET_DIR)/../../package/networkmanager/networkmanager-1.post
 	patch -p1 -i $(TARGET_DIR)/../../package/networkmanager/networkmanager-2.post
+	patch -p1 -i $(TARGET_DIR)/../../package/networkmanager/networkmanager-3.post
 endef
 
 NETWORKMANAGER_POST_CONFIGURE_HOOKS += NETWORKMANGER_LIBNM_UTIL_MAKEFILE

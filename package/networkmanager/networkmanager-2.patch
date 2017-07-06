@@ -1,0 +1,29 @@
+--- a/src/system-settings/nm-sysconfig-connection.c
++++ b/src/system-settings/nm-sysconfig-connection.c
+@@ -612,8 +612,10 @@
+ nm_sysconfig_connection_init (NMSysconfigConnection *self)
+ {
+ 	NMSysconfigConnectionPrivate *priv = NM_SYSCONFIG_CONNECTION_GET_PRIVATE (self);
++	GError *error;
++
++	priv->authority = polkit_authority_get_sync (NULL /* GCancellable* */, &error);
+ 
+-	priv->authority = polkit_authority_get ();
+ 	if (!priv->authority) {
+ 		nm_log_err (LOGD_SYS_SET, "%s: error creating PolicyKit authority");
+ 	}
+--- a/src/system-settings/nm-sysconfig-settings.c
++++ b/src/system-settings/nm-sysconfig-settings.c
+@@ -1505,10 +1505,11 @@
+ nm_sysconfig_settings_init (NMSysconfigSettings *self)
+ {
+ 	NMSysconfigSettingsPrivate *priv = NM_SYSCONFIG_SETTINGS_GET_PRIVATE (self);
++	GError *error;
+ 
+ 	priv->connections = g_hash_table_new_full (g_direct_hash, g_direct_equal, g_object_unref, NULL);
+ 
+-	priv->authority = polkit_authority_get ();
++	priv->authority = polkit_authority_get_sync (NULL /* GCancellable* */, &error);
+ 	if (priv->authority) {
+ 		priv->auth_changed_id = g_signal_connect (priv->authority,
+ 		                                          "changed",

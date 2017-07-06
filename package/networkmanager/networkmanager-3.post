@@ -1,0 +1,20 @@
+--- a/output/build/networkmanager-0.8.1/src/Makefile.in
++++ b/output/build/networkmanager-0.8.1/src/Makefile.in
+@@ -402,7 +402,6 @@
+ 	bluez-manager \
+ 	system-settings \
+ 	. \
+-	tests
+ 
+ INCLUDES = -I${top_srcdir}                   \
+            -I${top_srcdir}/include           \
+--- a/output/build/networkmanager-0.8.1/src/Makefile.am
++++ b/output/build/networkmanager-0.8.1/src/Makefile.am
+@@ -12,7 +12,6 @@
+ 	bluez-manager \
+ 	system-settings \
+ 	. \
+-	tests
+ 
+ INCLUDES = -I${top_srcdir}                   \
+            -I${top_srcdir}/include           \
