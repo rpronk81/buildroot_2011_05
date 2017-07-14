@@ -4,7 +4,7 @@
  nm_sysconfig_connection_init (NMSysconfigConnection *self)
  {
  	NMSysconfigConnectionPrivate *priv = NM_SYSCONFIG_CONNECTION_GET_PRIVATE (self);
-+	GError *error;
++	GError *error=NULL;
 +
 +	priv->authority = polkit_authority_get_sync (NULL /* GCancellable* */, &error);
  
@@ -18,7 +18,7 @@
  nm_sysconfig_settings_init (NMSysconfigSettings *self)
  {
  	NMSysconfigSettingsPrivate *priv = NM_SYSCONFIG_SETTINGS_GET_PRIVATE (self);
-+	GError *error;
++	GError *error=NULL;
  
  	priv->connections = g_hash_table_new_full (g_direct_hash, g_direct_equal, g_object_unref, NULL);
  
