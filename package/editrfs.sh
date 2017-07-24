@@ -4,7 +4,7 @@
 echo $1
 
 rm -f output/target/etc/inittab
-cp ./inittab output/target/etc/inittab
+cp package/customize/etc/etc/inittab output/target/etc/inittab
 
 if [ ! -e output/target/lib/firmware ]
 then
@@ -45,12 +45,12 @@ fi
 echo "Expanding elinos_rfs tar files to this RFS"
 SPACE_RFS_ADD_ONS=package/customize
 tar -xf $SPACE_RFS_ADD_ONS/bin.tar         -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/etc.tar         -C output/target
-
+# check on necessity of etc
+#tar -xf $SPACE_RFS_ADD_ONS/etc.tar         -C output/target
+# check on necessity of sbin
 tar -xf $SPACE_RFS_ADD_ONS/sbin.tar        -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/usrbin.tar      -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/usr_libexec.tar -C output/target
-# tar -xf $SPACE_RFS_ADD_ONS/lib2.tar        -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/networkman.tar  -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/nm_wpa.tar      -C output/target
 

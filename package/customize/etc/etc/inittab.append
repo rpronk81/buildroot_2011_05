@@ -1,3 +1,0 @@
-console::respawn:-/etc/setupshell
-console::sysinit:/bin/mount -n -a
-console::once:/etc/rc.start
