@@ -3,8 +3,12 @@
 # 
 echo $1
 
-rm -f output/target/etc/inittab
+if [ -e output/target/etc/inittab ]
+then
+   rm -f output/target/etc/inittab
+fi
 cp package/customize/etc/etc/inittab output/target/etc/inittab
+cp package/customize/system.conf output/target/etc/dbus-1/
 
 if [ ! -e output/target/lib/firmware ]
 then
@@ -42,6 +46,7 @@ then
 	mkdir output/target/var/log/debug
 fi
 
+
 echo "Expanding elinos_rfs tar files to this RFS"
 SPACE_RFS_ADD_ONS=package/customize
 tar -xf $SPACE_RFS_ADD_ONS/bin.tar         -C output/target
@@ -53,6 +58,11 @@ tar -xf $SPACE_RFS_ADD_ONS/usrbin.tar      -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/usr_libexec.tar -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/networkman.tar  -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/nm_wpa.tar      -C output/target
+
+cp ./package/customize/fi.epitest.hostap.WPASupplicant.service output/target/usr/share/dbus-1/system-services/fi.epitest.hostap.WPASupplicant.service
+
+cp ./package/customize/nmwpa/etc/group output/target/etc/group
+cp ./package/customize/nmwpa/etc/passwd output/target/etc/passwd
 
 STARTINGPOINT=$PWD
 cd output/target/usr/share/locale/
@@ -67,7 +77,12 @@ be   ca@valencia  en@boldquot  et       gu  is  ku  ml            nl   ps  sk   
 
 chmod -R a+x $STARTINGPOINT/output/target/etc/init.d/*
 
+cd $STARTINGPOINT/output/target/usr/lib; ln -s libpcre.so libpcre.so.3
+
 echo "Done expanding elinos_rfs tar files to this RFS"
+
+ln -s /opt/buildroot-2011.05/usr/lib/libiw.so /home/robert/svn/trunk/clones/sclite/app.rootfs/lib/
+
 
 echo "editrfs.sh is complete"
 exit 0

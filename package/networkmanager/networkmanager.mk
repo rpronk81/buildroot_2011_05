@@ -14,7 +14,7 @@ NETWORKMANAGER_AUTORECONF = yes
 
 NETWORKMANAGER_CONF_OPT = \
 	--with-distro=debian \
-	# --with-iptables=/usr/sbin/iptables 
+	--with-iptables=/usr/sbin/iptables 
 	--with-resolvconf=no \
 	--with-dhcpcd=no \
 	--with-dhclient=/sbin/dhclient \
