@@ -58,6 +58,7 @@ tar -xf $SPACE_RFS_ADD_ONS/usrbin.tar      -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/usr_libexec.tar -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/networkman.tar  -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/nm_wpa.tar      -C output/target
+tar -xf $SPACE_RFS_ADD_ONS/libevent.tar    -C output/target
 
 cp ./package/customize/fi.epitest.hostap.WPASupplicant.service output/target/usr/share/dbus-1/system-services/fi.epitest.hostap.WPASupplicant.service
 
