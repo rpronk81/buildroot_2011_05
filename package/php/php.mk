@@ -3,19 +3,34 @@
 # php
 #
 #############################################################
+# --with-curl=/opt/buildroot-2011.05/usr/bin/arm-none-linux-gnueabi \
 
-PHP_VERSION = 5.2.17
+PHP_VERSION = 5.4.3
+#PHP_VERSION = 5.2.17
 PHP_SOURCE = php-$(PHP_VERSION).tar.bz2
-PHP_SITE = http://www.php.net/distributions
+PHP_SITE = http://museum.php.net/php5/
 PHP_INSTALL_STAGING = YES
 PHP_INSTALL_STAGING_OPT = INSTALL_ROOT=$(STAGING_DIR) install
 PHP_INSTALL_TARGET_OPT = INSTALL_ROOT=$(TARGET_DIR) install
+PHP_INSTALL_TARGET = YES
 PHP_LIBTOOL_PATCH = NO
 PHP_CONF_OPT =  --mandir=/usr/share/man \
 		--infodir=/usr/share/info \
 		--disable-all \
+		--without-sqlite \
 		--without-pear \
+		--disable-phar \
 		--with-config-file-path=/etc \
+		--without-iconv \
+		--enable-cgi \
+		--with-zlib-dir=/opt/buildroot-2011.05/usr/bin/arm-none-linux-gnueabi \
+		--with-gettext=/opt/buildroot-2011.05/usr/bin/arm-none-linux-gnueabi \
+		--with-curl=/opt/buildroot-2011.05/usr/arm-unknown-linux-gnueabi/sysroot/usr \
+		--enable-fileinfo \
+		--enable-tokenizer \
+		--enable-dom \
+		--enable-hash \
+		--enable-ctype \
 		--localstatedir=/var \
 
 PHP_CFLAGS = $(TARGET_CFLAGS)
@@ -175,6 +190,10 @@ define PHP_INSTALL_FIXUP
 	rm -rf $(TARGET_DIR)/usr/lib/php
 	rm -f $(TARGET_DIR)/usr/bin/phpize
 	rm -f $(TARGET_DIR)/usr/bin/php-config
+	mv $(TARGET_DIR)/usr/bin/arm-linux-php-cgi $(TARGET_DIR)/sbin/php-cgi
+	rm -f $(TARGET_DIR)/usr/bin/arm-linux-php
+	rm -f $(TARGET_DIR)/usr/bin/arm-linux-php-config
+	rm -f $(TARGET_DIR)/usr/bin/arm-linux-phpize
 	if [ ! -f $(TARGET_DIR)/etc/php.ini ]; then \
 		$(INSTALL) -m 0755 $(BR2_PACKAGE_PHP_CONFIG) $(TARGET_DIR)/etc/php.ini; fi
 endef

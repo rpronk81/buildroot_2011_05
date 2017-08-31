@@ -357,6 +357,7 @@ endmenu
 menu "XML"
 source "package/expat/Config.in"
 source "package/ezxml/Config.in"
+source "package/libjson/Config.in"
 source "package/libxml-parser-perl/Config.in"
 source "package/libxml2/Config.in"
 source "package/libxslt/Config.in"
@@ -401,6 +402,7 @@ source "package/iw/Config.in"
 source "package/kismet/Config.in"
 source "package/xl2tp/Config.in"
 if BR2_PACKAGE_BUSYBOX_SHOW_OTHERS
+source "package/json-dbus-bridge/Config.in"
 source "package/lighttpd/Config.in"
 endif
 source "package/links/Config.in"
