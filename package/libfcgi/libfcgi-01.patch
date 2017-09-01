@@ -1,0 +1,10 @@
+--- a/libfcgi/fcgio.cpp
++++ b/libfcgi/fcgio.cpp
+@@ -24,6 +24,7 @@
+ 
+ #include <limits.h>
+ #include "fcgio.h"
++#include <stdio.h>
+ 
+ using std::streambuf;
+ using std::istream;

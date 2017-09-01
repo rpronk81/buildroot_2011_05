@@ -1,6 +1,7 @@
 config BR2_PACKAGE_JSON_DBUS_BRIDGE
 	bool "json-dbus-bridge"
-	depends on BR2_PACKAGE_LIBJSON
+	depends on BR2_PACKAGE_JSON_C
+	depends on BR2_PACKAGE_LIBFCGI
 	help
 	json-dbus-bridge is a fast-cgi application that provides access to D-Bus.
 	It accepts JSON-RPC[1] calls as used by qooxdoo[2] and translates these
