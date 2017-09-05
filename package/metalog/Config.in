@@ -1,0 +1,5 @@
+config BR2_PACKAGE_METALOG
+	bool "metalog"
+	help
+	  metalog Hooray for logs, and for Beer.
+
