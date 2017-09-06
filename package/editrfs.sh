@@ -50,6 +50,7 @@ fi
 echo "Expanding elinos_rfs tar files to this RFS"
 SPACE_RFS_ADD_ONS=package/customize
 tar -xf $SPACE_RFS_ADD_ONS/bin.tar         -C output/target
+tar -xf $SPACE_RFS_ADD_ONS/sbin.tar         -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/usr_libexec.tar -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/networkman.tar  -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/nm_wpa.tar      -C output/target

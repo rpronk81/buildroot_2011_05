@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
-# Buildroot 2011.05-g7bbafaa-dirty Configuration
-# Fri Sep  1 13:19:53 2017
+# Buildroot 2011.05-g56a90db-dirty Configuration
+# Tue Sep  5 14:22:20 2017
 #
 BR2_HAVE_DOT_CONFIG=y
 BR2_arm=y
@@ -620,7 +620,7 @@ BR2_PACKAGE_CAN_UTILS=y
 # BR2_PACKAGE_IW is not set
 # BR2_PACKAGE_KISMET is not set
 # BR2_PACKAGE_XL2TP is not set
-BR2_PACKAGE_JSON_DBUS_BRIDGE=n
+BR2_PACKAGE_JSON_DBUS_BRIDGE=y
 BR2_PACKAGE_LIGHTTPD=y
 BR2_PACKAGE_LIGHTTPD_OPENSSL=y
 BR2_PACKAGE_LIGHTTPD_ZLIB=y
@@ -728,6 +728,7 @@ BR2_PACKAGE_KMOD=y
 # BR2_PACKAGE_KMOD_TOOLS is not set
 # BR2_PACKAGE_HTOP is not set
 BR2_PACKAGE_MODULE_INIT_TOOLS=y
+BR2_PACKAGE_METALOG=y
 # BR2_PACKAGE_PROCPS is not set
 # BR2_PACKAGE_PSMISC is not set
 # BR2_PACKAGE_SYSKLOGD is not set
