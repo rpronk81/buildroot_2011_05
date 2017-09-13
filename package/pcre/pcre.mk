@@ -4,8 +4,9 @@
 #
 #############################################################
 
-PCRE_VERSION = 7.9
-PCRE_SITE = ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre
+PCRE_VERSION = 8.02
+# PCRE_SITE = ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre
+PCRE_SITE = https://sourceforge.net/projects/pcre/files/pcre/8.02/
 PCRE_INSTALL_STAGING = YES
 PCRE_INSTALL_TARGET = YES
 
