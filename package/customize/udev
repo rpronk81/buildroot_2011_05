@@ -1,0 +1,154 @@
+#!/bin/sh
+
+# Purpose: udev startup script.
+#
+# Author: Jan Capek <jca@sysgo.com>
+#
+# $Id: udev,v 1.1.1.1 2012/05/23 12:56:33 mar Exp $
+#
+# Date: 2006/08/25
+#
+#
+# Description: The script detects whether the /dev or / are on a tmpfs
+# or not. If not, udev moves the current static nodes in /dev into
+# /dev/.static and creates a new tmpfs mounted on /dev.
+#
+# After the udev daemon is started the /dev is populated with nodes
+# supplied by the kernel (via udevtrigger).
+
+[ -x /usr/libexec/udevd ] || exit 0
+
+PATH="/sbin:/bin:/usr/bin:/usr/sbin"
+
+# defaults
+tmpfs_size="1M"
+udev_root="/dev"
+
+[ -e /etc/udev/udev.conf ] && . /etc/udev/udev.conf
+
+case "$1" in
+	start)
+
+	# if dev or the root directory are already on tmpfs there is no
+	# need to create a new one
+	# we use this odd way of checking so even busybox's msh understands
+	# what we want
+	grep -q " /dev .*tmpfs" /proc/mounts || \
+	grep -q " /dev .*ramfs" /proc/mounts || \
+	grep -q " / .*tmpfs" /proc/mounts || \
+	grep -q " / .*ramfs" /proc/mounts || \
+	[ -z "`grep \ /\  /proc/mounts | grep -v rootfs`" ]
+	if [ 0 != $? ] ; then
+		remount_pts=0
+		if grep  -q "/dev/pts" /proc/mounts; then
+			umount -n -l /dev/pts/
+			remount_pts=1
+		fi
+		remount_shm=0
+		if grep -q "/dev/shm" /proc/mounts; then
+			umount -n -l /dev/shm/
+			remount_shm=1
+		fi
+
+		# /etc/udev/ is recycled as a temporary mount point because it's the only
+		# directory which is guaranteed to be available.
+		mount -n --bind /dev /etc/udev
+
+		mount -n -o size=$tmpfs_size,mode=0755 -t tmpfs tmpfs /dev || {
+			umount -n /etc/udev
+			echo "udev: tmpfs support required, not started."
+			exit 1
+		}
+
+		mkdir -p /dev/.static/dev
+		chmod 700 /dev/.static/
+		mount -n --move /etc/udev /dev/.static/dev
+	fi
+
+	#mount /run if exists and not done yet
+	if [ -d /run ] ; then
+		grep -q " /run .*tmpfs" /proc/mounts || \
+		grep -q " / .*tmpfs" /proc/mounts || \
+		[ -z "`grep \ /\  /proc/mounts | grep -v rootfs`" ]
+
+		if [ 0 != $? ] ; then
+			mount -n -o size=$tmpfs_size,mode=0755 -t tmpfs tmpfs /run
+		fi
+	else
+		# if this directory is not present /dev will not be updated by udev
+		mkdir -p /dev/.udev/db/ /dev/.udev/queue/
+	fi
+
+	# Copy over default device tree
+	cp -a -f /lib/udev/devices/* /dev
+	# copy over statically created devices
+	[ -d /dev/.static/dev ] && cp -a -f /dev/.static/dev/* /dev/
+
+	# no hotplug binary needed, udev uses netlink socket
+	[ -d /proc/1 ] || mount -n /proc
+	echo > /proc/sys/kernel/hotplug
+
+	# make_extra_nodes
+	if [ -e /etc/udev/links.conf ] ; then
+		grep '^[^#]' /etc/udev/links.conf | \
+		while read type name arg1; do
+				[ "$type" -a "$name" -a ! -e "/dev/$name" -a ! -L "/dev/$name" ] || \
+					continue
+			case "$type" in
+				L) ln -s $arg1 /dev/$name ;;
+				D) mkdir -p /dev/$name ;;
+				M) mknod -m 600 /dev/$name $arg1 ;;
+				*) echo "udev: links.conf - unparseable line ($type $name $arg1)" ;;
+			esac
+		done
+	else
+		[ -c /dev/null ] || mknod /dev/null c 1 3
+	fi
+
+	# start the daemon
+	/usr/libexec/udevd --daemon || {
+		echo "udev: failed to start udevd!"
+		exit 1
+	}
+
+
+	udevadm trigger || {
+		echo "udev: synthesizing the initial hotplug events failed"
+		exit 1
+	}
+
+	# wait for the udevd childs to finish
+	udevadm settle --timeout=12 || {
+		echo "udev: /dev not populated yet"
+		exit 1
+	}
+
+	# recover previously unmounted special filesystems (shmfs/devpts)
+	[ "${remount_pts}" = "1" ] && mount -n /dev/pts
+	[ "${remount_shm}" = "1" ] && mount -n /dev/shm
+	echo "udev: started"
+	;;
+
+	stop)
+	echo "udev: stopping the hotplug events dispatcher"
+	killall udevd
+	;;
+
+	restart|force-reload)
+	echo "udev: stopping the hotplug events dispatcher"
+	killall udevd
+
+	echo "udev: starting the hotplug events dispatcher"
+	/usr/libexec/udevd --daemon || {
+		echo "udev: failed to start udevd!"
+		exit 1
+	}
+	;;
+
+	*)
+	echo "Usage: /etc/init.d/udev {start|stop|restart|force-reload}"
+	exit 1
+	;;
+esac
+
+exit 0
