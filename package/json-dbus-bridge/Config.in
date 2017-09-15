@@ -1,7 +1,7 @@
 config BR2_PACKAGE_JSON_DBUS_BRIDGE
 	bool "json-dbus-bridge"
-	select     BR2_PACKAGE_LIBFCGI
 	depends on BR2_PACKAGE_JSON_C
+	select     BR2_PACKAGE_LIBFCGI
 	select     BR2_PACKAGE_LIBEVENT
 	help
 	json-dbus-bridge is a fast-cgi application that provides access to D-Bus.
@@ -12,4 +12,3 @@ config BR2_PACKAGE_JSON_DBUS_BRIDGE
 	modifications to the bridge.
 
 comment "JSON Dbus Bridge requires JSON-C libfcgi and libevent 2.X" 
-	depends on !BR2_PACKAGE_LIBFCGI || !BR2_PACKAGE_LIBEVENT
