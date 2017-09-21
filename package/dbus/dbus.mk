@@ -12,7 +12,7 @@ DBUS_DEPENDENCIES = host-pkg-config
 
 DBUS_CONF_ENV = ac_cv_have_abstract_sockets=yes
 DBUS_CONF_OPT = --program-prefix="" \
-		--with-dbus-user=dbus \
+		--with-dbus-user=root \
 		--disable-tests \
 		--disable-asserts \
 		--enable-abstract-sockets \
@@ -20,8 +20,10 @@ DBUS_CONF_OPT = --program-prefix="" \
 		--disable-xml-docs \
 		--disable-doxygen-docs \
 		--disable-static \
-		--enable-dnotify \
+		--enable-inotify \
 		--localstatedir=/var \
+		--with-session-socket-dir=/tmp \
+		--with-test-socket-dir=/tmp \
 		--with-system-socket=/var/run/dbus/system_bus_socket \
 		--with-system-pid-file=/var/run/messagebus.pid
 

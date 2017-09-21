@@ -13,6 +13,7 @@ LIGHTTPD_CONF_OPT = \
 	--localstatedir=/var \
 	--program-prefix="" \
 	$(if $(BR2_LARGEFILE),,--disable-lfs)
+LIGHTTPD_AUTORECONF = YES
 
 ifeq ($(BR2_PACKAGE_LIGHTTPD_OPENSSL),y)
 LIGHTTPD_DEPENDENCIES += openssl
