@@ -15,7 +15,7 @@ POLKIT_INSTALL_TARGET = YES
 POLKIT_DEPENDENCIES = libglib2 host-intltool expat
  
 # We could also support --with-authfw=pam
-POLKIT_CONF_OPT = --with-authfw=shadow --with-os-type=unknown
+POLKIT_CONF_OPT = --with-authfw=shadow --with-os-type=unknown --disable-gtk-doc --disable-man-pages --disable-doxygen-docs --disable-xml-docs
 #POLKIT_AUTORECONF = YES
  
 #$(eval $(autotools-package))

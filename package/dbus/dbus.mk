@@ -12,6 +12,7 @@ DBUS_DEPENDENCIES = host-pkg-config
 
 DBUS_CONF_ENV = ac_cv_have_abstract_sockets=yes
 DBUS_CONF_OPT = --program-prefix="" \
+		--enable-verbose-mode \
 		--with-dbus-user=root \
 		--disable-tests \
 		--disable-asserts \

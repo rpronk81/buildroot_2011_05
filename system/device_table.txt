@@ -22,6 +22,10 @@
 /dev/ttyp	c	666	0	0	3	0	0	1	10
 /dev/ptyp	c       666     0       0       2       0       0       1       10
 /dev/ptmx	c	666	0	0	5	2	-	-	-
+
+#/dev/pts	c	660	0	0	136 	0	-	-	1
+/dev/ptya	c	660	0	0	2	176 	0	1	10
+
 /dev/ttyP	c	666	0	0	57	0	0	1	4
 /dev/ttyS	c	666	0	0	4	64	0	1	4
 /dev/fb		c	640	0	5	29	0	0	1	4

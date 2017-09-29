@@ -56,10 +56,18 @@ tar -xf $SPACE_RFS_ADD_ONS/networkman.tar  -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/nm_wpa.tar      -C output/target
 cp $SPACE_RFS_ADD_ONS/udev                    output/target/etc/init.d/
 
+# Temporary work around for json issues preventing connection with the library. 
+rm output/target/usr/lib/libjson*
+cp /home/robert/50G/br_oct19/buildroot_2011_05/package/customize/usrbin/usr/bin/json-dbus-bridge output/target/usr/bin
+cp -d /home/robert/50G/br_oct19/buildroot_2011_05/package/customize/lib2/lib/libjson.so.0.0.1 output/target/usr/lib
+cp -d /home/robert/50G/br_oct19/buildroot_2011_05/package/customize/lib2/lib/libjson.so.0 output/target/usr/lib
+
+
 cp ./package/customize/fi.epitest.hostap.WPASupplicant.service output/target/usr/share/dbus-1/system-services/fi.epitest.hostap.WPASupplicant.service
 
 cp ./package/customize/nmwpa/etc/group output/target/etc/group
 cp ./package/customize/nmwpa/etc/passwd output/target/etc/passwd
+cp ./package/customize/system-local.conf output/target/etc/dbus-1
 
 STARTINGPOINT=$PWD
 cd output/target/usr/share/locale/
