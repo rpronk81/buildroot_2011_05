@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
-# Buildroot 2011.05-g7d7519c-dirty Configuration
-# Mon Sep 11 15:57:03 2017
+# Buildroot 2011.05-gf69ebbf-dirty Configuration
+# Mon Oct  2 10:24:52 2017
 #
 BR2_HAVE_DOT_CONFIG=y
 BR2_arm=y
@@ -621,6 +621,10 @@ BR2_PACKAGE_CAN_UTILS=y
 # BR2_PACKAGE_KISMET is not set
 # BR2_PACKAGE_XL2TP is not set
 BR2_PACKAGE_JSON_DBUS_BRIDGE=y
+
+#
+# JSON Dbus Bridge requires JSON-C libfcgi and libevent 2.X
+#
 BR2_PACKAGE_LIGHTTPD=y
 BR2_PACKAGE_LIGHTTPD_OPENSSL=y
 BR2_PACKAGE_LIGHTTPD_ZLIB=y
@@ -646,7 +650,7 @@ BR2_PACKAGE_NETWORKMANAGER=y
 BR2_PACKAGE_NTP=y
 # BR2_PACKAGE_NTP_SNTP is not set
 # BR2_PACKAGE_NTP_NTP_KEYGEN is not set
-# BR2_PACKAGE_NTP_NTPD is not set
+BR2_PACKAGE_NTP_NTPD=y
 BR2_PACKAGE_NTP_NTPDATE=y
 # BR2_PACKAGE_NTP_NTPDC is not set
 # BR2_PACKAGE_NTP_NTPQ is not set
