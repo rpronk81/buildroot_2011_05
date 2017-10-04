@@ -7,7 +7,12 @@ if [ -e output/target/etc/inittab ]
 then
    rm -f output/target/etc/inittab
 fi
-cp package/customize/etc/etc/inittab output/target/etc/inittab
+#cp package/customize/etc/etc/inittab output/target/etc/inittab
+cp fs/skeleton/etc/inittab output/target/etc/inittab
+
+cp /home/robert/50G/br_oct19/buildroot_2011_05/package/customize/init.sh output/target/
+chmod a+x output/target/init.sh
+
 cp package/customize/system.conf output/target/etc/dbus-1/
 
 if [ ! -e output/target/lib/firmware ]

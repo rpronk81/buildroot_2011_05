@@ -15,13 +15,16 @@
 
 # Startup the system
 null::sysinit:/bin/mount -t proc proc /proc
+null::respawn:/etc/setupshell
 null::sysinit:/bin/mount -o remount,rw /
+null::sysinit:/bin/mount -t jffs2 -o ro /dev/mtdblock2 /.flash
 null::sysinit:/bin/mount -n -a
 null::sysinit:/bin/mkdir -p /dev/pts
 null::sysinit:/bin/hostname -F /etc/hostname
 
 # now run any rc scripts
-::once:/etc/rc.start
+::once:/init.sh
+
 ::sysinit:/etc/init.d/rcS
 
 # Put a getty on the serial port
