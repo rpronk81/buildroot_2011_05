@@ -15,7 +15,6 @@
 
 # Startup the system
 null::sysinit:/bin/mount -t proc proc /proc
-null::respawn:/etc/setupshell
 null::sysinit:/bin/mount -o remount,rw /
 null::sysinit:/bin/mount -t jffs2 -o ro /dev/mtdblock2 /.flash
 null::sysinit:/bin/mount -n -a

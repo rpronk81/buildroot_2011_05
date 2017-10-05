@@ -100,31 +100,37 @@ pwd
 ln -sf bin/busybox busybox 
 
 ln -sf /tmp/resolv.conf          etc/resolv.conf
-#ln -sf /etc/spacecom/localtime   etc/localtime
+ln -sf /etc/spacecom/localtime   etc/localtime
 #ln -sf /tmp/adjtime             etc/adjtime
 #ln -sf /etc/tmp/adjtime          etc/adjtime
 #ln -sf /etc/spacecom/ftpd.passwd etc/ftpd.passwd
 
-
-chmod u+s  updater/check_params
 mkdir -p sbin/.ssh
 mkdir -p $TARGETPOINT/var/empty/ntp/
 mkdir -p $TARGETPOINT/var/watchdog/empty
 ln -sf dev/.udev udev
 mkdir -p $TARGETPOINT/etc/dhcp
 ln -sf var/dhclient.conf etc/dhcp/dhclient.conf
-ln -sf tmp/known_hosts_www sbin/.ssh
-ln -sf tmp/known_hosts_www root/.ssh
+ln -sf tmp/known_hosts_www sbin/.ssh/known_hosts
 ln -sf tmp/wb45n-bbraun tmp
 ln -sf tmp/wlan tmp
 mkdir -p $TARGETPOINT/usr/local
 #ln -sf etc/ssl usr/local/ssl
-mkdir -p $TARGETPOINT/var/state/dhcp
-mkdir -p $TARGETPOINT/var/lib/dhcp
+mkdir -p var/state/dhcp
+mkdir -p var/lib/dhcp
+rm -rf root/.ssh
 mkdir -p root/.ssh
-cp -fv etc/id_rsa.pub root/.ssh/authorized_keys2
-mv usr/bin/od bin/od
-mv usr/bin/tr bin/tr
+cp -f etc/id_rsa.pub root/.ssh/authorized_keys2
+
+if [ -e usr/bin/od ]
+then
+   mv usr/bin/od bin/od
+fi
+if [ -e usr/bin/tr ]
+then
+   mv usr/bin/tr bin/tr
+fi
+
 mkdir -p sbin/inet6
 cp sbin/ifconfig sbin/inet6/ifconfig
 cp sbin/route sbin/inet6/route
@@ -138,24 +144,16 @@ cp etc/id_rsa.pub sbin/.ssh/
 
 chmod 0600 root/.ssh/authorized_keys2 sbin/.ssh/id_rsa sbin/.ssh/id_rsa.pub
 
-chmod 06755 $TARGETPOINT/sbin/updaterwr 
+chmod 06755 sbin/updaterwr 
+
 cd $TARGETPOINT
 
-chmod 0755 \
-$TARGETPOINT/var/watchdog/empty \
-$TARGETPOINT/var/run \
-$TARGETPOINT/var/state \ 
-$TARGETPOINT/var/state/dhcp \
-$TARGETPOINT/var/lib \
-$TARGETPOINT/var/lib/dhcp \
-$TARGETPOINT/lib \
-$TARGETPOINT/lib/udev \
-$TARGETPOINT/etc/NetworkManager \
-$TARGETPOINT/etc/dbus-1 \
-$TARGETPOINT/etc/spacecom_backup \
-$TARGETPOINT/etc/spacecom_backup/protected \
-$TARGETPOINT/etc/spacecom_backup/protected/system-connections \
-$TARGETPOINT/etc/NetworkManger/dispatcher.d \
+chmod 0755 $TARGETPOINT/var/watchdog/empty $TARGETPOINT/var/run $TARGETPOINT/var/state $TARGETPOINT/var/state/dhcp
+
+chmod 0755 $TARGETPOINT/var/lib
+chmod 0755 $TARGETPOINT/var/lib/dhcp $TARGETPOINT/lib $TARGETPOINT/etc/NetworkManager $TARGETPOINT/etc/dbus-1 
+
+chmod 0755 $TARGETPOINT/etc/NetworkManager/dispatcher.d \
 $TARGETPOINT/etc/NetworkManager/dispatcher.d/01ifupdown \
 $TARGETPOINT/mnt \
 $TARGETPOINT/etc/dbus-1/system.d \
@@ -167,18 +165,13 @@ $TARGETPOINT/usr/libexec \
 $TARGETPOINT/usr/sbin \
 $TARGETPOINT/usr/share/NetworkManager \
 $TARGETPOINT/usr/share/dbus-1 \
-$TARGETPOINT/media \
-$TARGETPOINT/www \
-$TARGETPOINT/etc/fake-files \
-$TARGETPOINT/www/diag \
-$TARGETPOINT/dev/shm \
-$TARGETPOINT/dev/net \
-$TARGETPOINT/etc/dhcp \
+$TARGETPOINT/media 
+
+chmod 0755  $TARGETPOINT/etc/dhcp \
 $TARGETPOINT/updater \
 $TARGETPOINT/usr/local 
 
-chmod 0666 $TARGETPOINT/dev/tun
-
+#chmod 0666 $TARGETPOINT/dev/tun
 
 chmod 01775 $TARGETPOINT/etc/spacecom
 
