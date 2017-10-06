@@ -49,8 +49,14 @@ if [ ! -e output/target/var/log ]
 then
 	mkdir -p output/target/var/log
 	mkdir -p output/target/var/log/debug
+	mkdir -p output/target/var/tmp
+	chmod 775 output/target/var/tmp
 fi
-
+if [ -e output/target/usr/sbin/flashcp ]
+then
+	mv output/target/usr/sbin/flash_erase output/target/sbin/flash_erase
+	mv output/target/usr/sbin/flashcp output/target/sbin/flashcp
+fi
 
 echo "Expanding elinos_rfs tar files to this RFS"
 SPACE_RFS_ADD_ONS=package/customize
@@ -68,7 +74,6 @@ rm output/target/usr/lib/libjson*
 cp /home/robert/50G/br_oct19/buildroot_2011_05/package/customize/usrbin/usr/bin/json-dbus-bridge output/target/usr/bin
 cp -d /home/robert/50G/br_oct19/buildroot_2011_05/package/customize/lib2/lib/libjson.so.0.0.1 output/target/usr/lib
 cp -d /home/robert/50G/br_oct19/buildroot_2011_05/package/customize/lib2/lib/libjson.so.0 output/target/usr/lib
-
 
 cp ./package/customize/fi.epitest.hostap.WPASupplicant.service output/target/usr/share/dbus-1/system-services/fi.epitest.hostap.WPASupplicant.service
 
@@ -176,6 +181,8 @@ $TARGETPOINT/usr/local
 chmod 01775 $TARGETPOINT/etc/spacecom
 
 chmod 0700 $TARGETPOINT/root $TARGETPOINT/root/.ssh $TARGETPOINT/sbin/.ssh
+mkdir $TARGETPOINT/var/tmp
+chmod 775 $TARGETPOINT/var/tmp
 
 echo "editrfs.sh is complete"
 exit 0
