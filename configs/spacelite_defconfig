@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
-# Buildroot 2011.05-gf69ebbf-dirty Configuration
-# Mon Oct  2 10:24:52 2017
+# Buildroot 2011.05-gd74352d-dirty Configuration
+# Fri Oct  6 13:34:30 2017
 #
 BR2_HAVE_DOT_CONFIG=y
 BR2_arm=y
@@ -712,7 +712,7 @@ BR2_PACKAGE_WPA_SUPPLICANT_DBUS_OLD=y
 #
 # BR2_PACKAGE_AT is not set
 # BR2_PACKAGE_BASH is not set
-# BR2_PACKAGE_DASH is not set
+BR2_PACKAGE_DASH=y
 # BR2_PACKAGE_DIALOG is not set
 # BR2_PACKAGE_FILE is not set
 # BR2_PACKAGE_LOCKFILE_PROGS is not set
