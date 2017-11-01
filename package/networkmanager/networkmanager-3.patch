@@ -1,0 +1,11 @@
+--- a/src/nm-device-wifi.c
++++ b/src/nm-device-wifi.c
+@@ -2523,7 +2523,7 @@
+ 			 * while to scan.
+ 			 */
+ 			if (!priv->link_timeout_id) {
+-				priv->link_timeout_id = g_timeout_add_seconds (scanning ? 30 : 15,
++				priv->link_timeout_id = g_timeout_add_seconds (scanning ? 60 : 30,
+ 				                                               link_timeout_cb, self);
+ 			}
+ 		}
