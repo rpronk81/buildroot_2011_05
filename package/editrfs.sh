@@ -66,8 +66,8 @@ tar -xf $SPACE_RFS_ADD_ONS/usr_libexec.tar -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/networkman.tar  -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/nm_wpa.tar      -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/updater.tar     -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/id_rsa.tar         -C output/target
-cp $SPACE_RFS_ADD_ONS/udev                    output/target/etc/init.d/
+tar -xf $SPACE_RFS_ADD_ONS/id_rsa.tar      -C output/target
+cp      $SPACE_RFS_ADD_ONS/udev               output/target/etc/init.d/
 
 # Temporary work around for json issues preventing connection with the library. 
 rm output/target/usr/lib/libjson*
@@ -110,6 +110,8 @@ ln -sf /etc/spacecom/localtime   etc/localtime
 #ln -sf /etc/tmp/adjtime          etc/adjtime
 #ln -sf /etc/spacecom/ftpd.passwd etc/ftpd.passwd
 
+$TARGETPOINT/etc/spacecom_backup 
+
 mkdir -p sbin/.ssh
 mkdir -p $TARGETPOINT/var/empty/ntp/
 mkdir -p $TARGETPOINT/var/watchdog/empty
@@ -137,8 +139,6 @@ then
 fi
 
 mkdir -p sbin/inet6
-cp sbin/ifconfig sbin/inet6/ifconfig
-cp sbin/route sbin/inet6/route
 cp etc/id_rsa sbin/.ssh/
 cp etc/id_rsa.pub sbin/.ssh/
 

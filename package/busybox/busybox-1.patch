@@ -1,0 +1,11 @@
+--- a/init/init.c
++++ b/init/init.c
+@@ -990,7 +990,7 @@
+ 	setsid();
+ 
+ 	/* Make sure environs is set to something sane */
+-	putenv((char *) "HOME=/");
++	putenv((char *) "HOME=/tmp");
+ 	putenv((char *) bb_PATH_root_path);
+ 	putenv((char *) "SHELL=/bin/sh");
+ 	putenv((char *) "USER=root"); /* needed? why? */

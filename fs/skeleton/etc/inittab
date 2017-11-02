@@ -1,5 +1,4 @@
 null::sysinit:/bin/mount -t proc proc /proc
-# null::sysinit:/bin/mount -o remount,rw /
 null::sysinit:/bin/mount -t jffs2 -o ro /dev/mtdblock2 /.flash
 
 console::respawn:-/etc/setupshell
