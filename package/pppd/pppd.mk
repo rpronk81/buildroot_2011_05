@@ -13,6 +13,14 @@ PPPD_RADIUS_MANPAGES = $(if $(BR2_HAVE_DOCUMENTATION),pppd-radattr pppd-radius)
 PPPD_RADIUS_CONF = dictionary dictionary.ascend dictionary.compat \
 			dictionary.merit dictionary.microsoft \
 			issue port-id-map realms server radiusclient.conf
+PPPD_INSTALL_STAGING = YES
+
+define PPPD_INSTALL_STAGING_CMDS
+	cp $(PPPD_DIR)/pppd/pppd.h  $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/pppd/
+	cp $(PPPD_DIR)/pppd/fsm.h  $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/pppd/
+	cp $(PPPD_DIR)/pppd/ipcp.h  $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/pppd/
+	cp $(PPPD_DIR)/pppd/patchlevel.h  $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/
+endef
 
 ifeq ($(BR2_PACKAGE_PPPD_FILTER),y)
 	PPPD_DEPENDENCIES += libpcap

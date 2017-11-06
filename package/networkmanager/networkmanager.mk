@@ -5,8 +5,11 @@
 #############################################################
 NETWORKMANAGER_VERSION = 0.8.1
 NETWORKMANAGER_VERSION_MAJOR=0.8
-NETWORKMANAGER_SOURCE = NetworkManager-$(NETWORKMANAGER_VERSION).tar.gz
-NETWORKMANAGER_SITE = https://download.gnome.org/sources/NetworkManager/$(NETWORKMANAGER_VERSION_MAJOR)
+NETWORKMANAGER_SOURCE = NetworkManager-$(NETWORKMANAGER_VERSION).git20100811.tar
+NETWORKMANAGER_SITE = https://github.com/ptdropper/NetworkManager/blob/master/
+
+#NETWORKMANAGER_SOURCE = NetworkManager-$(NETWORKMANAGER_VERSION).tar.gz
+# NETWORKMANAGER_SITE = https://download.gnome.org/sources/NetworkManager/$(NETWORKMANAGER_VERSION_MAJOR)
 NETWORKMANAGER_INSTALL_STAGING = YES
 NETWORKMANAGER_DEPENDENCIES = host-pkg-config udev dbus-glib libnl wireless_tools gnutls utillinux polkit pppd
 

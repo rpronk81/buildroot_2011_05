@@ -8,7 +8,7 @@ WIRELESS_TOOLS_VERSION = 30
 WIRELESS_TOOLS_SITE = https://github.com/wxjeacen/RTL8188C/raw/master/wireless_tools
 #WIRELESS_TOOLS_SITE = http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux
 WIRELESS_TOOLS_SOURCE = wireless_tools.$(WIRELESS_TOOLS_VERSION).tar.gz
-WIRELESS_TOOLS_INSTALL_STAGING = NO
+WIRELESS_TOOLS_INSTALL_STAGING = YES
 
 WIRELESS_TOOLS_BUILD_TARGETS = iwmulticall
 WIRELESS_TOOLS_INSTALL_TARGETS = install-iwmulticall
@@ -21,6 +21,8 @@ ifeq ($(BR2_PACKAGE_WIRELESS_TOOLS_LIB),y)
 define WIRELESS_TOOLS_INSTALL_STAGING_CMDS
 	$(MAKE) -C $(@D) PREFIX="$(STAGING_DIR)" install-dynamic
 	$(MAKE) -C $(@D) PREFIX="$(STAGING_DIR)/usr" install-hdr
+	cp output/build/wireless_tools-30/wireless.h $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/
+	cp output/build/wireless_tools-30/iwlib.h $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/
 endef
 
 endif
