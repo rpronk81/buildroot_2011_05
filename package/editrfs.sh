@@ -183,6 +183,7 @@ chmod 01775 $TARGETPOINT/etc/spacecom
 chmod 0700 $TARGETPOINT/root $TARGETPOINT/root/.ssh $TARGETPOINT/sbin/.ssh
 mkdir $TARGETPOINT/var/tmp
 chmod 775 $TARGETPOINT/var/tmp
+rmdir $TARGETPOINT/var/watchdog/empty
 
 echo "editrfs.sh is complete"
 exit 0

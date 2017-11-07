@@ -832,7 +832,7 @@ BR2_LINUX_KERNEL_CUSTOM_VERSION=y
 # BR2_LINUX_KERNEL_CUSTOM_TARBALL is not set
 BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="2.6.34"
 BR2_LINUX_KERNEL_VERSION="2.6.34"
-BR2_LINUX_KERNEL_PATCH="package/34to3412.patch package/ns921-1.patch package/ns921-2.patch package/ns921-3.patch /home/robert/svn/trunk/buildroot/ns921-non_gpl.patch package/linux_config.patch"
+BR2_LINUX_KERNEL_PATCH="package/34to3412.patch package/ns921-1.patch package/ns921-2.patch package/ns921-3.patch /home/robert/svn/trunk/buildroot/ns921-non_gpl.patch package/linux_config.patch package/linux_config2.patch"
 # BR2_LINUX_KERNEL_USE_DEFCONFIG is not set
 BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
 BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="output/build/linux-2.6.34/arch/arm/configs/spacecom_lite_defconfig"

@@ -1,0 +1,51 @@
+--- a/arch/arm/configs/spacecom_lite_defconfig	
+--- b/arch/arm/configs/spacecom_lite_defconfig
+@@ -503,13 +503,16 @@
+ CONFIG_WEXT_CORE=y
+ CONFIG_WEXT_PROC=y
+ CONFIG_WEXT_PRIV=y
+-# CONFIG_CFG80211 is not set
++CONFIG_CFG80211=y
++# CONFIG_NL80211_TESTMODE is not set
++# CONFIG_CFG80211_DEVELOPER_WARNINGS is not set
++# CONFIG_CFG80211_REG_DEBUG is not set
++CONFIG_CFG80211_DEFAULT_PS=y
++# CONFIG_CFG80211_INTERNAL_REGDB is not set
++CONFIG_CFG80211_WEXT=y
+ CONFIG_WIRELESS_EXT_SYSFS=y
+ # CONFIG_LIB80211 is not set
+-
+-#
+-# CFG80211 needs to be enabled for MAC80211
+-#
++# CONFIG_MAC80211 is not set
+ 
+ #
+ # Some wireless drivers require a rate control algorithm
+@@ -698,7 +701,9 @@
+ CONFIG_NETDEV_10000=y
+ CONFIG_WLAN=y
+ CONFIG_WLAN_RWLP_SDIO=m
++# CONFIG_ATH_COMMON is not set
+ # CONFIG_HOSTAP is not set
++# CONFIG_LIBERTAS is not set
+ 
+ #
+ # Enable WiMAX (Networking options) to see the WiMAX drivers
+@@ -820,7 +825,15 @@
+ # CONFIG_POWER_SUPPLY is not set
+ # CONFIG_HWMON is not set
+ # CONFIG_THERMAL is not set
+-# CONFIG_WATCHDOG is not set
++CONFIG_WATCHDOG=y
++# CONFIG_WATCHDOG_NOWAYOUT is not set
++
++#
++# Watchdog Device Drivers
++#
++# CONFIG_SOFT_WATCHDOG is not set
++# CONFIG_MAX63XX_WATCHDOG is not set
++CONFIG_NS9XXX_WATCHDOG=y
+ CONFIG_SSB_POSSIBLE=y
+ 
+ #
