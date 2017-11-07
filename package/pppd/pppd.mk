@@ -16,6 +16,8 @@ PPPD_RADIUS_CONF = dictionary dictionary.ascend dictionary.compat \
 PPPD_INSTALL_STAGING = YES
 
 define PPPD_INSTALL_STAGING_CMDS
+	
+	mkdir $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/pppd
 	cp $(PPPD_DIR)/pppd/pppd.h  $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/pppd/
 	cp $(PPPD_DIR)/pppd/fsm.h  $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/pppd/
 	cp $(PPPD_DIR)/pppd/ipcp.h  $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/pppd/
