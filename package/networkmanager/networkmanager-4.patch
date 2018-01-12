@@ -1,0 +1,11 @@
+--- a/src/nm-device-ethernet.c
++++ b/src/nm-device-ethernet.c
+@@ -307,7 +307,7 @@
+ 	const char *iface;
+ 	GUdevClient *client;
+ 	GUdevDevice *dev;
+-	GUdevDevice *parent;
++	GUdevDevice *parent=NULL;
+ 	const char *parent_path, *item, *driver;
+ 	const char *subsystems[] = { "net", NULL };
+ 	GDir *dir;

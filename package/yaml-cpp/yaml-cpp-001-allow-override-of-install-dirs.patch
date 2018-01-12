@@ -1,0 +1,66 @@
+--- yaml-cpp-0.5.2/CMakeLists.txt	2016-04-22 10:17:58.887631326 +0200
++++ yaml-cpp-0.5.2/CMakeLists.txt	2016-04-22 10:30:17.874531809 +0200
+@@ -3,7 +3,7 @@
+ ###
+ ## Due to Mac OSX we need to keep compatibility with CMake 2.6
+ # see http://www.cmake.org/Wiki/CMake_Policies
+-cmake_minimum_required(VERSION 2.6)
++cmake_minimum_required(VERSION 3.2)
+ # see http://www.cmake.org/cmake/help/cmake-2-8-docs.html#policy:CMP0012
+ if(POLICY CMP0012)
+ 	cmake_policy(SET CMP0012 OLD)
+@@ -14,7 +14,7 @@
+ endif()
+ 
+ include(CheckCXXCompilerFlag)
+-
++include(GNUInstallDirs)
+ 
+ ###
+ ### Project settings
+@@ -251,17 +251,16 @@
+ if(WIN32)
+ 	set(_library_dir bin)	# .dll are in PATH, like executables
+ else()
+-	set(_library_dir lib)
++	set(_library_dir ${CMAKE_INSTALL_LIBDIR})
+ endif()
+ 
+-set(INCLUDE_INSTALL_ROOT_DIR include)
++set(INCLUDE_INSTALL_ROOT_DIR ${CMAKE_INSTALL_INCLUDEDIR} CACHE PATH "The include directory where to install headers")
+ 
+ set(INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_ROOT_DIR}/yaml-cpp)
+-set(LIB_INSTALL_DIR "${_library_dir}${LIB_SUFFIX}")
+ 
+ set(_INSTALL_DESTINATIONS
+-	RUNTIME DESTINATION bin
+-	LIBRARY DESTINATION ${LIB_INSTALL_DIR}
++	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ 	ARCHIVE DESTINATION "lib${LIB_SUFFIX}"
+ )
+ 
+@@ -298,7 +297,7 @@
+ 	endif()
+ endif()
+ 
+-install(TARGETS yaml-cpp ${_INSTALL_DESTINATIONS})
++install(TARGETS yaml-cpp EXPORT yaml-cpp-targets ${_INSTALL_DESTINATIONS})
+ install(
+ 	DIRECTORY ${header_directory}
+ 	DESTINATION ${INCLUDE_INSTALL_DIR}
+@@ -317,10 +316,13 @@
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/yaml-cpp-config-version.cmake.in
+ 	"${PROJECT_BINARY_DIR}/yaml-cpp-config-version.cmake" @ONLY)
+ 
++install(FILES ${PROJECT_BINARY_DIR}/yaml-cpp-config.cmake ${PROJECT_BINARY_DIR}/yaml-cpp-config-version.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/yaml-cpp)
++install(EXPORT yaml-cpp-targets DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/yaml-cpp)
++
+ if(UNIX)
+ 	set(PC_FILE ${CMAKE_BINARY_DIR}/yaml-cpp.pc)
+ 	configure_file("yaml-cpp.pc.cmake" ${PC_FILE} @ONLY)
+-	install(FILES ${PC_FILE} DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
++	install(FILES ${PC_FILE} DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ endif()
+ 
+ 

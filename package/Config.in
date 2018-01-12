@@ -365,6 +365,7 @@ source "package/libxml-parser-perl/Config.in"
 source "package/libxml2/Config.in"
 source "package/libxslt/Config.in"
 source "package/xerces/Config.in"
+source "package/yaml-cpp/Config.in"
 endmenu
 
 endmenu

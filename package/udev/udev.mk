@@ -47,5 +47,5 @@ UDEV_POST_INSTALL_TARGET_HOOKS += UDEV_INSTALL_INITSCRIPT
 
 $(eval $(call AUTOTARGETS,package,udev))
 
-# cp ./output/build/utillinux-2.20.1/libblkid/src/.libs/libblkid.* ./output/host/usr/arm-unknown-linux-gnueabi/sysroot/usr/lib/  
-#
+export PKG_CONFIG_PATH=$(DL_DIR)/../output/build/utillinux-2.20.1/libblkid/:$(DL_DIR)/../output/build/utillinux-2.20.1/libuuid/
+

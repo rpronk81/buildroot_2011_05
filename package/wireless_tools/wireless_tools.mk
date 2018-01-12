@@ -7,7 +7,7 @@
 WIRELESS_TOOLS_VERSION = 30
 WIRELESS_TOOLS_SITE = https://github.com/wxjeacen/RTL8188C/raw/master/wireless_tools
 #WIRELESS_TOOLS_SITE = http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux
-WIRELESS_TOOLS_SOURCE = wireless_tools.$(WIRELESS_TOOLS_VERSION).tar.gz
+WIRELESS_TOOLS_SOURCE = wireless_tools.$(WIRELESS_TOOLS_VERSION).rtl.tar.gz
 WIRELESS_TOOLS_INSTALL_STAGING = YES
 
 WIRELESS_TOOLS_BUILD_TARGETS = iwmulticall
