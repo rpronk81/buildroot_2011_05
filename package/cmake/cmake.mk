@@ -1,6 +1,6 @@
-CMAKE_VERSION=2.8.3
+CMAKE_VERSION=3.5.1
 CMAKE_SOURCE=cmake-$(CMAKE_VERSION).tar.gz
-CMAKE_SITE=http://www.cmake.org/files/v2.8/
+CMAKE_SITE=http://www.cmake.org/files/v3.5/
 
 define HOST_CMAKE_CONFIGURE_CMDS
  (cd $(@D); \

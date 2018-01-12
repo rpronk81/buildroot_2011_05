@@ -1,0 +1,11 @@
+--- boost-1.57.0/boost/container/vector.hpp.orig	2016-03-17 13:38:04.350240553 +0100
++++ boost-1.57.0/boost/container/vector.hpp	2016-03-17 13:38:19.454241127 +0100
+@@ -1709,7 +1709,7 @@
+          const_iterator first1(x.cbegin()), first2(y.cbegin());
+          const const_iterator last1(x.cend());
+          for (; first1 != last1; ++first1, ++first2) {
+-            if (!(*first1 != *first2)) {
++            if (*first1 != *first2) {
+                   return false;
+             }
+          }
