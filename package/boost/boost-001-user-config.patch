@@ -1,0 +1,16 @@
+Manual customizations to the build process.
+
+--- boost-1.57.0/boost/config/user.hpp	2014-06-12 11:42:55.946074192 +0200
++++ boost-1.57.0/boost/config/user.hpp	2014-06-12 11:43:16.669813659 +0200
+@@ -87,7 +87,10 @@
+ // be statically linked (Boost.Test for example) and others which may only 
+ // be dynamically linked (Boost.Threads for example), in these cases this 
+ // macro has no effect.
+-// #define BOOST_ALL_DYN_LINK
++#define BOOST_ALL_DYN_LINK
++
++// set BOOST_THREAD_VERSION to allow working with promise and unique_ptr
++#define BOOST_THREAD_VERSION 3
+  
+ // BOOST_WHATEVER_DYN_LINK: Forces library "whatever" to be linked as a dll 
+ // rather than a static library on Microsoft Windows: replace the WHATEVER 

@@ -1,0 +1,15 @@
+This patch allows for non-primitive pointer type casting in the circular buffer,
+which is needed to use rotate() when it is instantiated with offset_ptr types 
+from shared memory.
+
+--- boost-1.57.0/boost/circular_buffer/base.hpp.orig	2014-09-26 12:06:54.483081827 +0200
++++ boost-1.57.0/boost/circular_buffer/base.hpp	2014-09-26 12:07:35.282158657 +0200
+@@ -755,7 +755,7 @@
+         BOOST_CB_ASSERT(new_begin.is_valid(this)); // check for uninitialized or invalidated iterator
+         BOOST_CB_ASSERT(new_begin.m_it != 0);      // check for iterator pointing to end()
+         if (full()) {
+-            m_first = m_last = const_cast<pointer>(new_begin.m_it);
++            m_first = m_last = boost::intrusive::pointer_traits<pointer>::const_cast_from(new_begin.m_it);
+         } else {
+             difference_type m = end() - new_begin;
+             difference_type n = new_begin - begin();
