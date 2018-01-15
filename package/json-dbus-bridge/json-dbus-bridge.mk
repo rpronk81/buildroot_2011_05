@@ -12,10 +12,14 @@ JSON_DBUS_BRIDGE_DEPENDENCIES = libfcgi libevent
 
 JSON_DBUS_BRIDGE_AUTORECONF = YES
 
+ifeq ($(BR2_ARCH),"powerpc")
+CUSTOM_TOOLCHAIN_PATH = $(BR2_HOST_DIR)/usr/powerpc-unknown-linux-gnu
+endif 
+
 define JSON_DBUS_BRIDGE_CPY_JSON_C_LIB
-	mkdir -p $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/json
-	cp $(DL_DIR)/../output/build/json-c-0.10-20120530/*.h $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/json/
-	cp -p $(DL_DIR)/../output/target/usr/lib/libjson.*  $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/lib
+	mkdir -p $(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/json
+	cp $(DL_DIR)/../output/build/json-c-0.10-20120530/*.h $(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/json/
+	cp -p $(DL_DIR)/../output/target/usr/lib/libjson.*  $(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/lib
 endef
 
 JSON_DBUS_BRIDGE_POST_EXTRACT_HOOKS += JSON_DBUS_BRIDGE_CPY_JSON_C_LIB

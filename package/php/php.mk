@@ -3,7 +3,7 @@
 # php
 #
 #############################################################
-# --with-curl=/opt/buildroot-2011.05/usr/bin/arm-none-linux-gnueabi \
+# --with-curl=/opt/buildroot-2011.05-ppc/usr/bin/powerpc-unknown-linux-gnu \
 
 PHP_VERSION = 5.4.3
 #PHP_VERSION = 5.2.17
@@ -23,9 +23,9 @@ PHP_CONF_OPT =  --mandir=/usr/share/man \
 		--with-config-file-path=/etc \
 		--without-iconv \
 		--enable-cgi \
-		--with-zlib-dir=/opt/buildroot-2011.05/usr/bin/arm-none-linux-gnueabi \
-		--with-gettext=/opt/buildroot-2011.05/usr/bin/arm-none-linux-gnueabi \
-		--with-curl=/opt/buildroot-2011.05/usr/arm-unknown-linux-gnueabi/sysroot/usr \
+		--with-zlib-dir=/opt/buildroot-2011.05-ppc/usr/bin/powerpc-unknown-linux-gnu \
+		--with-gettext=/opt/buildroot-2011.05-ppc/usr/bin/powerpc-unknown-linux-gnu \
+		--with-curl=/opt/buildroot-2011.05-ppc/usr/powerpc-unknown-linux-gnu/sysroot/usr \
 		--enable-fileinfo \
 		--enable-tokenizer \
 		--enable-dom \

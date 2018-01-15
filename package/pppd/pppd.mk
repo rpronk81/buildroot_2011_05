@@ -15,13 +15,16 @@ PPPD_RADIUS_CONF = dictionary dictionary.ascend dictionary.compat \
 			issue port-id-map realms server radiusclient.conf
 PPPD_INSTALL_STAGING = YES
 
+ifeq ($(BR2_ARCH),"powerpc")
+CUSTOM_TOOLCHAIN_PATH = $(BR2_HOST_DIR)/usr/powerpc-unknown-linux-gnu
+endif 
+
 define PPPD_INSTALL_STAGING_CMDS
-	
-	mkdir $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/pppd
-	cp $(PPPD_DIR)/pppd/pppd.h  $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/pppd/
-	cp $(PPPD_DIR)/pppd/fsm.h  $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/pppd/
-	cp $(PPPD_DIR)/pppd/ipcp.h  $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/pppd/
-	cp $(PPPD_DIR)/pppd/patchlevel.h  $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/
+	mkdir $(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/pppd
+	cp $(PPPD_DIR)/pppd/pppd.h  $(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/pppd/
+	cp $(PPPD_DIR)/pppd/fsm.h  $(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/pppd/
+	cp $(PPPD_DIR)/pppd/ipcp.h  $(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/pppd/
+	cp $(PPPD_DIR)/pppd/patchlevel.h  $(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/
 endef
 
 ifeq ($(BR2_PACKAGE_PPPD_FILTER),y)

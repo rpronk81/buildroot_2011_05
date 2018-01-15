@@ -97,29 +97,18 @@ endef
 UTILLINUX_INSTALL_STAGING_OPT += MKINSTALLDIRS=$(@D)/config/mkinstalldirs
 UTILLINUX_INSTALL_TARGET_OPT += MKINSTALLDIRS=$(@D)/config/mkinstalldirs
 
+ifeq ($(BR2_ARCH),"powerpc")
+	CUSTOM_TOOLCHAIN_PATH = $(BR2_HOST_DIR)/usr/powerpc-unknown-linux-gnu
+endif 
+
 define UTILLINUX_INSTALL_STAGING_CMDS
-	mkdir $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/uuid
-	mkdir $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/blkid
-	cp output/build/utillinux-2.20.1/libuuid/src/uuid.h $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/uuid/
-	cp output/build/utillinux-2.20.1/libblkid/src/blkid.h $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/blkid/
-	cp output/build/utillinux-2.20.1/libblkid/src/.libs/libblkid.* $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/lib/
-	cp  output/build/utillinux-2.20.1/libuuid/src/.libs/lib* $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/lib/
+	if [ ! -f /opt/buildroot-2011.05-ppc/usr/powerpc-unknown-linux-gnu/sysroot/usr/include/uuid/uuid.h ]; then \
+		echo "file not found uuid.h";  mkdir "$(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/uuid" ;  mkdir "$(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/blkid"; fi
+	cp output/build/utillinux-2.20.1/libuuid/src/uuid.h $(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/uuid/
+	cp output/build/utillinux-2.20.1/libblkid/src/blkid.h $(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/blkid/
+	cp output/build/utillinux-2.20.1/libblkid/src/.libs/libblkid.* $(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/lib/
+	cp  output/build/utillinux-2.20.1/libuuid/src/.libs/lib* $(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/lib/
 endef
 
 $(eval $(call AUTOTARGETS,package,utillinux))
 $(eval $(call AUTOTARGETS,package,utillinux,host))
-
-# Once this builds edit the PCK_CONFIG_PATH
-# export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/home/robert/50G/br_oct19/buildroot_2011_05/output/build/utillinux-2.20.1/libblkid/:/home/robert/50G/br_oct19/buildroot_2011_05/output/build/utillinux-2.20.1/libuuid/
-
-
-# Add these to let udev-1.82 build
-# export PKG_CONFIG_PATH=/home/robert/50G/br_oct19/buildroot_2011_05/output/build/utillinux-2.20.1/libblkid/:/home/robert/50G/br_oct19/buildroot_2011_05/output/build/utillinux-2.20.1/libuuid/
-
-# mkdir ./output/host/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/uuid
-# mkdir ./output/host/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/blkid
-# cp ./output/build/utillinux-2.20.1/libuuid/src/uuid.h ./output/host/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/uuid/
-# cp ./output/build/utillinux-2.20.1/libblkid/src/blkid.h ./output/host/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/blkid/
-# cp ./output/build/utillinux-2.20.1/libblkid/src/.libs/libblkid.* ./output/host/usr/arm-unknown-linux-gnueabi/sysroot/usr/lib/
-# cp  output/build/utillinux-2.20.1/libuuid/src/.libs/lib* ./output/host/usr/arm-unknown-linux-gnueabi/sysroot/usr/lib/
-#

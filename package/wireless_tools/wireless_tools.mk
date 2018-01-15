@@ -18,11 +18,15 @@ ifeq ($(BR2_PACKAGE_WIRELESS_TOOLS_LIB),y)
 	WIRELESS_TOOLS_BUILD_TARGETS += libiw.so.$(WIRELESS_TOOLS_VERSION)
 	WIRELESS_TOOLS_INSTALL_TARGETS += install-dynamic
 
+ifeq ($(BR2_ARCH),"powerpc")
+CUSTOM_TOOLCHAIN_PATH = $(BR2_HOST_DIR)/usr/powerpc-unknown-linux-gnu
+endif 
+
 define WIRELESS_TOOLS_INSTALL_STAGING_CMDS
 	$(MAKE) -C $(@D) PREFIX="$(STAGING_DIR)" install-dynamic
 	$(MAKE) -C $(@D) PREFIX="$(STAGING_DIR)/usr" install-hdr
-	cp output/build/wireless_tools-30/wireless.h $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/
-	cp output/build/wireless_tools-30/iwlib.h $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi/sysroot/usr/include/
+	cp output/build/wireless_tools-30/wireless.h $(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/
+	cp output/build/wireless_tools-30/iwlib.h $(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/
 endef
 
 endif
