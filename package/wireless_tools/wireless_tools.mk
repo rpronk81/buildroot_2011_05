@@ -20,6 +20,8 @@ ifeq ($(BR2_PACKAGE_WIRELESS_TOOLS_LIB),y)
 
 ifeq ($(BR2_ARCH),"powerpc")
 CUSTOM_TOOLCHAIN_PATH = $(BR2_HOST_DIR)/usr/powerpc-unknown-linux-gnu
+else
+CUSTOM_TOOLCHAIN_PATH = $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi
 endif 
 
 define WIRELESS_TOOLS_INSTALL_STAGING_CMDS

@@ -80,3 +80,6 @@ cp output/build/libnss-3.12.9/mozilla/security/nss/lib/util/pkcs11f.h /opt/build
 cp output/build/libnss-3.12.9/mozilla/security/nss/lib/util/secdig.h /opt/buildroot-2011.05-ppc/usr/powerpc-unknown-linux-gnu/sysroot/usr/include/
 cp output/build/libnss-3.12.9/mozilla/security/nss/lib/util/secdigt.h /opt/buildroot-2011.05-ppc/usr/powerpc-unknown-linux-gnu/sysroot/usr/include/
 cp output/build/libnss-3.12.9/mozilla/security/nss/lib/pkcs12/pkcs12t.h  /opt/buildroot-2011.05-ppc/usr/powerpc-unknown-linux-gnu/sysroot/usr/include/
+cp output/build/libnss-3.12.9/mozilla/security/nss/lib/util/ciferfam.h /opt/buildroot-2011.05-ppc/usr/powerpc-unknown-linux-gnu/sysroot/usr/include/
+cp output/build/libnss-3.12.9/mozilla/security/nss/lib/pkcs12/p12plcy.h /opt/buildroot-2011.05-ppc/usr/powerpc-unknown-linux-gnu/sysroot/usr/include/
+cp output/build/libnss-3.12.9/mozilla/security/nss/lib/nss/nss.h /opt/buildroot-2011.05-ppc/usr/powerpc-unknown-linux-gnu/sysroot/usr/include/

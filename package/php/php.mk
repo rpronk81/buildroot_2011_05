@@ -185,15 +185,30 @@ ifeq ($(BR2_PACKAGE_PHP_EXT_PDO_MYSQL),y)
 	PHP_DEPENDENCIES += mysql_client
 endif
 endif
-
+ifeq ($(BR2_ARCH),"powerpc")
+CUSTOM_TOOLCHAIN_PATH = $(BR2_HOST_DIR)/usr/powerpc-unknown-linux-gnu
+else
+CUSTOM_TOOLCHAIN_PATH = $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi
+endif 
 define PHP_INSTALL_FIXUP
 	rm -rf $(TARGET_DIR)/usr/lib/php
 	rm -f $(TARGET_DIR)/usr/bin/phpize
 	rm -f $(TARGET_DIR)/usr/bin/php-config
-	mv $(TARGET_DIR)/usr/bin/arm-linux-php-cgi $(TARGET_DIR)/sbin/php-cgi
-	rm -f $(TARGET_DIR)/usr/bin/arm-linux-php
-	rm -f $(TARGET_DIR)/usr/bin/arm-linux-php-config
-	rm -f $(TARGET_DIR)/usr/bin/arm-linux-phpize
+
+	if [ "$(BR2_ARCH)" = "powerpc" ]; then \
+	mv $(TARGET_DIR)/usr/bin/powerpc-linux-php-cgi $(TARGET_DIR)/sbin/php-cgi ; \
+	rm -f $(TARGET_DIR)/usr/bin/powerpc-linux-php ; \
+	rm -f $(TARGET_DIR)/usr/bin/powerpc-linux-php-config ; \
+	rm -f $(TARGET_DIR)/usr/bin/powerpc-linux-phpize ; \
+	fi
+
+	if [ "$(BR2_ARCH)" ="arm" ]; then \
+	mv $(TARGET_DIR)/usr/bin/arm-linux-php-cgi $(TARGET_DIR)/sbin/php-cgi ; \
+	rm -f $(TARGET_DIR)/usr/bin/arm-linux-php ; \
+	rm -f $(TARGET_DIR)/usr/bin/arm-linux-php-config ; \
+	rm -f $(TARGET_DIR)/usr/bin/arm-linux-phpize ; \
+	fi 
+
 	if [ ! -f $(TARGET_DIR)/etc/php.ini ]; then \
 		$(INSTALL) -m 0755 $(BR2_PACKAGE_PHP_CONFIG) $(TARGET_DIR)/etc/php.ini; fi
 endef

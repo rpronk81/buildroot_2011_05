@@ -99,11 +99,13 @@ UTILLINUX_INSTALL_TARGET_OPT += MKINSTALLDIRS=$(@D)/config/mkinstalldirs
 
 ifeq ($(BR2_ARCH),"powerpc")
 	CUSTOM_TOOLCHAIN_PATH = $(BR2_HOST_DIR)/usr/powerpc-unknown-linux-gnu
+else
+	CUSTOM_TOOLCHAIN_PATH = $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi
 endif 
 
 define UTILLINUX_INSTALL_STAGING_CMDS
 	if [ ! -f /opt/buildroot-2011.05-ppc/usr/powerpc-unknown-linux-gnu/sysroot/usr/include/uuid/uuid.h ]; then \
-		echo "file not found uuid.h";  mkdir "$(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/uuid" ;  mkdir "$(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/blkid"; fi
+		mkdir "$(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/uuid" ;  mkdir "$(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/blkid"; fi
 	cp output/build/utillinux-2.20.1/libuuid/src/uuid.h $(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/uuid/
 	cp output/build/utillinux-2.20.1/libblkid/src/blkid.h $(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/include/blkid/
 	cp output/build/utillinux-2.20.1/libblkid/src/.libs/libblkid.* $(CUSTOM_TOOLCHAIN_PATH)/sysroot/usr/lib/

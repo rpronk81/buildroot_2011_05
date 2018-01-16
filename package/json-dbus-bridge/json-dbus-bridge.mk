@@ -14,6 +14,8 @@ JSON_DBUS_BRIDGE_AUTORECONF = YES
 
 ifeq ($(BR2_ARCH),"powerpc")
 CUSTOM_TOOLCHAIN_PATH = $(BR2_HOST_DIR)/usr/powerpc-unknown-linux-gnu
+else
+CUSTOM_TOOLCHAIN_PATH = $(BR2_HOST_DIR)/usr/arm-unknown-linux-gnueabi
 endif 
 
 define JSON_DBUS_BRIDGE_CPY_JSON_C_LIB
