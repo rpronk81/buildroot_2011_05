@@ -1,0 +1,14 @@
+--- a/arch/powerpc/platforms/52xx/Kconfig	2010-05-16 17:17:36.000000000 -0400
++++ b/arch/powerpc/platforms/52xx/Kconfig	2018-01-16 15:41:15.837876984 -0500
+@@ -36,6 +36,11 @@
+ 	select RTAS_PROC
+ 	select PPC_NATIVE
+ 
++config PPC_SPACECOM2
++	bool "B.Braun SpaceCom 2 Board"
++	help
++	Support for the B.Braun SpaceCom 2 Board.
++
+ config PPC_LITE5200
+ 	bool "Freescale Lite5200 Eval Board"
+ 	depends on PPC_MPC52xx
