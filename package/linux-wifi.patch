@@ -1,0 +1,20 @@
+--- a/drivers/net/wireless/Kconfig
++++ b/drivers/net/wireless/Kconfig
+@@ -210,6 +210,17 @@
+ 
+ 	  If you choose to build a module, it'll be called rndis_wlan.
+ 
++config RTL8712U
++	tristate "RealTek RTL8712U (RTL8192SU) Wireless LAN NIC driver"
++	depends on WLAN && USB
++	select WIRELESS_EXT
++	select WEXT_PRIV
++	select FW_LOADER
++	default N
++	---help---
++	This option adds the Realtek RTL8712 USB device such as the D-Link DWA-130.
++	If built as a module, it will be called r8712u.
++
+ config RTL8180
+ 	tristate "Realtek 8180/8185 PCI support"
+ 	depends on MAC80211 && PCI && EXPERIMENTAL
