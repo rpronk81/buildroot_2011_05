@@ -1,0 +1,229 @@
+diff -ur linux-34/drivers/net/wireless//ath/ath.h linux-ppc/drivers/net/wireless//ath/ath.h
+--- linux-34/drivers/net/wireless//ath/ath.h	2010-10-21 13:59:52.000000000 +0200
++++ linux-ppc/drivers/net/wireless//ath/ath.h	2010-10-18 12:02:10.000000000 +0200
+@@ -19,6 +19,7 @@
+ 
+ #include <linux/skbuff.h>
+ #include <linux/if_ether.h>
++#include <linux/spinlock.h>
+ #include <net/mac80211.h>
+ 
+ /*
+@@ -35,7 +36,6 @@
+ 
+ struct ath_ani {
+ 	bool caldone;
+-	int16_t noise_floor;
+ 	unsigned int longcal_timer;
+ 	unsigned int shortcal_timer;
+ 	unsigned int resetcal_timer;
+@@ -43,11 +43,24 @@
+ 	struct timer_list timer;
+ };
+ 
++struct ath_cycle_counters {
++	u32 cycles;
++	u32 rx_busy;
++	u32 rx_frame;
++	u32 tx_frame;
++};
++
+ enum ath_device_state {
+ 	ATH_HW_UNAVAILABLE,
+ 	ATH_HW_INITIALIZED,
+ };
+ 
++enum ath_bus_type {
++	ATH_PCI,
++	ATH_AHB,
++	ATH_USB,
++};
++
+ struct reg_dmn_pair_mapping {
+ 	u16 regDmnEnum;
+ 	u16 reg_5ghz_ctl;
+@@ -65,17 +78,54 @@
+ 	struct reg_dmn_pair_mapping *regpair;
+ };
+ 
++enum ath_crypt_caps {
++	ATH_CRYPT_CAP_CIPHER_AESCCM		= BIT(0),
++	ATH_CRYPT_CAP_MIC_COMBINED		= BIT(1),
++};
++
++struct ath_keyval {
++	u8 kv_type;
++	u8 kv_pad;
++	u16 kv_len;
++	u8 kv_val[16]; /* TK */
++	u8 kv_mic[8]; /* Michael MIC key */
++	u8 kv_txmic[8]; /* Michael MIC TX key (used only if the hardware
++			 * supports both MIC keys in the same key cache entry;
++			 * in that case, kv_mic is the RX key) */
++};
++
++enum ath_cipher {
++	ATH_CIPHER_WEP = 0,
++	ATH_CIPHER_AES_OCB = 1,
++	ATH_CIPHER_AES_CCM = 2,
++	ATH_CIPHER_CKIP = 3,
++	ATH_CIPHER_TKIP = 4,
++	ATH_CIPHER_CLR = 5,
++	ATH_CIPHER_MIC = 127
++};
++
++/**
++ * struct ath_ops - Register read/write operations
++ *
++ * @read: Register read
++ * @write: Register write
++ * @enable_write_buffer: Enable multiple register writes
++ * @write_flush: flush buffered register writes and disable buffering
++ */
+ struct ath_ops {
+ 	unsigned int (*read)(void *, u32 reg_offset);
+-        void (*write)(void *, u32 val, u32 reg_offset);
++	void (*write)(void *, u32 val, u32 reg_offset);
++	void (*enable_write_buffer)(void *);
++	void (*write_flush) (void *);
+ };
+ 
+ struct ath_common;
+ 
+ struct ath_bus_ops {
+-	void		(*read_cachesize)(struct ath_common *common, int *csz);
+-	bool		(*eeprom_read)(struct ath_common *common, u32 off, u16 *data);
+-	void		(*bt_coex_prep)(struct ath_common *common);
++	enum ath_bus_type ath_bus_type;
++	void (*read_cachesize)(struct ath_common *common, int *csz);
++	bool (*eeprom_read)(struct ath_common *common, u32 off, u16 *data);
++	void (*bt_coex_prep)(struct ath_common *common);
+ };
+ 
+ struct ath_common {
+@@ -100,7 +150,14 @@
+ 
+ 	u32 keymax;
+ 	DECLARE_BITMAP(keymap, ATH_KEYMAX);
+-	u8 splitmic;
++	DECLARE_BITMAP(tkip_keymap, ATH_KEYMAX);
++	enum ath_crypt_caps crypt_caps;
++
++	unsigned int clockrate;
++
++	spinlock_t cc_lock;
++	struct ath_cycle_counters cc_ani;
++	struct ath_cycle_counters cc_survey;
+ 
+ 	struct ath_regulatory regulatory;
+ 	const struct ath_ops *ops;
+@@ -112,5 +169,13 @@
+ 				gfp_t gfp_mask);
+ 
+ void ath_hw_setbssidmask(struct ath_common *common);
++void ath_key_delete(struct ath_common *common, struct ieee80211_key_conf *key);
++int ath_key_config(struct ath_common *common,
++			  struct ieee80211_vif *vif,
++			  struct ieee80211_sta *sta,
++			  struct ieee80211_key_conf *key);
++bool ath_hw_keyreset(struct ath_common *common, u16 entry);
++void ath_hw_cycle_counters_update(struct ath_common *common);
++int32_t ath_hw_get_listen_time(struct ath_common *common);
+ 
+ #endif /* ATH_H */
+diff -ur linux-34/drivers/net/wireless//ath/debug.h linux-ppc/drivers/net/wireless//ath/debug.h
+--- linux-34/drivers/net/wireless//ath/debug.h	2010-10-21 13:59:52.000000000 +0200
++++ linux-ppc/drivers/net/wireless//ath/debug.h	2010-10-18 12:02:10.000000000 +0200
+@@ -36,6 +36,7 @@
+  * @ATH_DBG_PS: power save processing
+  * @ATH_DBG_HWTIMER: hardware timer handling
+  * @ATH_DBG_BTCOEX: bluetooth coexistance
++ * @ATH_DBG_BSTUCK: stuck beacons
+  * @ATH_DBG_ANY: enable all debugging
+  *
+  * The debug level is used to control the amount and type of debugging output
+@@ -59,6 +60,8 @@
+ 	ATH_DBG_PS		= 0x00000800,
+ 	ATH_DBG_HWTIMER		= 0x00001000,
+ 	ATH_DBG_BTCOEX		= 0x00002000,
++	ATH_DBG_WMI		= 0x00004000,
++	ATH_DBG_BSTUCK		= 0x00008000,
+ 	ATH_DBG_ANY		= 0xffffffff
+ };
+ 
+@@ -74,4 +77,14 @@
+ }
+ #endif /* CONFIG_ATH_DEBUG */
+ 
++/** Returns string describing opmode, or NULL if unknown mode. */
++#ifdef CONFIG_ATH_DEBUG
++const char *ath_opmode_to_string(enum nl80211_iftype opmode);
++#else
++static inline const char *ath_opmode_to_string(enum nl80211_iftype opmode)
++{
++	return "UNKNOWN";
++}
++#endif
++
+ #endif /* ATH_DEBUG_H */
+diff -ur linux-34/drivers/net/wireless//ath/Kconfig linux-ppc/drivers/net/wireless//ath/Kconfig
+--- linux-34/drivers/net/wireless//ath/Kconfig	2010-10-21 13:59:52.000000000 +0200
++++ linux-ppc/drivers/net/wireless//ath/Kconfig	2010-10-18 12:02:10.000000000 +0200
+@@ -3,7 +3,7 @@
+ 	depends on CFG80211
+ 	---help---
+ 	  This will enable the support for the Atheros wireless drivers.
+-	  ath5k, ath9k and ar9170 drivers share some common code, this option
++	  ath5k, ath9k, ath9k_htc and ar9170 drivers share some common code, this option
+ 	  enables the common ath.ko module which shares common helpers.
+ 
+ 	  For more information and documentation on this module you can visit:
+diff -ur linux-34/drivers/net/wireless//ath/reg.h linux-ppc/drivers/net/wireless//ath/reg.h
+--- a/drivers/net/wireless/ath/reg.h	2010-10-21 13:59:52.000000000 +0200
++++ b/drivers/net/wireless/ath/reg.h	2010-10-18 12:02:10.000000000 +0200
+@@ -17,6 +17,12 @@
+ #ifndef ATH_REGISTERS_H
+ #define ATH_REGISTERS_H
+ 
++#define AR_MIBC			0x0040
++#define AR_MIBC_COW		0x00000001
++#define AR_MIBC_FMC		0x00000002
++#define AR_MIBC_CMC		0x00000004
++#define AR_MIBC_MCS		0x00000008
++
+ /*
+  * BSSID mask registers. See ath_hw_set_bssid_mask()
+  * for detailed documentation about these registers.
+@@ -24,4 +30,32 @@
+ #define AR_BSSMSKL		0x80e0
+ #define AR_BSSMSKU		0x80e4
+ 
++#define AR_TFCNT		0x80ec
++#define AR_RFCNT		0x80f0
++#define AR_RCCNT		0x80f4
++#define AR_CCCNT		0x80f8
++
++#define AR_KEYTABLE_0           0x8800
++#define AR_KEYTABLE(_n)         (AR_KEYTABLE_0 + ((_n)*32))
++#define AR_KEY_CACHE_SIZE       128
++#define AR_RSVD_KEYTABLE_ENTRIES 4
++#define AR_KEY_TYPE             0x00000007
++#define AR_KEYTABLE_TYPE_40     0x00000000
++#define AR_KEYTABLE_TYPE_104    0x00000001
++#define AR_KEYTABLE_TYPE_128    0x00000003
++#define AR_KEYTABLE_TYPE_TKIP   0x00000004
++#define AR_KEYTABLE_TYPE_AES    0x00000005
++#define AR_KEYTABLE_TYPE_CCM    0x00000006
++#define AR_KEYTABLE_TYPE_CLR    0x00000007
++#define AR_KEYTABLE_ANT         0x00000008
++#define AR_KEYTABLE_VALID       0x00008000
++#define AR_KEYTABLE_KEY0(_n)    (AR_KEYTABLE(_n) + 0)
++#define AR_KEYTABLE_KEY1(_n)    (AR_KEYTABLE(_n) + 4)
++#define AR_KEYTABLE_KEY2(_n)    (AR_KEYTABLE(_n) + 8)
++#define AR_KEYTABLE_KEY3(_n)    (AR_KEYTABLE(_n) + 12)
++#define AR_KEYTABLE_KEY4(_n)    (AR_KEYTABLE(_n) + 16)
++#define AR_KEYTABLE_TYPE(_n)    (AR_KEYTABLE(_n) + 20)
++#define AR_KEYTABLE_MAC0(_n)    (AR_KEYTABLE(_n) + 24)
++#define AR_KEYTABLE_MAC1(_n)    (AR_KEYTABLE(_n) + 28)
++
+ #endif /* ATH_REGISTERS_H */

@@ -1,0 +1,1235 @@
+--- /dev/null
++++ b/arch/powerpc/platforms/52xx/mpc52xx_pic.h
+@@ -0,0 +1,11 @@
++/* HW IRQ mapping */
++#define MPC52xx_IRQ_L1_CRIT	(0)
++#define MPC52xx_IRQ_L1_MAIN	(1)
++#define MPC52xx_IRQ_L1_PERP	(2)
++#define MPC52xx_IRQ_L1_SDMA	(3)
++
++#define MPC52xx_IRQ_L1_OFFSET	(6)
++#define MPC52xx_IRQ_L1_MASK	(0x00c0)
++#define MPC52xx_IRQ_L2_MASK	(0x003f)
++
++#define MPC52xx_IRQ_HIGHTESTHWIRQ (0xd0)
+--- /dev/null	2018-02-08 13:54:34.068029000 -0500
++++ b/arch/powerpc/platforms/52xx/spacecom2.c	2017-03-02 10:39:46.429013195 -0500
+@@ -0,0 +1,648 @@
++/*********************  P r o g r a m  -  M o d u l e ***********************/
++/*!
++ *        \file  spacecom2.c
++ *
++ *      \author  kp/ts
++ *        $Date: 2010-08-18 15:49:15 $
++ *    $Revision: 1.2 $
++ *
++ *        \brief Platform support file for the SpaceCom II board based on MPC52xx.
++ *               Located in linux tree: arch/powerpc/platforms/52xx/spacecom2/
++ *
++ *
++ *-------------------------------[ History ]---------------------------------
++ *
++ * $Log: not supported by cvs2svn $
++ * Revision 1.1.1.1  2010/08/16 16:57:47  mar
++ * PR#280-projects Add 2.6.34.
++ *
++ * Revision 1.5  2010/07/15 13:10:08  cko
++ * Enable the 48 MHz oscillator as system clock of the external USB controller.
++ *
++ * Revision 1.4  2010/07/07 14:56:32  mar
++ * PR#274-projects Add GPIO/Led subsystem support.
++ *
++ * Revision 1.3  2010/06/23 14:46:46  cko
++ * - Added workaround for bs.uboot bug by setting load and entry address.
++ * - Removed setting of the USB clock. Let the MenMon set this bit.
++ * - Changed the link address to support a kernel size of up to 12 MB (the MenMon can't handle bigger images).
++ *
++ * Revision 1.2  2010/06/21 16:37:28  mar
++ * PR#274-projects Fix the GPIO setup, make serial ports work.
++ *
++ * Revision 1.1.1.1  2010/06/01 10:03:00  cko
++ * Initial import of the SpaceCom II BSP.
++ *
++ * Revision 1.11  2010/02/10 19:13:12  ts
++ * R: cosmetics, removed #if 0... parts
++ *
++ * Revision 1.10  2009/10/20 13:36:19  ts
++ * R: message about applied reset to CPLD didnt appear
++ * M: inclreased verbose level to KERN_WARNING
++ *
++ * Revision 1.9  2009/10/15 12:18:54  ts
++ * R: Cosmetics, aligned Register output
++ *
++ * Revision 1.8  2009/09/17 13:54:03  ts
++ * R: USB showed abnormal behaviour on boards with 256MB because Menmon didnt
++ *    setup XLB snoop size window correctly.
++ * M: setup snoop window size again according to mem0 parameter
++ *
++ * Revision 1.7  2009/09/11 13:44:00  ts
++ * R: 1) In case Silicon revision wasnt found 0xB3 is assumed but was not set
++ *    2) when M99 on D203 was opened (m_open) the F500 PCI bridge was disabled
++ * M: 1) actually assign 0xb3 to    ppc_md.cpu_type
++ *    2) in menem1_pcidev_enable(): PCI_CMD read out before changing
++ *
++ * Revision 1.6  2009/03/18 14:23:00  ts
++ * R: New fileset 10EM01-90 created, official release
++ *
++ * Revision 1.5  2009/03/11 19:35:54  ts
++ * R: small cosmetics, indented XLB and register dumps more correctly
++ *
++ * Revision 1.4  2009/03/10 17:57:32  ts
++ * R: 1) FEC Ethernet didnt work correctly
++ *    2) EM1 specific settings e.g. for USB not at right location in
++ *       mpc52xx_common.c
++ * M: 1) enabled XLB pipelining and display thorough XLB config settings
++ *    2) moved all MEN specific stuff in men5200_setup.c
++ *
++ * Revision 1.3  2009/03/06 15:52:31  ts
++ * R: Cosmetics, removed one unintended CVS tag
++ *
++ * Revision 1.2  2009/03/06 15:40:37  ts
++ * R: 1) kernel crash while booting on F12: ppc_md.cpu_type wasnt set,
++ *    PCI enumeration thought its early Rev. A2 and tried to apply Conf Type 1
++ *    bug workaround which crashed
++ *    2) MENMON parameter string wasnt visible
++ * M: 1) ppc_md.cpu_type retrieved in setup_arch from device tree
++ *    2) added printk with MENMON parameter string
++ *
++ * Revision 1.1  03.02.2009 15:41:12 by ts
++ * R: BSP maintenance now at MEN, own repository location
++ *
++ *---------------------------------------------------------------------------
++ * (c) Copyright by MEN mikro elektronik GmbH, Nuremberg, Germany
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2. This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ *
++ ****************************************************************************/
++
++#undef DEBUG
++#include <linux/stddef.h>
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/errno.h>
++#include <linux/reboot.h>
++#include <linux/pci.h>
++#include <linux/kdev_t.h>
++#include <linux/major.h>
++#include <linux/console.h>
++#include <linux/delay.h>
++#include <linux/seq_file.h>
++#include <linux/root_dev.h>
++#include <linux/initrd.h>
++
++#include <asm/system.h>
++#include <asm/atomic.h>
++#include <asm/time.h>
++#include <asm/io.h>
++#include <asm/machdep.h>
++#include <asm/ipic.h>
++#include <asm/irq.h>
++#include <asm/prom.h>
++#include <asm/udbg.h>
++#include <sysdev/fsl_soc.h>
++#include <asm/of_platform.h>
++#include <asm/mpc52xx.h>
++#include <platforms/52xx/spacecom2.h>
++#include <platforms/52xx/mpc52xx_pic.h>
++
++#define USB_EXT_SYNC 4
++#define USB_EXT_EN   2
++
++#define MAX_MEM_STRNGSZ         32      /* should hold '1048576'+'\0' */
++#define MAX_MMPARASTRING_LEN    1024
++char men5200_mmparastring[MAX_MMPARASTRING_LEN];
++char revision[MAX_MMPARASTRING_LEN];
++
++/* needed globally for men_sysparam*/
++EXPORT_SYMBOL(men5200_mmparastring); /* for men_sysparam and others */
++
++/* ======================================================================== */
++/* Platform specific code                                                   */
++/* ======================================================================== */
++void spacecom2_show_cpuinfo(struct seq_file *m)
++{
++	struct device_node* np = of_find_all_nodes(NULL);
++	const char *model = NULL;
++
++	if (np)
++		model = of_get_property(np, "model", NULL);
++
++	seq_printf(m, "vendor\t\t: MEN \n");
++	seq_printf(m, "machine\t\t: %s\n", model ? model : "Unknown");
++	seq_printf(m, "boardrevision\t: %s\n", revision);
++	of_node_put(np);
++}
++
++/***************************************************************************/
++/** helper to convert strings to int
++ *
++ *  \input  base   base of number (2,10,16)
++ *  \input  expr   string to parse
++ *  \output valP   result of value parsed
++ *
++ *  \return position to first character decoded
++ */
++char *str2int(int base, char *expr, unsigned long *valP)
++{
++	unsigned long tmp = 0, new;
++	
++	while (*expr) {
++		if (*expr >= '0' && *expr <= '9')
++			new = *expr - '0';
++		else if (*expr >= 'a' && *expr <= 'f')
++			new = *expr - 'a' + 10;
++		else if (*expr >= 'A' && *expr <= 'F')
++			new = *expr - 'A' + 10;
++		else
++			goto ex;
++		
++		if (new >= base)
++			goto ex;
++		
++		tmp = (tmp * base) + new;
++		expr++;
++	}
++	ex:
++	*valP = tmp;
++
++	return expr;
++}
++
++#ifdef CONFIG_PCI
++
++/***************************************************************************/
++/** used mapping of external IRQs to interrupt lines:
++ *
++ * MPC5200
++ * IRQ input    line    assigned(Menmon)    MPC52xx irq value
++ * IRQ0         INTA        0xf0                MPC52xx_IRQ0
++ * IRQ1         INTB        0xf1                MPC52xx_IRQ1
++ * IRQ2         INTC        0xf2                MPC52xx_IRQ2
++ * IRQ3         INTD        0xf3                MPC52xx_IRQ3
++ *
++ * \returns     (ISA)IRQ number to assign to this devices PCI_INTERRUPT_LINE.
++ *               Its assigned as in the table above, all setup done in Menmon
++ *
++ * \brief fixes pci irq mapping
++ *  void pci_irq_fixup(struct pci_dev *);
++ */
++void __devinit pci_irq_fixup(struct pci_dev *dev)
++{
++	unsigned char line;
++
++	pci_read_config_byte(dev, PCI_INTERRUPT_LINE,&line);
++	
++	/* 0x00 = (MPC52xx_IRQ_L1_CRIT << MPC52xx_IRQ_L1_OFFSET) + 0
++	 * 0x41 = (MPC52xx_IRQ_L1_MAIN << MPC52xx_IRQ_L1_OFFSET) + 1
++	 * 0x42 = (MPC52xx_IRQ_L1_MAIN << MPC52xx_IRQ_L1_OFFSET) + 2
++	 * 0x43 = (MPC52xx_IRQ_L1_MAIN << MPC52xx_IRQ_L1_OFFSET) + 3
++	 */
++	switch (line) {
++	case 0xf0:
++		dev->irq = irq_create_mapping(NULL, 0x00);
++		break;
++	case 0xf1:
++		dev->irq = irq_create_mapping(NULL, 0x41);
++		break;
++	case 0xf2:
++		dev->irq = irq_create_mapping(NULL, 0x42);
++		break;
++	case 0xf3:
++		dev->irq = irq_create_mapping(NULL, 0x43);
++		break;
++	default:
++		return;
++	}
++
++	if (dev->irq != NO_IRQ) {
++		set_irq_type(dev->irq, IRQ_TYPE_LEVEL_LOW);
++	}
++}
++
++/***************************************************************************/
++/* Called when pci_enable_device() is called or
++ * when a device with no assigned resource is found.
++ * Returns 0 to allow assignment/enabling of the device.
++ * machdep.h: int (*pcibios_enable_device_hook)(struct pci_dev *);
++ */
++static int pcidev_enable(struct pci_dev *dev)
++{
++	int idx;
++	unsigned short cmd = 0;
++	struct resource *r;
++	
++	for (idx=0; idx < 6; idx++) {
++		/* dont change command bits which are already set */
++		pci_read_config_word(dev, PCI_COMMAND, &cmd);
++		r = &dev->resource[idx];
++		if (r->flags & IORESOURCE_IO)
++			cmd |= PCI_COMMAND_IO;
++		if (r->flags & IORESOURCE_MEM)
++			cmd |= PCI_COMMAND_MEMORY;
++	}
++#if 0
++	printk("pcidev_enable: vendor:0x%04x device :0x%04x cmd 0x%04x\n",
++	dev->vendor, dev->device, cmd );
++#endif
++	pci_write_config_word(dev, PCI_COMMAND, cmd );
++
++	return 0;
++}
++
++#endif /* CONFIG_PCI */
++
++static void __init spacecom2_setup_cpu(void)
++{
++	/* specific SpaceCom II setup . Others are set at mpc52xx_setup_cpu */
++	struct device_node *np;
++	struct mpc52xx_gpio __iomem *gpio;
++	struct mpc52xx_cdm  __iomem *cdm;
++	struct mpc52xx_intr __iomem *intr;
++	struct mpc52xx_xlb  __iomem *xlb;
++	u32 __iomem *csc;
++	
++	u32 port_config = 0;
++	u32 snoop_size = 0;
++	u32 intr_ctrl, i;
++	u32 reg_val;
++	char memory[MAX_MEM_STRNGSZ];
++	unsigned long memsize = 0;
++	char *mP;
++	
++	/* helper for verbose register dump */
++	const char *pmode[4] = {
++		"No parking            ",
++		"Reserved              ",
++		"most recently used    ",
++		"as set in CONFIG[10:8]"
++	};
++	
++	/*--------------------
++	| Map zones           |
++	--------------------*/
++	np = of_find_compatible_node(NULL, NULL, "fsl,mpc5200b-gpio");
++	gpio = of_iomap(np, 0);
++	of_node_put(np);
++
++	np = of_find_compatible_node(NULL, NULL, "fsl,mpc5200b-cdm");
++	cdm = of_iomap(np, 0);
++	of_node_put(np);
++
++	np = of_find_compatible_node(NULL, NULL, "fsl,mpc5200b-pic");
++	intr = of_iomap(np, 0);
++	of_node_put(np);
++
++	np = of_find_compatible_node(NULL, NULL, "fsl,mpc5200b-xlb");
++	xlb = of_iomap(np, 0);
++	of_node_put(np);
++	
++	np = of_find_compatible_node(NULL, NULL, "fsl,mpc5200b-csc");
++	csc = of_iomap(np, 0);
++	of_node_put(np);	
++
++	if (!gpio || !cdm || !intr || !xlb || !csc) {
++		printk(KERN_ERR __FILE__ ": "                                   \
++		"*** Error while remapping one of GPIO/CDM/INTR/XLB/CSC Registers"
++		" for configuration. Expect some abnormal behavior!\n");
++		
++		printk(KERN_ERR "Remapped values:\n ");
++		printk(KERN_ERR "GPIO:    %p\n ", gpio);
++		printk(KERN_ERR "CDM:     %p\n ", cdm);
++		printk(KERN_ERR "INTR:    %p\n ", intr);
++		printk(KERN_ERR "XLB:     %p\n ", xlb);
++		printk(KERN_ERR "CSC:     %p\n ", csc);
++		goto unmap_regs;
++	}
++	
++	/*--------------------
++	| USB clk settings    |
++	--------------------*/
++	/*
++	* ts: now use external 48 MHz at RevB2/3 boards.
++	* check MPC5200 CDM 48MHz Fractional Divider Configuration Register
++	* User Manual p. 5-15
++	*/
++	out_8( &cdm->ext_48mhz_en,  USB_EXT_SYNC | USB_EXT_EN );
++	out_8( &cdm->fd_enable,     0x0 );
++	
++	/*--------------------
++	| XLB configuration   |
++	--------------------*/
++	/*
++	* Enable pipelining, fixes FEC problems, but suitable only for MPC5200B
++	* ts: check if the other mentioned fix ("disable BestComm snoop" )
++	*  must be / can be applied too ?
++	*/
++	out_be32(&xlb->config, in_be32(&xlb->config) & ~MPC52xx_XLB_CFG_PLDIS);
++
++	/*
++	* Fix XLB snoop window Problem with 256 MB boards and MM <=1.20
++	*/
++	
++	/* dont have MMPARA_xx funcs here, seek for 'mem0=' */
++	memset((void*)memory, 0x0, MAX_MEM_STRNGSZ);
++	for (i = 0; i < (MAX_MMPARASTRING_LEN - MAX_MEM_STRNGSZ - 1); i++ ) {
++		mP = &men5200_mmparastring[i];  /* paranoia! accept mem0= or MEM0= */
++		if (((mP[0]=='m')||(mP[0]=='M')) && ((mP[1]=='e')||(mP[1]=='E')) &&
++			((mP[2]=='m')||(mP[2]=='M')) && ( mP[3]=='0')) {
++			mP+=5; /* skip 'mem0=' */
++			memcpy(memory, mP, MAX_MEM_STRNGSZ);
++			memory[MAX_MEM_STRNGSZ-1] = 0;
++		}
++	}
++	str2int(10, memory, &memsize);
++	
++	if (memsize) {
++		printk(KERN_INFO "XLB snoop window check: Found memsize '%ld'\n",
++			   memsize);
++	} else {
++		printk(KERN_INFO "*** couldnt find 'mem0=' param, assume 128MB!\n");
++		memsize=MEM_SIZE_128MB;
++	}
++	
++	snoop_size = in_be32(&xlb->snoop_window);
++	printk(KERN_INFO "Got XLB snoop size window: 0x%08x\n", snoop_size);
++	
++	snoop_size &=~0xffffffe0; /* clear WINSIZE[4:0] */
++	
++	switch (memsize) {
++	case MEM_SIZE_1GB:
++		snoop_size |= XLBARB_SNOOPWIN_SIZE_1GB;
++		break;
++	case MEM_SIZE_512MB:
++		snoop_size |= XLBARB_SNOOPWIN_SIZE_512MB;
++		break;
++	case MEM_SIZE_256MB:
++		snoop_size |= XLBARB_SNOOPWIN_SIZE_256MB;
++		break;
++	case MEM_SIZE_128MB:
++		snoop_size |= XLBARB_SNOOPWIN_SIZE_128MB;
++		break;
++	case MEM_SIZE_64MB:
++		snoop_size |= XLBARB_SNOOPWIN_SIZE_64MB;
++		break;
++	case MEM_SIZE_32MB:
++		snoop_size |= XLBARB_SNOOPWIN_SIZE_32MB;
++		break;
++	default:
++		snoop_size |= XLBARB_SNOOPWIN_SIZE_128MB;
++	}
++	
++	printk(KERN_INFO "Set XLB snoop size window: 0x%08x\n", snoop_size);
++	/* commit changed XLB snoop size */
++	out_be32(&xlb->snoop_window, snoop_size );
++	
++	/*--------------------
++	| port configuration  |
++	--------------------*/
++	
++	/* Get port mux config */
++	port_config = in_be32(&gpio->port_config);
++	
++	/* Set it to 0x80052004 */
++	/* Serial ports on PCS1 PSC4 PSC5 */
++	port_config &= ~0x00000007;
++	port_config |=  0x00000004;
++
++	/* Disable internal USB and set PSC4 and PSC5 there */
++	port_config &= ~0x00003000;
++	port_config |=  0x00002000; 
++	
++	/* Ethernet port */
++	port_config &= ~0x000f0000; /* 100 Mbits with MDIO lines */
++	port_config |= 0x00050000;
++	
++	/* CAN port, PSC2 */
++	port_config &= ~0x00000070;
++	port_config |= 0x00000010;
++	
++	/* Commit port config */
++	out_be32(&gpio->port_config, port_config);
++	
++	/* IRQ0-3: level-sensitive, active low (PCI like) */
++	intr_ctrl = in_be32(&intr->ctrl);
++	intr_ctrl &= ~0x00ff0000;
++	intr_ctrl |= 0x00ff0000;
++	out_be32(&intr->ctrl, intr_ctrl);
++	
++	/* Enable write access to the boot flash */
++	out_be32(csc, in_be32(csc) & ~3);
++	
++	/* everything should be up and running. Dump internal registers summary: */
++	printk(KERN_INFO
++		"Setup of CPU finished. Most important Register settings:\n");
++	reg_val = in_be32(&xlb->config);
++	printk(KERN_INFO "  XLB configuration register:                0x%08x\n",
++		reg_val);
++	printk(KERN_INFO "  |-> Pipelining: %s                   CONFIG[31]\n",
++		(reg_val & (1<<31)) ? "disabled" : "enabled ");
++	printk(KERN_INFO "  |-> BestComm snooping: %s            CONFIG[16]\n",
++		(reg_val & (1<<16)) ? "disabled" : "enabled ");
++	printk(KERN_INFO "  |-> XLB snoop: %s                    CONFIG[15]\n",
++		(reg_val & (1<<15)) ? "enabled ": "disabled" );
++	printk(KERN_INFO "  |-> write-with-flush: %s             CONFIG[14]\n",
++		(reg_val & (1<<14)) ? "enabled " : "disabled");
++	printk(KERN_INFO "  |-> Timebase counter: %s             CONFIG[13]\n",
++		(reg_val & (1<<13)) ? "enabled" : "stopped");
++	printk(KERN_INFO "  |-> Min. Waitstates: %s              CONFIG[11]\n",
++		(reg_val & (1<<11)) ? "1      " : "0        ");
++	printk(KERN_INFO "  |-> parked Master: %d               "
++		"        CONFIG[10:8]\n", ((reg_val & 0x700) >> 8)  );
++	printk(KERN_INFO "  `-> parking mode: %s   CONFIG[6:5]\n",
++		pmode[ (reg_val & 0x60) >> 5 ]);
++	
++	reg_val = in_be32(&gpio->port_config);
++	printk(KERN_INFO "  GPIO port configuration Register           0x%08x\n",
++		reg_val);
++
++	/* the member is u8 ext_48mhz_en but we read 32bit at once */
++	reg_val = in_be32((u32*)&cdm->ext_48mhz_en);
++	printk(KERN_INFO "  CDM fract. divider configuration:          0x%08x\n",
++		reg_val);
++	printk(KERN_INFO "  |-> USB 48MHz clk select: %s         FDCR[25]\n",
++		(reg_val & (1<<25)) ? "external" : "internal");
++
++	printk(KERN_INFO "  |-> ext 48MHz USB clk sync: %s       FDCR[26]\n",
++		(reg_val & (1<<26)) ? "synchron" : "asyncron" );
++
++	printk(KERN_INFO "  `-> fractional divider: %s           FDCR[16]\n",
++		 (reg_val & (1<<26)) ? "enabled " : "disabled" );
++
++	reg_val = in_be32(&xlb->snoop_window);
++	printk(KERN_INFO "  XLB snoop window register:                 0x%08x\n",
++		reg_val);
++
++	memset((void*)memory, 0x0, MAX_MEM_STRNGSZ);
++	for (i = 0; i < (MAX_MMPARASTRING_LEN - 7 - 1); i++ ) {
++		mP = &men5200_mmparastring[i];
++		if (!strncmp(mP, "brdrev=", 7)) {
++			mP+=7; /* skip */
++			memcpy(memory, mP, MAX_MEM_STRNGSZ);
++			memory[MAX_MEM_STRNGSZ-1] = 0;
++		}
++	}
++	{
++		char *s = strchr(memory, ' ');
++		if (s)
++			*s = 0;
++		strncpy(revision, memory, 10);
++	}
++
++	/* Unmap reg zone */
++unmap_regs:
++	iounmap(gpio);
++	iounmap(cdm);
++	iounmap(intr);
++	iounmap(xlb);
++	iounmap(csc);
++}
++
++static void __init spacecom2_setup_arch(void)
++{
++	struct device_node *np;
++	struct device_node *devp;
++	
++	const char * tmp_mmparastring = NULL;
++	
++	/* Retrieve MENMON parameter string */
++	devp = of_find_node_by_path("/chosen");
++	if (devp)
++		tmp_mmparastring = of_get_property(devp, "menmonparams", NULL);
++	
++	if ((!devp) || (!tmp_mmparastring)) {
++		printk(KERN_ERR __FILE__ ": " \
++		"Error while retrieving MENMON parameter string. "
++		"Expect some abnormal behavior\n");
++	} else {
++		memcpy(men5200_mmparastring,
++			tmp_mmparastring,
++			strlen(tmp_mmparastring));
++		printk(KERN_INFO "MENMON parameter string: '%s'\n",
++		   men5200_mmparastring );
++	}
++	
++	if (ppc_md.progress)
++		ppc_md.progress("spacecom2_setup_arch()", 0);
++	
++	np = of_find_node_by_type(NULL, "cpu");
++	if (np) {
++		const unsigned int *fp =
++			of_get_property(np, "clock-frequency", NULL);
++		if (fp)
++			loops_per_jiffy = *fp / HZ;
++		else
++			loops_per_jiffy = 50000000 / HZ;
++		of_node_put(np);
++	}
++
++	/* Map important registers from the internal memory map */
++	mpc52xx_map_common_devices();
++
++	/* Some mpc5200 & mpc5200b related configuration */
++	mpc5200_setup_xlb_arbiter();
++
++	spacecom2_setup_cpu();  /* Platform specific */
++	
++#ifdef CONFIG_PM
++	mpc52xx_suspend.board_suspend_prepare = mpc5200_suspend_prepare;
++	mpc52xx_suspend.board_resume_finish = mpc5200_resume_finish;
++	mpc52xx_pm_init();
++#endif
++	
++#ifdef CONFIG_PCI
++	np = of_find_node_by_type(NULL, "pci");
++	if (np) {
++		mpc52xx_add_bridge(np);
++		of_node_put(np);
++	}
++#endif
++	
++#ifdef CONFIG_BLK_DEV_INITRD
++	if (initrd_start)
++		ROOT_DEV = Root_RAM0;
++	else
++#endif
++#ifdef  CONFIG_ROOT_NFS
++	ROOT_DEV = Root_NFS;
++#else
++	ROOT_DEV = Root_HDA1;
++#endif
++}
++
++void pcibios_fixup(void)
++{
++	struct pci_dev *dev;
++	
++	/* Search the external USB controller */
++	dev = pci_get_bus_and_slot(0, PCI_DEVFN(0x18, 0));
++	/* System clock is 48 MHz oscillator. */
++	pci_write_config_dword(dev, 0xe4, 0x20);
++
++	dev = NULL;
++	while ((dev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, dev)) != NULL) {
++		if (dev->devfn == 0xa0) {
++			dev->irq = (MPC52xx_IRQ_L1_CRIT << MPC52xx_IRQ_L1_OFFSET) + 0;
++			/* MPC52xx_IRQ0 */
++			pci_write_config_byte(dev, PCI_INTERRUPT_LINE, dev->irq);
++		}
++	}
++}
++
++/*
++ * Called very early, MMU is off, device-tree isn't unflattened
++ */
++static int __init spacecom2_probe(void)
++{
++	unsigned long node = of_get_flat_dt_root();
++	const char *model = of_get_flat_dt_prop(node, "model", NULL);
++
++	if (!of_flat_dt_is_compatible(node, "men,spacecom2"))
++		return 0;
++
++	pr_debug("%s board found\n", model ? model : "unknown");
++	printk("%s board found\n", model ? model : "unknown");
++
++	return 1;
++}
++
++define_machine(spacecom2) {
++	.name                       = "spacecom2",
++	.probe                      = spacecom2_probe,
++	.setup_arch                 = spacecom2_setup_arch,
++	.init                       = mpc52xx_declare_of_platform_devices,
++	.init_IRQ                   = mpc52xx_init_irq,
++	.get_irq                    = mpc52xx_get_irq,
++	.show_cpuinfo               = spacecom2_show_cpuinfo,
++	.calibrate_decr             = generic_calibrate_decr,
++	.progress                   = udbg_progress,
++	
++#ifdef CONFIG_PCI
++	.pci_irq_fixup              = pci_irq_fixup,
++	.pcibios_enable_device_hook = pcidev_enable,
++	.pcibios_fixup              = pcibios_fixup,
++#endif /* CONFIG_PCI*/
++	
++	/*.find_end_of_memory   = mpc52xx_find_end_of_memory,*/
++	/*.setup_io_mappings    = mpc52xx_map_io,*/
++	.restart                    = mpc52xx_restart,
++#if 0
++	.power_off                  = mpc52xx_power_off,
++	.halt                       = mpc52xx_halt,
++#endif
++	.calibrate_decr             = generic_calibrate_decr,
++};
+--- /dev/null	2018-02-08 13:54:34.068029000 -0500
++++ b/arch/powerpc/platforms/52xx/spacecom2.h	2017-03-02 10:39:46.433013195 -0500
+@@ -0,0 +1,67 @@
++/*********************  P r o g r a m  -  M o d u l e ***********************/
++/*!
++ *        \file  spacecom2.h
++ *
++ *      \author  kp/ts
++ *        $Date: 2010-08-16 16:57:47 $
++ *    $Revision: 1.1.1.1 $
++ *
++ *        \brief basic header defines for SpaceCom II ElinOS BSP.
++ *				 Located in linux tree: arch/powerpc/platforms/52xx/
++ *
++ * 
++ *-------------------------------[ History ]---------------------------------
++ *
++ * $Log: not supported by cvs2svn $
++ * Revision 1.1.1.1  2010/06/01 10:03:00  cko
++ * Initial import of the SpaceCom II BSP.
++ *
++ * Revision 1.3  2009/10/14 18:14:27  ts
++ * R: cosmetics, documentation header added
++ *
++ * Revision 1.2  14.10.2009 13:45:07 by ts
++ * R: EM1 MM didnt properly set up XLB snoop size, made USB not work
++ * M: reinitialize size bits in linux, added size defines
++ *
++ * Revision 1.1  18.03.2009 14:23:06 by ts
++ * R: New fileset 10EM01-90 created, official release
++ *
++ *---------------------------------------------------------------------------
++ * (c) Copyright by MEN mikro elektronik GmbH, Nuremberg, Germany
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2. This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ *
++ ****************************************************************************/
++
++#ifndef __PLATFORMS_SPACECOM2_H
++#define __PLATFORMS_SPACECOM2_H
++
++#define MPC52xx_PF_CONSOLE_PORT 	0 		/* PSC0 */
++
++/* set XLB snoop window size to a correct value */
++#define XLBARB_SNOOPWIN_SIZE_1GB		0x1D
++#define MEM_SIZE_1GB					(1<<20)  /* 1048576 */
++#define XLBARB_SNOOPWIN_SIZE_512MB		0x1C
++#define MEM_SIZE_512MB					(1<<19)  /* 524288 	*/
++#define XLBARB_SNOOPWIN_SIZE_256MB		0x1B
++#define MEM_SIZE_256MB					(1<<18)	 /* 262144 	*/
++#define XLBARB_SNOOPWIN_SIZE_128MB		0x1A
++#define MEM_SIZE_128MB					(1<<17)  /* 131072 	*/
++#define XLBARB_SNOOPWIN_SIZE_64MB		0x19
++#define MEM_SIZE_64MB					(1<<16)  /*  65536 	*/
++#define XLBARB_SNOOPWIN_SIZE_32MB		0x18
++#define MEM_SIZE_32MB					(1<<15)  /* 32768 	*/
++
++extern char men5200_mmparastring[];
++extern u32 spacecom2_flash_size;
++
++extern int powersave_nap;
++extern void (*really_late_time_init)(void);
++
++extern void mpc52xx_find_bridges(void);
++extern void men5200_time_init(void);
++
++
++#endif /* __PLATFORMS_SPACECOM2_H */
+--- /dev/null	2018-02-08 13:54:34.068029000 -0500
++++ b/arch/powerpc/boot/bootinfo.h	2017-03-02 10:39:47.177013195 -0500
+@@ -0,0 +1,38 @@
++/*
++ * Non-machine dependent bootinfo structure.  Basic idea
++ * borrowed from the m68k.
++ *
++ * Copyright (C) 1999 Cort Dougan <cort@ppc.kernel.org>
++ */
++
++#ifndef _PPC_BOOTINFO_H
++#define _PPC_BOOTINFO_H
++
++struct bi_record {
++	unsigned long tag;		/* tag ID */
++	unsigned long size;		/* size of record (in bytes) */
++	unsigned long data[0];	/* data */
++};
++
++#define BI_FIRST				0x1010  /* first record - marker */
++#define BI_LAST					0x1011	/* last record - marker */
++#define BI_CMD_LINE				0x1012
++#define BI_BOOTLOADER_ID		0x1013
++#define BI_INITRD				0x1014
++#define BI_SYSMAP				0x1015
++#define BI_MACHTYPE				0x1016
++#define BI_MEMSIZE				0x1017
++#define BI_BOARD_INFO			0x1018
++#define BI_MENMON_PARAMETERS	0x1100
++
++extern unsigned long boot_mem_size;
++
++static inline struct bi_record *
++bootinfo_addr(unsigned long offset)
++{
++	return (struct bi_record *)_ALIGN((offset) + (1 << 20) - 1,
++			(1 << 20));
++}
++
++#endif /* _PPC_BOOTINFO_H */
++
+--- /dev/null	2018-02-08 13:54:34.068029000 -0500
++++ b/arch/powerpc/boot/cuboot-spacecom2.c	2017-03-02 10:39:46.433013195 -0500
+@@ -0,0 +1,267 @@
++/*
++ * Old U-boot compatibility for SpaceCom II board
++ *
++ * Author: Christian Koerner <ckoerner@sysgo.com>
++ *
++ * Copyright (c) 2010
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 as published
++ * by the Free Software Foundation.
++ */
++
++#define TARGET_PPC_MPC52xx
++
++#include "stringify.h"
++#include "ops.h"
++#include "stdio.h"
++#include "io.h"
++#include "page.h"
++#include "ppcboot.h"
++#include "page.h"
++#include "bootinfo.h"
++#include "mmparastring.h"
++
++#ifndef SPRN_SVR
++#define SPRN_SVR	0x11E	/* System Version Register */
++#endif
++
++#define mfspr(rn)	({unsigned long rval; \
++			asm volatile("mfspr %0," __stringify(rn) \
++				: "=r" (rval)); rval;})
++
++#define COPY_MM_PARM(key, where)\
++    if (MMPARA_SearchKey(key, men5200_mmparastring, strBuf))\
++        MMPARA_StringToInt(10, strBuf, &where);\
++    else\
++        printf("*** key \"" key "\" missing in menmon parameter string!\r\n");
++
++static void parse_menmon_params(struct bi_record *bi);
++
++static bd_t bd;
++static unsigned char cpu_type;
++extern char _end[];
++extern char _dtb_start[], _dtb_end[];
++
++char men5200_mmparastring[1024];	/* needed globally for men_sysparam*/
++
++static void platform_fixups(void)
++{
++	void *soc;
++	void *reg;
++	int div;
++	u32 sysfreq;
++
++	dt_fixup_memory(bd.bi_memstart, bd.bi_memsize);
++	dt_fixup_cpu_clocks(bd.bi_intfreq, bd.bi_busfreq / 4, bd.bi_busfreq);
++
++	/* Unfortunately, the specific model number is encoded in the
++	 * soc node name in existing dts files -- once that is fixed,
++	 * this can do a simple path lookup.
++	 */
++	soc = find_node_by_devtype(NULL, "soc");
++	if (soc) {
++		char strBuf[50];
++		/*void *serial = NULL;*/
++		void *ethernet = NULL;
++		void *sysparams = NULL;
++		unsigned char valid = 0;		
++
++		setprop(soc, "bus-frequency", &bd.bi_ipbfreq,
++		        sizeof(bd.bi_busfreq));
++
++		/* set cpu type property */
++		setprop(soc, "cpu-type", &cpu_type,sizeof(cpu_type));	
++
++		/* get mac address from bootloader and put it to tree*/		
++		char *p = MMPARA_SearchKey( "nmac0=", men5200_mmparastring, strBuf );
++		if (p != NULL) {
++			while ((ethernet = find_node_by_devtype(ethernet, "network"))) {
++				if (get_parent(ethernet) != soc)
++					continue;
++
++				printf("Retrieving nmac0 from MENMON: %s\r\n", p );
++				setprop(ethernet, "men-mac-address", p, strlen(p));
++				valid = 1;
++			}
++		}
++		
++		if (!valid) {
++			printf("*** WARNING: Retrieving Ethernet address failed!, "
++				   "use default\r\n");
++		}
++
++		/* we have to pass mmparastring to kernel. We can do it by puting it  *
++		 * to device tree leaf called "menmonparams". This is not a pretty    *
++		 * nice way, but the simplest at this stage. This params should be    *
++		 * parsed here and put one by one to device tree blob. But this       *
++		 * inquire bigger changes on driver side also                         */
++		printf("MENMON parameter string: \r\n %s \r\n", men5200_mmparastring);
++		printf("MENMON parameter string length: %d \r\n", strlen(men5200_mmparastring));
++
++		sysparams = finddevice("/chosen");
++		if (sysparams) {
++			printf("Storing MENMON parameter string in dev tree.\r\n");
++			setprop(sysparams, "menmonparams", men5200_mmparastring, strlen(men5200_mmparastring));
++			/* flash start and flash size are used by MTD map driver */
++			setprop(sysparams, "flashstart", &bd.bi_flashstart, sizeof(bd.bi_flashstart));
++			setprop(sysparams, "flashsize", &bd.bi_flashsize, sizeof(bd.bi_flashsize));
++		} else
++			printf("*** WARNING: Can't store MENMON parameter string\r\n");
++
++		if (!dt_xlate_reg(soc, 0, (void*)&reg, NULL))
++			return;
++		div = in_8(reg + 0x204) & 0x00200 ? 8:4;
++		sysfreq = bd.bi_busfreq * div;
++		setprop(soc, "system-frequency", &sysfreq, sizeof(sysfreq));
++	}
++}
++
++static void parse_bootinfo(struct bi_record *rec)
++{
++	if (rec == NULL || rec->tag != BI_FIRST)
++		return;
++	while (rec->tag != BI_LAST) {
++		/*unsigned long *data = rec->data;*/
++		switch (rec->tag) {
++		case BI_CMD_LINE:
++			/* we don't care abou that as we can grab it from r6 */
++			/*strlcpy(cmdline, (void *)data, sizeof(cmdline));*/
++			break;
++#if defined(CONFIG_BLK_DEV_INITRD) || defined(CONFIG_EXTRACT_ROOTFS)
++		case BI_INITRD:
++			/* TODO - but probably not needed */
++			/*initrd_start = data[0];*/
++			/*initrd_end = data[0] + data[1];*/
++			break;
++#endif /* CONFIG_BLK_DEV_INITRD */
++#ifdef CONFIG_PPC_MULTIPLATFORM
++		case BI_MACHTYPE:
++			break;
++#endif
++		case BI_MEMSIZE:
++			/*boot_mem_size = data[0];*/
++			break;
++		}
++		rec = (struct bi_record *)((unsigned long)rec + rec->size);
++	}
++}
++
++static void parse_menmon_params(struct bi_record *bi)
++{
++	char strBuf[20];
++	unsigned int fl_size;
++	memset(&bd, 0, sizeof(bd));
++
++	/* set default values first */
++	bd.bi_intfreq = 384000000;      /* core clock 		         */
++	bd.bi_busfreq = 128000000;      /* XLB clock: 128Mhz@EM1     */
++	bd.bi_ipbfreq = 64000000;       /* IPB clock                 */
++	bd.bi_pcifreq = 32000000;       /* PCI clock                 */
++	bd.bi_baudrate = 115200;        /* console baud rate         */
++	bd.bi_memsize = 256*1024*1024;  /* mem size                  */
++	bd.bi_flashstart = 0xffe00000;  /* flash start (2MB device)  */
++	bd.bi_flashsize = 2*1024*1024;  /* min. flash size           */
++
++	men5200_mmparastring[0] = '\0';
++	while (bi->tag != BI_LAST) {
++		if (bi->tag == BI_MENMON_PARAMETERS) {
++			memcpy(men5200_mmparastring, (void *)bi->data, bi->size);
++			break;
++		}
++		bi = (struct bi_record *)((unsigned long)bi + bi->size);
++	}
++	/* we can't use printf yet */
++	/*printf("MENMON parameter string: '%s'\r\n", men5200_mmparastring);*/
++
++	COPY_MM_PARM("cpuclkhz=",	bd.bi_intfreq	);
++	COPY_MM_PARM("ipbclkhz=",	bd.bi_ipbfreq	);
++	COPY_MM_PARM("xlbclkhz=",	bd.bi_busfreq	); // NOK TBC
++	COPY_MM_PARM("flash0=",		bd.bi_flashsize	);
++	COPY_MM_PARM("mem0=",		bd.bi_memsize	); // NOK TBC
++
++	fl_size = bd.bi_flashsize;
++
++	if ((fl_size == 2048)||(fl_size == 4096)||(fl_size == 8192)) {
++		/* adjust Flash start address according to size */
++		bd.bi_flashstart = (0xffffffff-(fl_size * 1024)) + 1;
++		/*printf("Flash start address:0x%08lx.\r\n",bd.bi_flashstart);*/
++	} else {
++		/*printf(" *** invalid Flash size in flash0. Use defaults.\r\n");*/
++		bd.bi_flashstart	= 0xffe00000; 
++		bd.bi_flashsize 	= 2*1024;
++	}
++
++	/* mem sizes are needed in _byte_ */
++	bd.bi_memsize *= 1024;
++	bd.bi_flashsize *= 1024;    
++}
++
++void platform_init(unsigned long r3, unsigned long r4, unsigned long r5,
++                   unsigned long r6, unsigned long r7)
++{
++	struct bi_record* bi = NULL;
++	unsigned int cpu_svr = 0;
++	unsigned long end_of_ram;        /* = bd.bi_memstart + bd.bi_memsize;*/
++	unsigned long avail_ram;         /* = end_of_ram - (unsigned long)_end;*/
++	
++	loader_info.initrd_addr = r4;
++	loader_info.initrd_size = r4 ? r5 - r4 : 0;
++	loader_info.cmdline = (char *)r6;
++	loader_info.cmdline_len = r7 - r6;
++
++	/* MENMON passes the address of a board info structure in R3 */
++	if (r3 != 0) {
++		bi = (struct bi_record *)(r3);
++	}
++
++	/* be more paranoid - check for BI_FIRST and correct size */
++	if (!bi || (bi->tag != BI_FIRST) ||(bi->size != sizeof(struct bi_record))) {
++		/*printf("Bootinfo records not found\n\r");*/
++	}
++
++	parse_bootinfo(bi);
++	parse_menmon_params(bi);    
++
++	/* after parse menmon params bd is set */
++	end_of_ram = bd.bi_memstart + bd.bi_memsize;
++	avail_ram = end_of_ram - (unsigned long)_end;
++    
++	simple_alloc_init(_end, avail_ram - 1024*1024, 32, 64);
++	fdt_init(_dtb_start);
++	serial_console_init();
++	/* from now on we can use printf as serial was initialized */
++	
++	/* disable editing of command line */
++	console_ops.edit_cmdline = NULL;
++	
++	/* BAT setup */
++	/*mpc52xx_set_bat(); */
++
++	printf("\r\nFound MPC52xx CPU Revision: ");
++	cpu_svr = mfspr(SPRN_SVR);
++
++	switch(cpu_svr) {
++	case 0x80110012:
++		cpu_type		  = 0xa2;
++		break;
++	case 0x80110020:
++		cpu_type		  = 0xb1;
++		break;
++	case 0x80110021:
++		cpu_type		  = 0xb2;
++		break;
++	case 0x80110022:
++		cpu_type		  = 0xb3;
++		break;
++	default:
++		cpu_type		  = 0x00;
++		printf(" UNKNOWN\r\n");
++	}
++	/* cpu_type is static variable which will be put to dev tree by platform_fixups */
++	printf("%02X (SVR=0x%08X)\r\n", cpu_type, cpu_svr );
++	printf("Available RAM: %d bytes, RAM ends at: 0x%x\r\n", (int)avail_ram, (int)end_of_ram);
++
++	platform_ops.fixups = platform_fixups;
++}
++
+--- /dev/null	2018-02-08 13:54:34.068029000 -0500
++++ b/arch/powerpc/boot/mmparastring.c	2017-03-02 10:39:46.205013195 -0500
+@@ -0,0 +1,148 @@
++/*********************  P r o g r a m  -  M o d u l e ***********************
++ *  
++ *         Name: mmparastring.c
++ *      Project: many
++ *
++ *       Author: kp
++ *        $Date: 2010-08-16 16:57:47 $
++ *    $Revision: 1.1.1.1 $
++ *
++ *  Description: Routines to parse MENMON parameter string
++ *                      
++ *	Some MENMONs provide an ASCII string in memory containing board and
++ *	other parameters (first implemented on MEN B11). This library allows
++ *	you to parse these parameters easily. Can be used also to parse parameters
++ *	in VxWorks bootline
++ *                      
++ *     Required: -
++ *     Switches: MENMON
++ *
++ *---------------------------[ Public Functions ]----------------------------
++ *  MMPARA_SearchKey
++ *	MMPARA_StringToInt
++ *-------------------------------[ History ]---------------------------------
++ *
++ * cloned from common mmparastring 1.3
++ *
++ *---------------------------------------------------------------------------
++ * (c) Copyright 2002 by MEN mikro elektronik GmbH, Nuernberg, Germany 
++ ****************************************************************************/
++/* This program is free software; you can redistribute  it and/or modify it
++ * under  the terms of  the GNU General  Public License as published by the
++ * Free Software Foundation;  either version 2 of the  License, or (at your
++ * option) any later version.
++ */
++
++#include "string.h"
++#include "mmparastring.h"
++
++#ifndef NULL
++# define NULL (void *)0
++#endif
++
++static int strncmp2(char *s1, char *s2, int  n)
++/*  register const char *s1, *s2; */
++/*  register int n; */
++{
++/* Compare 2 strings. */
++
++  while (1) {
++    if( n==0 ) return 0;
++    if (*s1 != *s2) return(*s1 - *s2);
++    if (*s1 == 0 )return(0);
++    n--;
++    s1++;
++    s2++;
++  }
++}
++
++static char *EatBlanks( char *p )
++{
++	while( *p==' ' || *p=='\t' )
++		p++;
++	return p;
++}
++
++/********************************* MMPARA_SearchKey **************************
++ *
++ *  Description: Search for a parameter in bootline or menmon parameters
++ *			   
++ *			     Copies the string found into the supplied buffer.
++ *				 dst must be large enough...	
++ *---------------------------------------------------------------------------
++ *  Input......: key				parameter name (e.g. "cbr=")
++ *				 src				source string containing parameters
++ *				 dst				destination string 
++ *  Output.....: returns:			<dst> or NULL if parameter not found
++ *  Globals....: -
++ ****************************************************************************/
++char *MMPARA_SearchKey( char *key, char *src, char *dst )
++{
++	int keylen;
++	char *orgDst = dst;
++
++	if( (src == NULL) || (dst == NULL) || (key == NULL) )
++		return NULL;
++
++	keylen = strlen(key);
++
++	while( *src ){
++		src = EatBlanks(src);	/* skip spaces */
++
++		if( strncmp2( key, src, keylen ) == 0 ){
++			/*--- found it ---*/
++
++			src += keylen;	/* skip parameter */
++			
++			/*--- copy string until next blank or EOS ---*/
++			while( *src && *src!=' ')
++				*dst++ = *src++;
++			*dst = '\0';
++			return orgDst;
++		}
++		/* search for next blank */
++		while( *src && *src!=' ')
++			src++;		
++	}
++	return NULL;
++}
++
++/********************************* MMPARA_StringToInt ***********************
++ *
++ *  Description: Convert string to integer accordung to "base"
++ *			   
++ *  If an illegal character is found, conversion is aborted and the return
++ *	value points to the unsuccessfully parsed character
++ *  Will handle positive integers only
++ *---------------------------------------------------------------------------
++ *  Input......: base			radix (2,10,16)
++ *				 expr		    string to parse
++ *  Output.....: returns:		ptr to first unsuccessfully parsed char
++ *				 *valP			value parsed
++ *  Globals....: -
++ ****************************************************************************/
++char *MMPARA_StringToInt( int base, char *expr, unsigned long *valP)
++{
++	unsigned long tmp=0, new;
++
++	while( *expr ){
++		if( *expr >= '0' && *expr <= '9' )
++			new = *expr - '0';
++		else if( *expr >= 'a' && *expr <= 'f' )
++			new = *expr - 'a' + 10;
++		else if( *expr >= 'A' && *expr <= 'F' )
++			new = *expr - 'A' + 10;
++		else
++			goto ex;
++		
++		if( new >= base )
++			goto ex;
++
++		tmp = (tmp*base) + new;
++		expr++;
++	}
++ex:
++	*valP = tmp;
++	return expr;
++}
++
+--- /dev/null	2018-02-08 13:54:34.068029000 -0500
++++ b/arch/powerpc/boot/mmparastring.h	2017-03-02 10:39:47.181013195 -0500
+@@ -0,0 +1,20 @@
++/*
++ * arch/ppc/platforms/mmparastring.h
++ * 
++ * Header file for mmparastring.c to parse MENMON parameter strings
++ *
++ * Author: Klaus Popp <klaus.popp@men.de>
++ *
++ * Copyright 2002 MEN Mikro Elektronik GmbH.
++ *
++ * This program is free software; you can redistribute  it and/or modify it
++ * under  the terms of  the GNU General  Public License as published by the
++ * Free Software Foundation;  either version 2 of the  License, or (at your
++ * option) any later version.
++ */
++
++char *MMPARA_SearchKey( char *key, char *src, char *dst );
++char *MMPARA_StringToInt( int base, char *expr, unsigned long *valP);
++char *MMPARA_StringToIp( char *str, unsigned long *ipP );
++
++
+--- /dev/null	2018-02-08 13:54:34.068029000 -0500
++++ b/arch/powerpc/boot/stringify.h	2017-03-02 10:39:46.241013195 -0500
+@@ -0,0 +1,12 @@
++#ifndef __LINUX_STRINGIFY_H
++#define __LINUX_STRINGIFY_H
++
++/* Indirect stringification.  Doing two levels allows the parameter to be a
++ * macro itself.  For example, compile with -DFOO=bar, __stringify(FOO)
++ * converts to "bar".
++ */
++
++#define __stringify_1(x)	#x
++#define __stringify(x)		__stringify_1(x)
++
++#endif	/* !__LINUX_STRINGIFY_H */

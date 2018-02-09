@@ -10,7 +10,7 @@ fi
 #cp package/customize/etc/etc/inittab output/target/etc/inittab
 cp fs/skeleton/etc/inittab output/target/etc/inittab
 
-cp /home/robert/50G/br_oct19/buildroot_2011_05/package/customize/init.sh output/target/
+cp package/customize/init.sh output/target/
 chmod a+x output/target/init.sh
 
 cp package/customize/system.conf output/target/etc/dbus-1/
@@ -66,14 +66,14 @@ tar -xf $SPACE_RFS_ADD_ONS/usr_libexec.tar -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/networkman.tar  -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/nm_wpa.tar      -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/updater.tar     -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/id_rsa.tar      -C output/target
+# tar -xf $SPACE_RFS_ADD_ONS/id_rsa.tar      -C output/target
 cp      $SPACE_RFS_ADD_ONS/udev               output/target/etc/init.d/
 
 # Temporary work around for json issues preventing connection with the library. 
 rm output/target/usr/lib/libjson*
-cp /home/robert/50G/br_oct19/buildroot_2011_05/package/customize/usrbin/usr/bin/json-dbus-bridge output/target/usr/bin
-cp -d /home/robert/50G/br_oct19/buildroot_2011_05/package/customize/lib2/lib/libjson.so.0.0.1 output/target/usr/lib
-cp -d /home/robert/50G/br_oct19/buildroot_2011_05/package/customize/lib2/lib/libjson.so.0 output/target/usr/lib
+cp package/customize/usrbin/usr/bin/json-dbus-bridge output/target/usr/bin
+cp -d package/customize/lib2/lib/libjson.so.0.0.1 output/target/usr/lib
+cp -d package/customize/lib2/lib/libjson.so.0 output/target/usr/lib
 
 cp ./package/customize/fi.epitest.hostap.WPASupplicant.service output/target/usr/share/dbus-1/system-services/fi.epitest.hostap.WPASupplicant.service
 
@@ -98,7 +98,6 @@ chmod -R a+x $STARTINGPOINT/output/target/etc/init.d/*
 
 echo "Done expanding elinos_rfs tar files to this RFS"
 
-# ln -sf /opt/buildroot-2011.05/usr/lib/libiw.so /home/robert/svn/trunk/clones/sclite/app.rootfs/lib/
 TARGETPOINT=$STARTINGPOINT/output/target
 cd $TARGETPOINT
 pwd

@@ -1,0 +1,123 @@
+Index: linux-2.6.34/arch/powerpc/boot/Makefile
+===================================================================
+--- linux-2.6.34.orig/arch/powerpc/boot/Makefile	2010-05-16 23:17:36.000000000 +0200
++++ linux-2.6.34/arch/powerpc/boot/Makefile	2010-08-16 15:32:47.000000000 +0200
+@@ -78,7 +78,7 @@
+ 		gunzip_util.c elf_util.c $(zlib) devtree.c oflib.c ofconsole.c \
+ 		4xx.c ebony.c mv64x60.c mpsc.c mv64x60_i2c.c cuboot.c bamboo.c \
+ 		cpm-serial.c stdlib.c mpc52xx-psc.c planetcore.c uartlite.c \
+-		fsl-soc.c mpc8xx.c pq2.c ugecon.c
++		fsl-soc.c mpc8xx.c pq2.c ugecon.c mmparastring.c
+ src-plat := of.c cuboot-52xx.c cuboot-824x.c cuboot-83xx.c cuboot-85xx.c holly.c \
+ 		cuboot-ebony.c cuboot-hotfoot.c treeboot-ebony.c prpmc2800.c \
+ 		ps3-head.S ps3-hvcall.S ps3.c treeboot-bamboo.c cuboot-8xx.c \
+@@ -89,7 +89,7 @@
+ 		cuboot-warp.c cuboot-85xx-cpm2.c cuboot-yosemite.c simpleboot.c \
+ 		virtex405-head.S virtex.c redboot-83xx.c cuboot-sam440ep.c \
+ 		cuboot-acadia.c cuboot-amigaone.c cuboot-kilauea.c \
+-		gamecube-head.S gamecube.c wii-head.S wii.c
++		gamecube-head.S gamecube.c wii-head.S wii.c cuboot-spacecom2.c
+ src-boot := $(src-wlib) $(src-plat) empty.c
+ 
+ src-boot := $(addprefix $(obj)/, $(src-boot))
+@@ -231,6 +231,8 @@
+ image-$(CONFIG_PPC_LITE5200)		+= cuImage.lite5200b lite5200b.dtb
+ image-$(CONFIG_PPC_MEDIA5200)		+= cuImage.media5200 media5200.dtb
+ 
++image-$(CONFIG_PPC_SPACECOM2)		+= cuImage.spacecom2
++
+ # Board ports in arch/powerpc/platform/82xx/Kconfig
+ image-$(CONFIG_MPC8272_ADS)		+= cuImage.mpc8272ads
+ image-$(CONFIG_PQ2FADS)			+= cuImage.pq2fads
+Index: linux-2.6.34/arch/powerpc/boot/wrapper
+===================================================================
+--- linux-2.6.34.orig/arch/powerpc/boot/wrapper	2010-05-16 23:17:36.000000000 +0200
++++ linux-2.6.34/arch/powerpc/boot/wrapper	2010-08-16 15:29:44.000000000 +0200
+@@ -176,6 +176,10 @@
+     *5200*|*-motionpro)
+         platformo=$object/cuboot-52xx.o
+         ;;
++    *spacecom2*)
++        platformo=$object/cuboot-spacecom2.o
++        link_address='0x800000'
++        ;;
+     *-pq2fads|*-ep8248e|*-mpc8272*|*-storcenter)
+         platformo=$object/cuboot-pq2.o
+         ;;
+Index: linux-2.6.34/arch/powerpc/platforms/52xx/Kconfig
+===================================================================
+--- linux-2.6.34.orig/arch/powerpc/platforms/52xx/Kconfig	2010-05-16 23:17:36.000000000 +0200
++++ linux-2.6.34/arch/powerpc/platforms/52xx/Kconfig	2010-08-16 15:29:44.000000000 +0200
+@@ -36,6 +36,12 @@
+ 	select RTAS_PROC
+ 	select PPC_NATIVE
+ 
++config PPC_SPACECOM2
++	bool "B.Braun SpaceCom II Board"
++	depends on PPC_MPC52xx
++	help
++		Support for the B.Braun SpaceCom II Board.
++
+ config PPC_LITE5200
+ 	bool "Freescale Lite5200 Eval Board"
+ 	depends on PPC_MPC52xx
+Index: linux-2.6.34/arch/powerpc/platforms/52xx/Makefile
+===================================================================
+--- linux-2.6.34.orig/arch/powerpc/platforms/52xx/Makefile	2010-05-16 23:17:36.000000000 +0200
++++ linux-2.6.34/arch/powerpc/platforms/52xx/Makefile	2010-08-16 15:35:01.000000000 +0200
+@@ -16,3 +16,4 @@
+ 
+ obj-$(CONFIG_PPC_MPC5200_GPIO)	+= mpc52xx_gpio.o
+ obj-$(CONFIG_PPC_MPC5200_LPBFIFO)	+= mpc52xx_lpbfifo.o
++obj-$(CONFIG_PPC_SPACECOM2)	+= spacecom2.o 
+Index: linux-2.6.34/arch/powerpc/platforms/52xx/mpc52xx_pic.c
+===================================================================
+--- linux-2.6.34.orig/arch/powerpc/platforms/52xx/mpc52xx_pic.c	2010-05-16 23:17:36.000000000 +0200
++++ linux-2.6.34/arch/powerpc/platforms/52xx/mpc52xx_pic.c	2010-08-16 15:49:41.000000000 +0200
+@@ -104,18 +104,8 @@
+ #include <asm/io.h>
+ #include <asm/prom.h>
+ #include <asm/mpc52xx.h>
++#include <platforms/52xx/mpc52xx_pic.h>
+ 
+-/* HW IRQ mapping */
+-#define MPC52xx_IRQ_L1_CRIT	(0)
+-#define MPC52xx_IRQ_L1_MAIN	(1)
+-#define MPC52xx_IRQ_L1_PERP	(2)
+-#define MPC52xx_IRQ_L1_SDMA	(3)
+-
+-#define MPC52xx_IRQ_L1_OFFSET	(6)
+-#define MPC52xx_IRQ_L1_MASK	(0x00c0)
+-#define MPC52xx_IRQ_L2_MASK	(0x003f)
+-
+-#define MPC52xx_IRQ_HIGHTESTHWIRQ (0xd0)
+ 
+ 
+ /* MPC5200 device tree match tables */
+
+Index: linux-2.6.34/arch/powerpc/platforms/52xx/mpc52xx-psc.c
+===================================================================
+--- linux-2.6.34.orig/arch/powerpc/boot/mpc52xx-psc.c	2010-05-16 23:17:36.000000000 +0200
++++ linux-2.6.34/arch/powerpc/boot/mpc52xx-psc.c	2011-03-23 11:33:49.295620290 +0100
+@@ -13,6 +13,7 @@
+ #include "types.h"
+ #include "io.h"
+ #include "ops.h"
++#include "../../../include/generated/autoconf.h"
+ 
+ /* Programmable Serial Controller (PSC) status register bits */
+ #define MPC52xx_PSC_SR		0x04
+@@ -51,9 +52,13 @@ static unsigned char psc_getc(void)
+ 
+ int mpc5200_psc_console_init(void *devp, struct serial_console_data *scdp)
+ {
++#if 0
+ 	/* Get the base address of the psc registers */
+ 	if (dt_get_virtual_reg(devp, &psc, 1) < 1)
+ 		return -1;
++#else
++	return -1;
++#endif
+ 
+ 	scdp->open = psc_open;
+ 	scdp->putc = psc_putc;
