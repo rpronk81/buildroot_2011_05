@@ -1,0 +1,102 @@
+--- a/arch/powerpc/boot/wrapper	2018-02-13 11:38:58.125142175 -0500
++++ b/arch/powerpc/boot/wrapper	2018-02-13 11:38:58.125142175 -0500
+@@ -29,12 +29,15 @@
+     set -x
+ fi
+ 
++# RLS debug enabled
++set -x
++
+ # defaults
+ kernel=
+ ofile=zImage
+ platform=of
+ initrd=
+-dtb=
++dtb=arch/powerpc/boot/spacecom2.dtb
+ dts=
+ cacheit=
+ binary=
+@@ -159,15 +162,16 @@
+     ;;
+ miboot|uboot)
+     # miboot and U-boot want just the bare bits, not an ELF binary
+-    ext=bin
+-    objflags="-O binary"
+-    tmp="$ofile"
+-    ksection=image
+-    isection=initrd
+-    ;;
+-cuboot*)
++#    ext=bin
++#    objflags="-O binary"
++#    tmp="$ofile"
++#    ksection=image
++#    isection=initrd
++#    ;;
++#cuboot*)
+     binary=y
+     gzip=
++    link_address='0x1000000'
+     case "$platform" in
+     *-mpc866ads|*-mpc885ads|*-adder875*|*-ep88xc)
+         platformo=$object/cuboot-8xx.o
+@@ -198,7 +202,10 @@
+         link_address='0x800000'
+         ;;
+     esac
++    platformo=$object/cuboot-spacecom2.o
++    link_address='0x800000'
+     ;;
++
+ ps3)
+     platformo="$object/ps3-head.o $object/ps3-hvcall.o $object/ps3.o"
+     lds=$object/zImage.ps3.lds
+@@ -271,17 +278,17 @@
+ # physical offset of kernel image
+ membase=`${CROSS}objdump -p "$kernel" | grep -m 1 LOAD | awk '{print $7}'`
+ 
+-case "$platform" in
+-uboot)
+-    rm -f "$ofile"
+-    ${MKIMAGE} -A ppc -O linux -T kernel -C gzip -a $membase -e $membase \
+-	$uboot_version -d "$vmz" "$ofile"
+-    if [ -z "$cacheit" ]; then
+-	rm -f "$vmz"
+-    fi
+-    exit 0
+-    ;;
+-esac
++#case "$platform" in
++#uboot)
++#    rm -f "$ofile"
++#    ${MKIMAGE} -A ppc -O linux -T kernel -C gzip -a $membase -e $membase \
++#	$uboot_version -d "$vmz" "$ofile"
++#    if [ -z "$cacheit" ]; then
++#	rm -f "$vmz"
++#    fi
++#    exit 0
++#    ;;
++#esac
+ 
+ addsec() {
+     ${CROSS}objcopy $4 $1 \
+@@ -383,3 +390,8 @@
+     gzip --force -9 --stdout "$ofile.bin" > "$odir/otheros.bld"
+     ;;
+ esac
++
++
++gzip -f -9 "$ofile"
++${MKIMAGE} -A ppc -O linux -T kernel -C gzip -a "$base" -e "$entry" \
++            $uboot_version -d "$ofile".gz "$ofile"
+--- a/arch/powerpc/boot/wrapper	2018-02-13 11:02:44.868972780 -0500
++++ b/arch/powerpc/boot/wrapper	2018-02-13 11:02:44.868972780 -0500
+@@ -37,6 +37,7 @@
+ ofile=zImage
+ platform=of
+ initrd=
++cp ../../../package/spacecom2.dtb arch/powerpc/boot/spacecom2.dtb
+ dtb=arch/powerpc/boot/spacecom2.dtb
+ dts=
+ cacheit=
