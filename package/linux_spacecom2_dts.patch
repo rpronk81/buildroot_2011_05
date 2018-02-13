@@ -1,0 +1,317 @@
+--- /dev/null	2018-02-09 12:06:07.337778000 -0500
++++ b/arch/powerpc/boot/spacecom2.dts	2018-02-08 15:15:30.752307347 -0500
+@@ -0,0 +1,314 @@
++/*
++ * SpaceCom II Device Tree Source
++ *
++ * Copyright 2010
++ * Christian Koerner <ckoener@sysgo.com>
++ *
++ * This program is free software; you can redistribute  it and/or modify it
++ * under  the terms of  the GNU General  Public License as published by the
++ * Free Software Foundation;  either version 2 of the  License, or (at your
++ * option) any later version.
++ */
++
++/*
++ * WARNING: Do not depend on this tree layout remaining static just yet.
++ * The MPC5200 device tree conventions are still in flux
++ * Keep an eye on the linuxppc-dev mailing list for more details
++ */
++ 
++/dts-v1/;
++
++/ {
++	model = "men,spacecom2";
++	// revision = "1.0";
++	compatible = "men,spacecom2";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		PowerPC,5200@0 {
++			device_type = "cpu";
++			reg = <0>;
++			d-cache-line-size = <32>;
++			i-cache-line-size = <32>;
++			d-cache-size = <0x4000>;	// L1, 16K
++			i-cache-size = <0x4000>;	// L1, 16K
++			timebase-frequency = <0>;	// from bootloader
++			bus-frequency = <0>;		// from bootloader
++			clock-frequency = <0>;		// from bootloader
++			32-bit;
++		};
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x10000000>;	// 256MB
++	};
++	
++	soc5200@f0000000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "fsl,mpc5200b-immr";
++		device_type = "soc";
++
++		ranges = <0 0xf0000000 0xf000c000>;
++		reg = <0xf0000000 0x0000c000>;
++
++		bus-frequency = <0>;		// from bootloader
++		system-frequency = <0>;		// from bootloader
++		cpu-type = <0>;				// from bootloader
++
++		cdm@200 {
++			compatible = "fsl,mpc5200b-cdm","fsl,mpc5200-cdm";
++			reg = <0x200 0x38>;
++		};
++
++		csc@300 {
++			compatible = "fsl,mpc5200b-csc","fsl,mpc5200-csc";
++			reg = <0x300 0x30>;
++		};
++		
++		mpc5200_pic: pic@500 {
++			// 5200 interrupts are encoded into two levels;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			device_type = "interrupt-controller";
++			compatible = "fsl,mpc5200b-pic","fsl,mpc5200-pic";
++			reg = <0x500 0x80>;
++		};
++
++		rled: timer@650 {	// Controls red status LED
++			compatible = "fsl,mpc5200-gpt";
++			cell-index = <0>;
++			reg = <0x650 0x10>;
++			interrupts = <1 14 0>;
++			interrupt-parent = <&mpc5200_pic>;
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
++
++		gpio-leds {
++			compatible = "gpio-leds";
++
++			red {
++				default-state = "keep";
++				gpios = <&rled 0 0>;
++			};
++		};
++
++		wdt@600 {	// Watchdog
++			compatible = "fsl,mpc5200b-gpt","fsl,mpc5200-gpt";
++			reg = <0x600 0x10>;
++			has-wdt;
++		};		
++
++		timer@610 {	// Controls battery test
++			compatible = "fsl,mpc5200-gpt";
++			cell-index = <1>;
++			reg = <0x610 0x10>;
++			interrupts = <1 10 0>;
++			interrupt-parent = <&mpc5200_pic>;
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
++
++		timer@620 {	// Controls power supply
++			compatible = "fsl,mpc5200-gpt";
++			cell-index = <2>;
++			reg = <0x620 0x10>;
++			interrupts = <1 11 0>;
++			interrupt-parent = <&mpc5200_pic>;
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
++
++		rtc@800 {	// Real time clock
++			compatible = "fsl,mpc5200b-rtc","fsl,mpc5200-rtc";
++			device_type = "rtc";
++			reg = <0x800 0x100>;
++			interrupts = <1 5 0 1 6 0>;
++			interrupt-parent = <&mpc5200_pic>;
++		};
++
++		can@900 {
++			compatible = "fsl,mpc5200b-mscan","fsl,mpc5200-mscan";
++			cell-index = <0>;
++			interrupts = <2 17 0>;
++			interrupt-parent = <&mpc5200_pic>;
++			reg = <0x900 0x80>;
++		};
++		
++		gpio@b00 {
++			compatible = "fsl,mpc5200b-gpio","fsl,mpc5200-gpio";
++			reg = <0xb00 0x40>;
++			interrupts = <1 7 0>;
++			interrupt-parent = <&mpc5200_pic>;
++		};
++
++		pci@d00 {
++			#interrupt-cells = <1>;
++			#size-cells = <2>;
++			#address-cells = <3>;
++			device_type = "pci";
++			compatible = "fsl,mpc5200b-pci","fsl,mpc5200-pci";
++			reg = <0xd00 0x100>;
++			interrupt-map-mask = <0xf800 0 0 7>;
++			interrupt-map = <0xc000 0 0 1 &mpc5200_pic 0 0 3
++							 0xc000 0 0 2 &mpc5200_pic 0 0 3
++							 0xc000 0 0 3 &mpc5200_pic 0 0 3
++							 0xc000 0 0 4 &mpc5200_pic 0 0 3>;
++			clock-frequency = <0>; // From boot loader
++			interrupts = <2 8 0 2 9 0 2 10 0>;
++			interrupt-parent = <&mpc5200_pic>;
++			bus-range = <0 0>;
++			ranges = <0x42000000 0 0x80000000 0x90000000 0 0x20000000
++					  0x02000000 0 0xa0000000 0xb0000000 0 0x10000000
++					  0x01000000 0 0x00000000 0xc0000000 0 0x01000000>;
++		};
++
++		dma-controller@1200 {
++			device_type = "dma-controller";
++			compatible = "fsl,mpc5200b-bestcomm","fsl,mpc5200-bestcomm";
++			reg = <0x1200 0x80>;
++			interrupts = <3 0 0  3 1 0  3 2 0  3 3 0
++			              3 4 0  3 5 0  3 6 0  3 7 0
++			              3 8 0  3 9 0  3 10 0  3 11 0
++			              3 12 0  3 13 0  3 14 0  3 15 0>;
++			interrupt-parent = <&mpc5200_pic>;
++		};
++
++		xlb@1f00 {
++			compatible = "fsl,mpc5200b-xlb","fsl,mpc5200-xlb";
++			reg = <0x1f00 0x100>;
++		};
++
++		serial@2000 {		// PSC1 Front panel
++			device_type = "serial";
++			compatible = "fsl,mpc5200b-psc-uart","fsl,mpc5200-psc-uart";
++			port-number = <0>;  // Logical port assignment
++			reg = <0x2000 0x100>;
++			interrupts = <2 1 0>;
++			interrupt-parent = <&mpc5200_pic>;
++		};
++
++		serial@2600 {		// PSC4 SpaceStation
++			device_type = "serial";
++			compatible = "fsl,mpc5200b-psc-uart","fsl,mpc5200-psc-uart";
++			port-number = <1>;  // Logical port assignment
++			reg = <0x2600 0x100>;
++			interrupts = <2 11 0>;
++			interrupt-parent = <&mpc5200_pic>;
++		};
++
++		serial@2800 {		// PSC5 Battery
++			device_type = "serial";
++			compatible = "fsl,mpc5200b-psc-uart","fsl,mpc5200-psc-uart";
++			port-number = <2>;  // Logical port assignment
++			reg = <0x2800 0x100>;
++			interrupts = <2 12 0>;
++			interrupt-parent = <&mpc5200_pic>;
++		};
++
++		ethernet@3000 {
++			device_type = "network";
++			compatible = "fsl,mpc5200b-fec","fsl,mpc5200-fec";
++			reg = <0x3000 0x400>;
++			local-mac-address = [ 00 00 00 00 00 00 ];
++			interrupts = <2 5 0>;
++			interrupt-parent = <&mpc5200_pic>;
++			phy-handle = <&phy0>;
++		};
++		
++		mdio@3000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "fsl,mpc5200b-mdio", "fsl,mpc5200-mdio";
++			reg = <0x3000 0x400>;	// fec range, since we need to setup fec interrupts
++			interrupts = <2 5 0>;	// these are for "mii command finished", not link changes & co.
++			interrupt-parent = <&mpc5200_pic>;
++
++			phy0:ethernet-phy@0 {
++				device_type = "ethernet-phy";
++				reg = <1>;
++			};
++		};
++
++		i2c@3d00 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			device_type = "i2c";
++			compatible = "fsl,mpc5200b-i2c","fsl,mpc5200-i2c","fsl-i2c";
++			cell-index = <0>;
++			reg = <0x3d00 0x40>;
++			interrupts = <2 15 0>;
++			interrupt-parent = <&mpc5200_pic>;
++			fsl5200-clocking;
++			
++			temp@4d {
++				compatible = "lm75";
++				reg = <0x4d>;
++			};
++			
++			rtc@51 {
++				compatible = "rtc-rx8581,rx8581";
++				reg = <0x51>;
++			};
++			
++			eeprom: at24@54 {
++				compatible = "at24,24c08";
++				reg = <0x54>;
++			};
++		};
++
++		sram@8000 {
++			device_type = "sram";
++			compatible = "fsl,mpc5200b-sram","fsl,mpc5200-sram","sram";
++			reg = <0x8000 0x4000>;
++		};
++	};
++
++	lpb {
++		model = "fsl,lpb";
++		compatible = "fsl,lpb";
++		#address-cells = <2>;
++		#size-cells = <1>;
++		reg = <0xffe00000 0x00200000>;
++		ranges = <0 0xffe00000 0xffe00000 0x00200000>;
++		
++		flash@0xffe00000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "cfi-flash";
++			bank-width = <1>;
++			device-width = <1>;
++			reg = <0 0xffe00000 0x00200000>;
++		
++			partition@0 {
++				label = "User";
++				reg = <0x00000000 0x00100000>;
++			};
++		
++			partition@100000 {
++				label = "PrimaryMenMon";
++				reg = <0x00100000 0x00080000>;
++			};
++		
++			partition@180000 {
++				label = "SecondaryMenMon";
++				reg = <0x00180000 0x00080000>;
++			};
++		};
++	};
++
++	chosen {
++		name = "chosen";
++        linux,platform = <0x00000600>; 
++		linux,stdout-path = "/soc5200@f0000000/serial@2000";
++		menmonparams = "";
++		flashstart = <0>; //from bootloader
++		flashsize = <0>; //from bootloader
++	};
++};
