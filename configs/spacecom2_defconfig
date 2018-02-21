@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
-# Buildroot 2011.05-gc5bd726-dirty Configuration
-# Tue Jan 16 13:59:36 2018
+# Buildroot 2011.05 Configuration
+# Mon Feb 19 09:30:10 2018
 #
 BR2_HAVE_DOT_CONFIG=y
 # BR2_arm is not set
@@ -788,7 +788,14 @@ BR2_PACKAGE_UTILLINUX_LIBBLKID=y
 #
 # BR2_TARGET_ROOTFS_CRAMFS is not set
 # BR2_TARGET_ROOTFS_CLOOP is not set
-# BR2_TARGET_ROOTFS_EXT2 is not set
+BR2_TARGET_ROOTFS_EXT2=y
+BR2_TARGET_ROOTFS_EXT2_BLOCKS=0
+BR2_TARGET_ROOTFS_EXT2_INODES=0
+BR2_TARGET_ROOTFS_EXT2_RESBLKS=0
+BR2_TARGET_ROOTFS_EXT2_NONE=y
+# BR2_TARGET_ROOTFS_EXT2_GZIP is not set
+# BR2_TARGET_ROOTFS_EXT2_BZIP2 is not set
+# BR2_TARGET_ROOTFS_EXT2_LZMA is not set
 BR2_TARGET_ROOTFS_JFFS2=y
 # BR2_TARGET_ROOTFS_JFFS2_DATAFLASH_1056 is not set
 # BR2_TARGET_ROOTFS_JFFS2_DATAFLASH_528 is not set
@@ -806,7 +813,12 @@ BR2_TARGET_ROOTFS_JFFS2_LE=y
 # BR2_TARGET_ROOTFS_JFFS2_SUMMARY is not set
 # BR2_TARGET_ROOTFS_UBIFS is not set
 # BR2_TARGET_ROOTFS_SQUASHFS is not set
-# BR2_TARGET_ROOTFS_TAR is not set
+BR2_TARGET_ROOTFS_TAR=y
+BR2_TARGET_ROOTFS_TAR_NONE=y
+# BR2_TARGET_ROOTFS_TAR_GZIP is not set
+# BR2_TARGET_ROOTFS_TAR_BZIP2 is not set
+# BR2_TARGET_ROOTFS_TAR_LZMA is not set
+BR2_TARGET_ROOTFS_TAR_OPTIONS=""
 # BR2_TARGET_ROOTFS_CPIO is not set
 # BR2_TARGET_ROOTFS_INITRAMFS is not set
 # BR2_TARGET_ROOTFS_ROMFS is not set
@@ -826,7 +838,7 @@ BR2_LINUX_KERNEL_CUSTOM_VERSION=y
 # BR2_LINUX_KERNEL_CUSTOM_TARBALL is not set
 BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="2.6.34"
 BR2_LINUX_KERNEL_VERSION="2.6.34"
-BR2_LINUX_KERNEL_PATCH="package/34to3412.patch package/linux-wifi.patch package/linux-wifi-makefile.patch package/linux-rtl8712.patch package/linux-spacecom2.patch package/linux_arch_powerpc.patch package/linux_drivers_net.patch package/linux_drivers_net_can.patch package/linux_drivers_net_wireless.patch package/linux_drivers_rtc.patch package/linux_drivers_usb.patch package/linux_mpc52xx_pic_h.patch package/linux_spacecom2_dts.patch package/linux_wrapper.patch" 
+BR2_LINUX_KERNEL_PATCH="package/34to3412.patch package/linux-wifi.patch package/linux-wifi-makefile.patch package/linux-rtl8712.patch package/linux-spacecom2.patch package/linux_arch_powerpc.patch package/linux_drivers_net.patch package/linux_drivers_net_can.patch package/linux_drivers_net_wireless.patch package/linux_drivers_rtc.patch package/linux_drivers_usb.patch package/linux_mpc52xx_pic_h.patch package/linux_spacecom2_dts.patch package/linux_wrapper.patch"
 # BR2_LINUX_KERNEL_USE_DEFCONFIG is not set
 BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
 BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="package/linux_config"
