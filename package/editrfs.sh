@@ -15,12 +15,6 @@ chmod a+x output/target/init.sh
 
 cp package/customize/system.conf output/target/etc/dbus-1/
 
-if [ ! -e output/target/lib/firmware ]
-then
-	mkdir -p output/target/lib/firmware
-fi
-cp -fr package/redpine output/target/lib/firmware/
-
 if [ ! -e output/target/.flash ]
 then
 	mkdir -p output/target/.flash
@@ -61,12 +55,11 @@ fi
 echo "Expanding elinos_rfs tar files to this RFS"
 SPACE_RFS_ADD_ONS=package/customize
 tar -xf $SPACE_RFS_ADD_ONS/bin.tar         -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/sbin.tar        -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/usr_libexec.tar -C output/target
+tar -xf $SPACE_RFS_ADD_ONS/sbin_sc2.tar        -C output/target
+tar -xf $SPACE_RFS_ADD_ONS/usr_libexec_sc2.tar -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/networkman_sc2.tar  -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/nm_wpa.tar      -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/updater.tar     -C output/target
-# tar -xf $SPACE_RFS_ADD_ONS/id_rsa.tar      -C output/target
+tar -xf $SPACE_RFS_ADD_ONS/nm_wpa_sc2.tar      -C output/target
+tar -xf $SPACE_RFS_ADD_ONS/updater_sc2.tar     -C output/target
 cp      $SPACE_RFS_ADD_ONS/udev               output/target/etc/init.d/
 
 # Temporary work around for json issues preventing connection with the library. 
