@@ -4,7 +4,7 @@
 # Bind-mount all directories from the flash filesystem.
 #
 mkdir /dev/pts
-cd /.flash
+# cd /.flash
 for file in * ; do
 	# No need to bind-mount virtual file systems and RAM file systems.
 	if /busybox [ "$file" != "dev" ] && \
