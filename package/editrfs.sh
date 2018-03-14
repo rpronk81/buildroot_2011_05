@@ -7,7 +7,7 @@ if [ -e output/target/etc/inittab ]
 then
    rm -f output/target/etc/inittab
 fi
-#cp package/customize/etc/etc/inittab output/target/etc/inittab
+
 cp fs/skeleton/etc/inittab output/target/etc/inittab
 
 cp package/customize/init.sh output/target/
@@ -62,11 +62,22 @@ tar -xf $SPACE_RFS_ADD_ONS/nm_wpa_sc2.tar      -C output/target
 tar -xf $SPACE_RFS_ADD_ONS/updater_sc2.tar     -C output/target
 cp      $SPACE_RFS_ADD_ONS/udev               output/target/etc/init.d/
 
+
+# FOR SPACECOM WIFI LITE ONLY
 # Temporary work around for json issues preventing connection with the library. 
+#
+var2=$(file output/build/linux-2.6.34/vmlinux | grep -q Power); var3=$?; echo $var3
+
+if [ "$var3" -eq 0 ]
+then
+echo "PowerPC" 
+else
+echo "Arm"
 rm output/target/usr/lib/libjson*
 cp package/customize/usrbin/usr/bin/json-dbus-bridge output/target/usr/bin
 cp -d package/customize/lib2/lib/libjson.so.0.0.1 output/target/usr/lib
 cp -d package/customize/lib2/lib/libjson.so.0 output/target/usr/lib
+fi
 
 cp ./package/customize/fi.epitest.hostap.WPASupplicant.service output/target/usr/share/dbus-1/system-services/fi.epitest.hostap.WPASupplicant.service
 
@@ -87,7 +98,6 @@ be   ca@valencia  en@boldquot  et       gu  is  ku  ml            nl   ps  sk   
 
 chmod -R a+x $STARTINGPOINT/output/target/etc/init.d/*
 
-# cd $STARTINGPOINT/output/target/usr/lib; ln -sf libpcre.so libpcre.so.3
 
 echo "Done expanding elinos_rfs tar files to this RFS"
 
@@ -98,9 +108,6 @@ ln -sf bin/busybox busybox
 
 ln -sf /tmp/resolv.conf          etc/resolv.conf
 ln -sf /etc/spacecom/localtime   etc/localtime
-#ln -sf /tmp/adjtime             etc/adjtime
-#ln -sf /etc/tmp/adjtime          etc/adjtime
-#ln -sf /etc/spacecom/ftpd.passwd etc/ftpd.passwd
 
 $TARGETPOINT/etc/spacecom_backup 
 
@@ -114,7 +121,6 @@ ln -sf tmp/known_hosts_www sbin/.ssh/known_hosts
 ln -sf tmp/wb45n-bbraun tmp
 ln -sf tmp/wlan tmp
 mkdir -p $TARGETPOINT/usr/local
-#ln -sf etc/ssl usr/local/ssl
 mkdir -p var/state/dhcp
 mkdir -p var/lib/dhcp
 rm -rf root/.ssh
@@ -133,11 +139,6 @@ fi
 mkdir -p sbin/inet6
 cp etc/id_rsa sbin/.ssh/
 cp etc/id_rsa.pub sbin/.ssh/
-
-# ALL of these need specific file permission bits.
-#cd dev
-#mkdir shm tun proc/kcore proc/self/fd proc/self/fd/2 proc/self/fd/0 proc/self/fd/1 cpu_dma_latency full fuse kmsg mtd0ro mtd1ro mtd2ro mtd3ro network_latency network_throughput ppp rtc0 tty8 tty9 ttya0 ttya1 ttya2 ttya3 ttya4 ttya5 ttya6 ttya7 ttya8 ttya9 vcs vcs1 vcsa vcsa1 watchdog
-
 
 chmod 0600 root/.ssh/authorized_keys2 sbin/.ssh/id_rsa sbin/.ssh/id_rsa.pub
 
@@ -167,8 +168,6 @@ $TARGETPOINT/media
 chmod 0755  $TARGETPOINT/etc/dhcp \
 $TARGETPOINT/updater \
 $TARGETPOINT/usr/local 
-
-#chmod 0666 $TARGETPOINT/dev/tun
 
 chmod 01775 $TARGETPOINT/etc/spacecom
 
