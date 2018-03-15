@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LIGHTTPD_VERSION = 1.4.30
+LIGHTTPD_VERSION = 1.4.41
 LIGHTTPD_SITE = http://download.lighttpd.net/lighttpd/releases-1.4.x
 LIGHTTPD_DEPENDENCIES = host-pkg-config
 LIGHTTPD_CONF_OPT = \
@@ -50,11 +50,5 @@ LIGHTTPD_CONF_OPT += --with-webdav-props --with-webdav-locks
 else
 LIGHTTPD_CONF_OPT += --without-webdav-props --without-webdav-locks
 endif
-
-define LIGHTTPD_UNINSTALL_TARGET_CMDS
-	rm -f $(TARGET_DIR)/usr/sbin/lighttpd
-	rm -f $(TARGET_DIR)/usr/sbin/lighttpd-angel
-	rm -rf $(TARGET_DIR)/usr/lib/lighttpd
-endef
 
 $(eval $(call AUTOTARGETS,package,lighttpd))
