@@ -4,10 +4,10 @@
 #
 #############################################################
 
-IPROUTE2_VERSION = 2.6.38
-IPROUTE2_SOURCE = iproute2-$(IPROUTE2_VERSION).tar.bz2
-IPROUTE2_SITE = http://devresources.linuxfoundation.org/dev/iproute2/download
-IPROUTE2_TARGET_SBINS = ctstat genl ifstat ip lnstat nstat routef routel rtacct rtmon rtpr rtstat ss tc
+IPROUTE2_VERSION = 3.10.0
+IPROUTE2_SOURCE = iproute2-$(IPROUTE2_VERSION).tar.gz
+IPROUTE2_SITE = $(BR2_KERNEL_MIRROR)/linux/utils/net/iproute2
+IPROUTE2_TARGET_SBINS = ip tc
 
 # If both iproute2 and busybox are selected, make certain we win
 # the fight over who gets to have their utils actually installed.
@@ -22,6 +22,11 @@ define IPROUTE2_WITH_IPTABLES
 	# Makefile is busted so it never passes IPT_LIB_DIR properly
 	$(SED) "s/-DIPT/-DXT/" $(IPROUTE2_DIR)/tc/Makefile
 	echo "TC_CONFIG_XT:=y" >>$(IPROUTE2_DIR)/Config
+endef
+else
+define IPROUTE2_WITH_IPTABLES
+	# em_ipset needs xtables, but configure misdetects it
+	echo "TC_CONFIG_IPSET:=n" >>$(IPROUTE2_DIR)/Config
 endef
 endif
 
@@ -50,8 +55,6 @@ endef
 define IPROUTE2_UNINSTALL_TARGET_CMDS
 	rm -rf $(TARGET_DIR)/lib/tc
 	rm -rf $(TARGET_DIR)/usr/lib/tc
-	rm -rf $(TARGET_DIR)/etc/iproute2
-	rm -rf $(TARGET_DIR)/var/lib/arpd
 	rm -f $(addprefix $(TARGET_DIR)/sbin/, $(IPROUTE2_TARGET_SBINS))
 endef
 
