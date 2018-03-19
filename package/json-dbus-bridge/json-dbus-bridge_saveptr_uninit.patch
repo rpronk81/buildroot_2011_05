@@ -1,0 +1,11 @@
+--- a/src/bridge_request.c	2018-02-14 05:26:26.359054994 -0500
++++ a/src/bridge_request.c	2018-02-14 05:26:58.234741015 -0500
+@@ -647,7 +647,7 @@
+ 	DBusMessageIter it;
+ 	struct json_object *params;
+ 	const char *service, *iface, *cmethod;
+-	char *path, *saveptr;
++	char *path, *saveptr = 0;
+ 	int ret;
+ 
+ 	if (!json_object_is_type(in_json, json_type_object) ||
