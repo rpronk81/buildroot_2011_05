@@ -3,29 +3,11 @@
 # 
 echo $1
 
-if [ -e output/target/etc/inittab ]
-then
-   rm -f output/target/etc/inittab
-fi
-#cp package/customize/etc/etc/inittab output/target/etc/inittab
-cp fs/skeleton/etc/inittab output/target/etc/inittab
-
-cp /home/robert/50G/br_oct19/buildroot_2011_05/package/customize/init.sh output/target/
-chmod a+x output/target/init.sh
-
-cp package/customize/system.conf output/target/etc/dbus-1/
-
 if [ ! -e output/target/lib/firmware ]
 then
 	mkdir -p output/target/lib/firmware
 fi
 cp -fr package/redpine output/target/lib/firmware/
-
-if [ ! -e output/target/.flash ]
-then
-	mkdir -p output/target/.flash
-fi
-chmod a+rwx output/target/.flash
 
 if [ ! -e output/target/etc/spacecom ]
 then
@@ -37,14 +19,17 @@ if [ ! -e output/target/run ]
 then
 	mkdir -p output/target/run
 fi
+
 if [ ! -e output/target/run/udev ]
 then
 	mkdir -p output/target/run/udev
 fi
+
 if [ ! -e output/target/var/lock ]
 then
 	mkdir -p output/target/var/lock
 fi
+
 if [ ! -e output/target/var/log ]
 then
 	mkdir -p output/target/var/log
@@ -52,34 +37,12 @@ then
 	mkdir -p output/target/var/tmp
 	chmod 775 output/target/var/tmp
 fi
+
 if [ -e output/target/usr/sbin/flashcp ]
 then
 	mv output/target/usr/sbin/flash_erase output/target/sbin/flash_erase
 	mv output/target/usr/sbin/flashcp output/target/sbin/flashcp
 fi
-
-echo "Expanding elinos_rfs tar files to this RFS"
-SPACE_RFS_ADD_ONS=package/customize
-tar -xf $SPACE_RFS_ADD_ONS/bin.tar         -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/sbin.tar        -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/usr_libexec.tar -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/networkman.tar  -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/nm_wpa.tar      -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/updater.tar     -C output/target
-tar -xf $SPACE_RFS_ADD_ONS/id_rsa.tar      -C output/target
-cp      $SPACE_RFS_ADD_ONS/udev               output/target/etc/init.d/
-
-# Temporary work around for json issues preventing connection with the library. 
-rm output/target/usr/lib/libjson*
-cp /home/robert/50G/br_oct19/buildroot_2011_05/package/customize/usrbin/usr/bin/json-dbus-bridge output/target/usr/bin
-cp -d /home/robert/50G/br_oct19/buildroot_2011_05/package/customize/lib2/lib/libjson.so.0.0.1 output/target/usr/lib
-cp -d /home/robert/50G/br_oct19/buildroot_2011_05/package/customize/lib2/lib/libjson.so.0 output/target/usr/lib
-
-cp ./package/customize/fi.epitest.hostap.WPASupplicant.service output/target/usr/share/dbus-1/system-services/fi.epitest.hostap.WPASupplicant.service
-
-cp ./package/customize/nmwpa/etc/group output/target/etc/group
-cp ./package/customize/nmwpa/etc/passwd output/target/etc/passwd
-cp ./package/customize/system-local.conf output/target/etc/dbus-1
 
 STARTINGPOINT=$PWD
 cd output/target/usr/share/locale/
@@ -94,66 +57,41 @@ be   ca@valencia  en@boldquot  et       gu  is  ku  ml            nl   ps  sk   
 
 chmod -R a+x $STARTINGPOINT/output/target/etc/init.d/*
 
-# cd $STARTINGPOINT/output/target/usr/lib; ln -sf libpcre.so libpcre.so.3
-
 echo "Done expanding elinos_rfs tar files to this RFS"
 
-# ln -sf /opt/buildroot-2011.05/usr/lib/libiw.so /home/robert/svn/trunk/clones/sclite/app.rootfs/lib/
 TARGETPOINT=$STARTINGPOINT/output/target
 cd $TARGETPOINT
 pwd
-ln -sf bin/busybox busybox 
-
+ln -sf /bin/busybox busybox 
 ln -sf /tmp/resolv.conf          etc/resolv.conf
-ln -sf /etc/spacecom/localtime   etc/localtime
-#ln -sf /tmp/adjtime             etc/adjtime
-#ln -sf /etc/tmp/adjtime          etc/adjtime
-#ln -sf /etc/spacecom/ftpd.passwd etc/ftpd.passwd
+ln -sf /etc/comsystem/localtime   etc/localtime
 
-$TARGETPOINT/etc/spacecom_backup 
-
-mkdir -p sbin/.ssh
+mkdir -p $TARGETPOINT/sbin/.ssh
 mkdir -p $TARGETPOINT/var/empty/ntp/
-mkdir -p $TARGETPOINT/var/watchdog/empty
-ln -sf dev/.udev udev
+sudo ln -sf /dev/.udev udev
 mkdir -p $TARGETPOINT/etc/dhcp
-ln -sf var/dhclient.conf etc/dhcp/dhclient.conf
-ln -sf tmp/known_hosts_www sbin/.ssh/known_hosts
-ln -sf tmp/wb45n-bbraun tmp
-ln -sf tmp/wlan tmp
+ln -sf /var/dhclient.conf etc/dhcp/dhclient.conf
+ln -sf /tmp/known_hosts_www sbin/.ssh/known_hosts
+ln -sf /tmp/wb45n-bbraun tmp
+ln -sf /tmp/wlan tmp
 mkdir -p $TARGETPOINT/usr/local
-#ln -sf etc/ssl usr/local/ssl
-mkdir -p var/state/dhcp
-mkdir -p var/lib/dhcp
-rm -rf root/.ssh
-mkdir -p root/.ssh
-cp -f etc/id_rsa.pub root/.ssh/authorized_keys2
+mkdir -p $TARGETPOINT/var/state/dhcp
+mkdir -p $TARGETPOINT/var/lib/dhcp
+rm -rf $TARGETPOINT/root/.ssh
+mkdir -p $TARGETPOINT/root/.ssh
 
-if [ -e usr/bin/od ]
+if [ -e $TARGETPOINT/usr/bin/od ]
 then
-   mv usr/bin/od bin/od
+   mv $TARGETPOINT/usr/bin/od $TARGETPOINT/bin/od
 fi
-if [ -e usr/bin/tr ]
+if [ -e $TARGETPOINT/usr/bin/tr ]
 then
-   mv usr/bin/tr bin/tr
+   mv $TARGETPOINT/usr/bin/tr $TARGETPOINT/bin/tr
 fi
 
-mkdir -p sbin/inet6
-cp etc/id_rsa sbin/.ssh/
-cp etc/id_rsa.pub sbin/.ssh/
+mkdir -p $TARGETPOINT/sbin/inet6
 
-# ALL of these need specific file permission bits.
-#cd dev
-#mkdir shm tun proc/kcore proc/self/fd proc/self/fd/2 proc/self/fd/0 proc/self/fd/1 cpu_dma_latency full fuse kmsg mtd0ro mtd1ro mtd2ro mtd3ro network_latency network_throughput ppp rtc0 tty8 tty9 ttya0 ttya1 ttya2 ttya3 ttya4 ttya5 ttya6 ttya7 ttya8 ttya9 vcs vcs1 vcsa vcsa1 watchdog
-
-
-chmod 0600 root/.ssh/authorized_keys2 sbin/.ssh/id_rsa sbin/.ssh/id_rsa.pub
-
-chmod 06755 sbin/updaterwr 
-
-cd $TARGETPOINT
-
-chmod 0755 $TARGETPOINT/var/watchdog/empty $TARGETPOINT/var/run $TARGETPOINT/var/state $TARGETPOINT/var/state/dhcp
+chmod 0755 $TARGETPOINT/var/run $TARGETPOINT/var/state $TARGETPOINT/var/state/dhcp
 
 chmod 0755 $TARGETPOINT/var/lib
 chmod 0755 $TARGETPOINT/var/lib/dhcp $TARGETPOINT/lib $TARGETPOINT/etc/NetworkManager $TARGETPOINT/etc/dbus-1 
@@ -173,17 +111,14 @@ $TARGETPOINT/usr/share/dbus-1 \
 $TARGETPOINT/media 
 
 chmod 0755  $TARGETPOINT/etc/dhcp \
-$TARGETPOINT/updater \
 $TARGETPOINT/usr/local 
-
-#chmod 0666 $TARGETPOINT/dev/tun
 
 chmod 01775 $TARGETPOINT/etc/spacecom
 
 chmod 0700 $TARGETPOINT/root $TARGETPOINT/root/.ssh $TARGETPOINT/sbin/.ssh
-mkdir $TARGETPOINT/var/tmp
+mkdir -p $TARGETPOINT/var/tmp
 chmod 775 $TARGETPOINT/var/tmp
-rmdir $TARGETPOINT/var/watchdog/empty
+rm -rf $TARGETPOINT/var/watchdog/empty
 
 echo "editrfs.sh is complete"
 exit 0
