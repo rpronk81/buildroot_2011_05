@@ -1,0 +1,11 @@
+--- a/src/bridge_request.c
++++ b/src/bridge_request.c
+@@ -683,7 +683,7 @@
+ 	DBusMessageIter it;
+ 	struct json_object *params;
+ 	const char *service, *iface, *cmethod;
++	char *path, *saveptr=NULL;
+-	char *path, *saveptr;
+ 	int ret;
+ 
+ 	if (!json_object_is_type(in_json, json_type_object) ||
