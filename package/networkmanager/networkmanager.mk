@@ -8,8 +8,6 @@ NETWORKMANAGER_VERSION_MAJOR=0.8
 NETWORKMANAGER_SOURCE = NetworkManager-$(NETWORKMANAGER_VERSION).git20100811.tar
 NETWORKMANAGER_SITE = https://github.com/ptdropper/NetworkManager/blob/master/
 
-#NETWORKMANAGER_SOURCE = NetworkManager-$(NETWORKMANAGER_VERSION).tar.gz
-# NETWORKMANAGER_SITE = https://download.gnome.org/sources/NetworkManager/$(NETWORKMANAGER_VERSION_MAJOR)
 NETWORKMANAGER_INSTALL_STAGING = YES
 NETWORKMANAGER_DEPENDENCIES = host-pkg-config udev dbus-glib libnl wireless_tools gnutls utillinux polkit pppd
 
@@ -44,17 +42,11 @@ NETWORKMANAGER_CONF_OPT = \
 	--disable-qt \
 	--disable-gtk-do-html
 
-# The target was built for the archlinux distribution, so we need
-# to move around things after installation
-#define NETWORKMANAGER_INSTALL_INITSCRIPT
-#	#$(INSTALL) -m 0755 -D package/networkmanager/S45network-manager $(TARGET_DIR)/etc/init.d/S45network-manager
-	#rm -f $(TARGET_DIR)/etc/rc.d/networkmanager
-	#rm -rf $(TARGET_DIR)/etc/rc.d
-	# rmdir --ignore-fail-on-non-empty $(TARGET_DIR)/etc/rc.d
-#endef
+define NETWORKMANAGER_INSTALL_SCRIPT
+	mkdir -p $(TARGET_DIR)/var/run/NetworkManager
+endef
 
-#NETWORKMANAGER_POST_INSTALL_TARGET_HOOKS += NETWORKMANAGER_INSTALL_INITSCRIPT
-
+NETWORKMANAGER_POST_INSTALL_TARGET_HOOKS += NETWORKMANAGER_INSTALL_SCRIPT
 
 define NETWORKMANGER_LIBNM_UTIL_MAKEFILE
 	cd $(@D)
