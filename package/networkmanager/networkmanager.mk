@@ -28,7 +28,7 @@ NETWORKMANAGER_CONF_OPT = \
 	--without-tests \
 	--disable-more-warnings \
 	--disable-tests \
-	--disable-rpath \ 
+	--disable-rpath \
 	--without-docs \
 	--disable-gtk-doc \
 	--disable-asserts \
