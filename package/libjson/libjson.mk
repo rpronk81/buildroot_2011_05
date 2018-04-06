@@ -5,7 +5,7 @@
 #############################################################
 
 LIBJSON_VERSION = 7.6.1
-LIBJSON_SITE = https://ptdropper:bM7mRhkmqd@github.com/ptdropper/libjson.git
+LIBJSON_SITE = https://github.com/ptdropper/libjson/raw/master/
 LIBJSON_SOURCE = libjson_$(LIBJSON_VERSION).tar
 LIBJSON_INSTALL_STAGING = YES
 LIBJSON_LICENSE = BSD-2c
