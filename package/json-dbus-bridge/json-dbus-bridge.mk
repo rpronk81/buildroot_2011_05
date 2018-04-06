@@ -8,7 +8,7 @@ JSON_DBUS_BRIDGE_VERSION = 1.1.5
 JSON_DBUS_BRIDGE_SITE = https://github.com/elrafoon/json-dbus-bridge/archive/
 JSON_DBUS_BRIDGE_SOURCE = v$(JSON_DBUS_BRIDGE_VERSION).tar.gz
 
-JSON_DBUS_BRIDGE_DEPENDENCIES = libfcgi libevent libjson
+JSON_DBUS_BRIDGE_DEPENDENCIES = libfcgi libevent libjson json-c
 
 JSON_DBUS_BRIDGE_AUTORECONF = YES
 
