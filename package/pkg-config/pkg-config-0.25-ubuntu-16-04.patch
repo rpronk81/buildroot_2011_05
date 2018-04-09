@@ -1,0 +1,65 @@
+--- a/aclocal.m4
++++ b/aclocal.m4
+@@ -6995,7 +6995,7 @@
+ [m4_ifdef([AC_PROG_GCJ], [AC_PROG_GCJ],
+   [m4_ifdef([A][M_PROG_GCJ], [A][M_PROG_GCJ],
+     [AC_CHECK_TOOL(GCJ, gcj,)
+-      test "x${GCJFLAGS+set}" = xset || GCJFLAGS="-g -O2"
++      test "x${GCJFLAGS+set}" = xset || GCJFLAGS="-g"
+       AC_SUBST(GCJFLAGS)])])[]dnl
+ ])
+ 
+--- a/configure	
++++ b/configure
+@@ -3689,13 +3689,13 @@
+   CFLAGS=$ac_save_CFLAGS
+ elif test $ac_cv_prog_cc_g = yes; then
+   if test "$GCC" = yes; then
+-    CFLAGS="-g -O2"
++    CFLAGS="-g"
+   else
+     CFLAGS="-g"
+   fi
+ else
+   if test "$GCC" = yes; then
+-    CFLAGS="-O2"
++    CFLAGS=""
+   else
+     CFLAGS=
+   fi
+@@ -10885,13 +10885,13 @@
+   CFLAGS=$ac_save_CFLAGS
+ elif test $ac_cv_prog_cc_g = yes; then
+   if test "$GCC" = yes; then
+-    CFLAGS="-g -O2"
++    CFLAGS="-g"
+   else
+     CFLAGS="-g"
+   fi
+ else
+   if test "$GCC" = yes; then
+-    CFLAGS="-O2"
++    CFLAGS=""
+   else
+     CFLAGS=
+   fi
+@@ -11190,7 +11190,7 @@
+ 
+ WARN_CFLAGS=""
+ if test "${GCC}" = "yes" && test "${ac_env_CFLAGS_set}" != "set"; then
+-   WARN_CFLAGS="-g -Wall -O2"
++   WARN_CFLAGS="-g -Wall"
+ fi
+ 
+ 
+--- a/configure.in	
++++ b/configure.in	
+@@ -72,7 +72,7 @@
+ 
+ WARN_CFLAGS=""
+ if test "${GCC}" = "yes" && test "${ac_env_CFLAGS_set}" != "set"; then
+-   WARN_CFLAGS="-g -Wall -O2"
++   WARN_CFLAGS="-g -Wall"
+ fi
+ AC_SUBST(WARN_CFLAGS)
+ 

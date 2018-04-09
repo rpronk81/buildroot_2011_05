@@ -1,0 +1,45 @@
+--- a/configure	
++++ b/configure
+@@ -3435,13 +3435,13 @@
+   CFLAGS=$ac_save_CFLAGS
+ elif test $ac_cv_prog_cc_g = yes; then
+   if test "$GCC" = yes; then
+-    CFLAGS="-g -O2"
++    CFLAGS="-g -DNO_INLINE_FUNCS"
+   else
+     CFLAGS="-g"
+   fi
+ else
+   if test "$GCC" = yes; then
+-    CFLAGS="-O2"
++    CFLAGS="-DNO_INLINE_FUNCS"
+   else
+     CFLAGS=
+   fi
+@@ -4046,13 +4046,13 @@
+   CFLAGS=$ac_save_CFLAGS
+ elif test $ac_cv_prog_cc_g = yes; then
+   if test "$GCC" = yes; then
+-    CFLAGS="-g -O2"
++    CFLAGS="-g -DNO_INLINE_FUNCS"
+   else
+     CFLAGS="-g"
+   fi
+ else
+   if test "$GCC" = yes; then
+-    CFLAGS="-O2"
++    CFLAGS="-DNO_INLINE_FUNCS"
+   else
+     CFLAGS=
+   fi
+--- a/MCONFIG.in
++++ b/MCONFIG.in
+@@ -147,7 +147,7 @@
+ 			-Wcast-qual -Wcast-align -Wno-variadic-macros \
+ 			-Wstrict-prototypes -Wmissing-prototypes \
+ 			-Wformat-security  -Wformat-nonliteral \
+-			-Wmissing-format-attribute -O2 -Wstrict-aliasing \
++			-Wmissing-format-attribute -DNO_INLINE_FUNCS -Wstrict-aliasing \
+ 			-Wnested-externs -Winline -DNO_INLINE_FUNCS -Wshadow \
+ 			-UENABLE_NLS
+ 
